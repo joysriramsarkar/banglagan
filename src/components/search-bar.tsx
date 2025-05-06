@@ -29,11 +29,11 @@ export default function SearchBar() {
       <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         type="search"
-        placeholder="গান, শিল্পী অনুসন্ধান করুন..."
+        placeholder="গান, শিল্পী, গীতিকার অনুসন্ধান করুন..." // Updated placeholder
         className="w-full rounded-lg bg-background pl-8 pr-16" // Added padding for button
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        aria-label="গান অনুসন্ধান করুন"
+        aria-label="গান, শিল্পী বা গীতিকার অনুসন্ধান করুন"
       />
       <Button type="submit" size="sm" className="absolute right-1 top-1/2 h-8 -translate-y-1/2">
         অনুসন্ধান

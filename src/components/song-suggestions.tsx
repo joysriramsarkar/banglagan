@@ -7,6 +7,7 @@ import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link'; // Import Link
 import { createSlug } from '@/lib/utils'; // Import from utils
+import { mockSongs } from '@/services/bangla-song-database'; // Import mockSongs to find lyricist
 
 export default function SongSuggestions() {
   const [suggestions, setSuggestions] = React.useState<SuggestSongsOutput['suggestions'] | null>(null);
@@ -66,13 +67,17 @@ export default function SongSuggestions() {
         {!loading && !error && suggestions && suggestions.length > 0 && (
           <ul className="space-y-2">
             {suggestions.map((song, index) => {
-              // Use the updated createSlug function
-              const slug = createSlug(song.title, song.artist);
+              // Find the full song details from mock data to get the lyricist
+              const fullSong = mockSongs.find(s => s.title === song.title && s.artist === song.artist);
+              // Use the createSlug function with title, artist, and lyricist (if found)
+              const slug = createSlug(song.title, song.artist, fullSong?.lyricist);
               return (
                 <li key={index} className="text-sm">
                   {/* Ensure the slug is properly encoded for the URL */}
                   <Link href={`/song/${encodeURIComponent(slug)}`} className="text-primary hover:text-accent hover:underline transition-colors">
                      <span className="font-medium">{song.title}</span> - {song.artist}
+                     {/* Optionally display lyricist here too */}
+                     {/* {fullSong?.lyricist && ` (${fullSong.lyricist})`} */}
                   </Link>
                 </li>
               );

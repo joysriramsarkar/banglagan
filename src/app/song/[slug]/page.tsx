@@ -2,7 +2,7 @@
 import { mockSongs, type Song } from '@/services/bangla-song-database'; // Adjust path if needed and import mockSongs
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, ListMusic } from 'lucide-react'; // Added ListMusic icon
+import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather } from 'lucide-react'; // Added ListMusic, Feather icons
 import { createSlug, toBengaliNumerals } from '@/lib/utils'; // Import converters
 import { Separator } from '@/components/ui/separator'; // Import Separator
 
@@ -13,7 +13,8 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
 
   // Find the song in the mock database whose generated slug matches the input slug
   const matchedSong = mockSongs.find(song => {
-    const generatedSlug = createSlug(song.title, song.artist);
+    // Pass lyricist to createSlug if available, otherwise pass undefined
+    const generatedSlug = createSlug(song.title, song.artist, song.lyricist);
     // console.log(`Comparing ${decodedSlug} with generated ${generatedSlug} for "${song.title}"`); // Keep for debugging if needed
     return generatedSlug === decodedSlug;
   });
@@ -22,18 +23,7 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
       // console.log(`Found direct match for slug ${decodedSlug}: "${matchedSong.title}" by ${matchedSong.artist}`); // Keep for debugging if needed
   } else {
        console.log(`No direct match found for slug: ${decodedSlug}. Consider fallback search if needed.`);
-      // Optional Fallback (using previous logic if direct match fails):
-      // This part can be complex and might still fail if slugs aren't perfectly stable.
-      // const parts = decodedSlug.split('-by-');
-      // if (parts.length === 2) {
-      //   const titleQuery = parts[0].replace(/-/g, ' ').trim().toLowerCase();
-      //   const artistQuery = parts[1].replace(/-/g, ' ').trim().toLowerCase();
-      //   // You could try searching mockSongs again with these looser queries
-      //   // matchedSong = mockSongs.find(song =>
-      //   //    song.title.toLowerCase().includes(titleQuery) &&
-      //   //    song.artist.toLowerCase().includes(artistQuery)
-      //   // );
-      // }
+      // Optional Fallback can be added here if necessary
   }
 
 
@@ -63,9 +53,18 @@ export default async function SongPage({ params }: SongPageProps) {
             <Music className="w-8 h-8 text-primary mt-1 flex-shrink-0" />
             <div className="flex-grow">
               <CardTitle className="text-3xl font-bold text-primary mb-1">{song.title}</CardTitle>
-              <CardDescription className="text-lg flex items-center gap-2 text-foreground/80 pt-1">
-                 <User className="w-4 h-4 flex-shrink-0" />
-                 <span>{song.artist}</span>
+              <CardDescription className="text-lg text-foreground/80 pt-1 space-y-1">
+                 <div className="flex items-center gap-2">
+                     <User className="w-4 h-4 flex-shrink-0" />
+                     <span>{song.artist}</span>
+                 </div>
+                  {/* Display Lyricist if available */}
+                  {song.lyricist && song.lyricist !== 'সংগৃহীত' && song.lyricist !== 'অজানা গীতিকার' && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <Feather className="w-4 h-4 flex-shrink-0" />
+                      <span>গীতিকার: {song.lyricist}</span>
+                    </div>
+                  )}
               </CardDescription>
             </div>
           </div>
@@ -95,12 +94,20 @@ export default async function SongPage({ params }: SongPageProps) {
                         <span>{toBengaliNumerals(song.releaseYear)}</span>
                     </div>
                  )}
+                 {/* Lyricist information again if needed, or just keep in description */}
+                 {/* {song.lyricist && (
+                    <div className="flex items-center gap-2">
+                        <Feather className="w-5 h-5 text-primary/80 flex-shrink-0"/>
+                        <span className="font-medium">গীতিকার:</span>
+                        <span>{song.lyricist}</span>
+                    </div>
+                 )} */}
              </div>
         </CardContent>
       </Card>
 
       {/* Lyrics Section */}
-      {song.lyrics && (
+      {song.lyrics && song.lyrics !== 'গানের কথা এখানে যোগ করা হবে...' && ( // Check if lyrics exist and are not placeholder
         <Card className="overflow-hidden shadow-lg bg-card">
             <CardHeader className="bg-secondary/10 p-6">
                 <CardTitle className="text-2xl font-semibold text-primary/90 flex items-center gap-2">
@@ -126,6 +133,6 @@ export async function generateStaticParams() {
   // Pre-render paths for all songs in the mock database
   return mockSongs.map((song) => ({
     // Ensure slugs are URL-encoded here as Next.js expects raw segment values
-    slug: encodeURIComponent(createSlug(song.title, song.artist)),
+    slug: encodeURIComponent(createSlug(song.title, song.artist, song.lyricist)),
   }));
 }

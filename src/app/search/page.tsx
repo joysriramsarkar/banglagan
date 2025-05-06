@@ -90,7 +90,7 @@ export default function SearchPage() {
       )}
 
        {!loading && !error && !query && (
-         <p className="text-muted-foreground">গান খুঁজতে অনুগ্রহ করে একটি অনুসন্ধান শব্দ লিখুন।</p>
+         <p className="text-muted-foreground">গান, শিল্পী বা গীতিকার খুঁজতে অনুগ্রহ করে একটি অনুসন্ধান শব্দ লিখুন।</p>
        )}
     </div>
   );

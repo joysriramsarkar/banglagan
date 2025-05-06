@@ -1,5 +1,5 @@
 /**
- * Represents a song with title, artist, album, genre, release year, and lyrics.
+ * Represents a song with title, artist, album, genre, release year, lyricist, and lyrics.
  */
 export interface Song {
   /**
@@ -12,6 +12,11 @@ export interface Song {
    * শিল্পীর নাম (বাংলায়)।
    */
   artist: string;
+  /**
+   * The lyricist of the song in Bengali (optional).
+   * গীতিকারের নাম (বাংলায়, যদি থাকে)।
+   */
+  lyricist?: string;
   /**
    * The album the song belongs to (optional).
    * অ্যালবামের নাম (যদি থাকে)।
@@ -39,7 +44,8 @@ export const mockSongs: Song[] = [ // Export the array
   // Rabindranath Tagore Songs (Expanded Sample)
   {
     title: 'আমার সোনার বাংলা',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী', // Often sung by various artists
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'স্বদেশ',
     releaseYear: 1905,
@@ -57,7 +63,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'পুরানো সেই দিনের কথা',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'স্মৃতি',
     releaseYear: 1885,
@@ -73,7 +80,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'যদি তোর ডাক শুনে কেউ না আসে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'স্বদেশ',
     releaseYear: 1905,
@@ -85,7 +93,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
     {
     title: 'আগুনের পরশমণি',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'পূজা',
     releaseYear: 1914,
@@ -96,7 +105,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'গ্রামছাড়া ওই রাঙা মাটির পথ',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রকৃতি',
     releaseYear: 1922,
@@ -108,7 +118,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'আমার হিয়ার মাঝে লুকিয়ে ছিলে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রেম',
     releaseYear: 1895,
@@ -118,7 +129,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'তুমি রবে নীরবে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রেম',
     releaseYear: 1895,
@@ -129,7 +141,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'ভালোবেসে, সখী, নিভৃতে যতনে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রেম',
     releaseYear: 1888,
@@ -138,7 +151,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
    {
     title: 'ফুলে ফুলে ঢ’লে ঢ’লে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রকৃতি',
     releaseYear: 1882,
@@ -149,7 +163,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'আকাশ ভরা সূর্য তারা',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রকৃতি',
     releaseYear: 1910,
@@ -162,7 +177,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'মেঘের কোলে রোদ হেসেছে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'শিশু ভোলানাথ', // Poem source
     genre: 'শিশুতোষ',
     releaseYear: 1922, // Poem publication year
@@ -178,7 +194,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
    {
     title: 'আমার মুক্তি আলোয় আলোয়',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'পূজা',
     releaseYear: 1910,
@@ -189,7 +206,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'যে রাতে মোর দুয়ারগুলি ভাঙল ঝড়ে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'পূজা',
     releaseYear: 1910,
@@ -200,7 +218,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'দিনগুলি মোর সোনার খাঁচায় রইল না',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'বিচিত্র',
     releaseYear: 1914,
@@ -211,7 +230,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'যখন পড়বে না মোর পায়ের চিহ্ন এই বাটে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রেম',
     releaseYear: 1915,
@@ -223,7 +243,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'সখী, ভাবনা কাহারে বলে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'প্রেম',
     releaseYear: 1881,
@@ -234,7 +255,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'মম চিত্তে নিতি নৃত্যে কে যে নাচে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'নাট্যগীতি',
     releaseYear: 1899,
@@ -245,7 +267,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'ভেঙে মোর ঘরের চাবি',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'পূজা',
     releaseYear: 1914,
@@ -255,7 +278,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'আনন্দলোকে মঙ্গলালোকে',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'পূজা',
     releaseYear: 1892,
@@ -265,7 +289,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'আমরা সবাই রাজা',
-    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
     album: 'গীতবিতান',
     genre: 'স্বদেশ',
     releaseYear: 1905,
@@ -276,69 +301,119 @@ export const mockSongs: Song[] = [ // Export the array
 নইলে মোদের রাজার সনে মিলব কী স্বত্বে?`
   },
 
-  // Add details to 50 placeholder Tagore songs
-   { title: 'অগ্নিবীণা বাজাও তুমি কেমন করে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অগ্রপথিক, হে সেনাপতি', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'স্বদেশ', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অজানা খনির নূতন মণির', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অজানা সুর কে দিয়ে যায়', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অঞ্জলি লহ মোর সঙ্গীতে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অত চুপি চুপি কেন কথা কও', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অতনু বিরহে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অতি নিবিড় মেঘের ধারা', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অদৃষ্টেরে শুধালেম', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অদোষ কোরো, হে নাথ', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অধরা মাধুরী ধরেছি ছন্দে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অধিকার', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনেক কথা বলেছিলেম', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনেক কথা যাও যে ব’লে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনেক দিনের আমার যে গান', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনেক দিয়েছ নাথ', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনেক পাওয়ার আশা ক’রে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনেক যুগের ওপার হতে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অনন্তসাগরমাঝে দাও তরী ভাসাইয়া', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অন্ত নাই কি অন্ত নাই', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অন্তর মম বিকশিত করো', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অন্তরে জাগিছ অন্তর্যামী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অন্ধজনে দেহো আলো', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অন্ধকারের উৎস হতে উৎসারিত আলো', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অন্ধকারে বসে আছি', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অব কি করবি পার', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অবশেষে হল আমার', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অবাক্ যে আমি', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অবুঝের এই দ্বন্দ্বগুলি', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অবেলায় যদি এসেছ আমার বনে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অভয় দাও তো বলি', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অভয় দাও, হে দয়াময়', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অমলা ধবলা পালে লেগেছে মন্দ মধুর হাওয়া', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অমৃতের সাগরে আমি যাব', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অমল ধবল পালে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' }, // Duplicate of অমলা ধবলা - keeping one variant
-   { title: 'অয়ি তন্বী শ্যামা শিখরিণী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি ত্রিসংসার চিত্তহর', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি দখিন पवन', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি ভুবনমনোমোহিনী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'স্বদেশ', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি বিষাদিনী বীণে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি মুক্ত আলোয়', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি মহামায়া বিশ্বেশ্বরী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি মালতী লতা দোলে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি রুদ্র রুদ্রাণী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অয়ি শ্রাবণ ঘন গহন মোহে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অরুণ উদয়কালে করুণ গুঞ্জনধ্বনি', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অরূপ তোমার বাণী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অরূপ বীণা রূপের আড়ালে', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-   { title: 'অর্থ না বুঝে করেছি পূজা', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+  // Add details to 100 placeholder Tagore songs
+   { title: 'অগ্নিবীণা বাজাও তুমি কেমন করে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অগ্রপথিক, হে সেনাপতি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'স্বদেশ', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অজানা খনির নূতন মণির', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অজানা সুর কে দিয়ে যায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অঞ্জলি লহ মোর সঙ্গীতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অত চুপি চুপি কেন কথা কও', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অতনু বিরহে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অতি নিবিড় মেঘের ধারা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অদৃষ্টেরে শুধালেম', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অদোষ কোরো, হে নাথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অধরা মাধুরী ধরেছি ছন্দে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অধিকার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনেক কথা বলেছিলেম', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনেক কথা যাও যে ব’লে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনেক দিনের আমার যে গান', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনেক দিয়েছ নাথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনেক পাওয়ার আশা ক’রে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনেক যুগের ওপার হতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অনন্তসাগরমাঝে দাও তরী ভাসাইয়া', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অন্ত নাই কি অন্ত নাই', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অন্তর মম বিকশিত করো', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অন্তরে জাগিছ অন্তর্যামী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অন্ধজনে দেহো আলো', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অন্ধকারের উৎস হতে উৎসারিত আলো', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অন্ধকারে বসে আছি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অব কি করবি পার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অবশেষে হল আমার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অবাক্ যে আমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অবুঝের এই দ্বন্দ্বগুলি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অবেলায় যদি এসেছ আমার বনে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অভয় দাও তো বলি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অভয় দাও, হে দয়াময়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অমলা ধবলা পালে লেগেছে মন্দ মধুর হাওয়া', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অমৃতের সাগরে আমি যাব', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অমল ধবল পালে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' }, // Duplicate of অমলা ধবলা - keeping one variant
+   { title: 'অয়ি তন্বী শ্যামা শিখরিণী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি ত্রিসংসার চিত্তহর', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি দখিন पवन', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি ভুবনমনোমোহিনী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'স্বদেশ', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি বিষাদিনী বীণে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি মুক্ত আলোয়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি মহামায়া বিশ্বেশ্বরী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি মালতী লতা দোলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি রুদ্র রুদ্রাণী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অয়ি শ্রাবণ ঘন গহন মোহে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অরুণ উদয়কালে করুণ গুঞ্জনধ্বনি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অরূপ তোমার বাণী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অরূপ বীণা রূপের আড়ালে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অর্থ না বুঝে করেছি পূজা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অকারন অকালে মোর পড়ল যখন ডাক', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অকারণে চঞ্চল', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অগভীর জলের নদী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'অলকে কুসুম না দিও', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি এ আনন্দসন্ধ্যা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'আনুষ্ঠানিক', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি এ নিরালা কুঞ্জে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি এ প্রভাতে রবির কর', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি এ বসন্তে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি কমলমুকুলদল খুলিল', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি খেলা ভাঙার খেলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি ঝড়ের রাতে তোমার অভিসার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি তোমার কাছে ভাসাই ভেলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি বিজন ঘরে নিশীথরাতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি যে রজনী যায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি প্রণমি তোমারে চলিব নাথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি বসন্ত জাগ্রত দ্বারে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি বহে বসন্ত পবন', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি শ্রাবণঘনগহন মোহে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' }, // Duplicate of অয়ি শ্রাবণ - keeping one
+   { title: 'আজি শুভ দিনে পিতার ভবনে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'আনুষ্ঠানিক', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজি হতে শতবর্ষ পরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ আলোকের এই ঝর্নাধারায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ আসিয়া কাছে बसीয়াছ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ খেলা ভাঙার খেলা খেলবি আয়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' }, // Duplicate of আজি খেলা - keeping one
+   { title: 'আজ জ্যোৎস্না রাতে সবাই গেছে বনে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ তারায় তারায় দীপ্ত শিখার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ তোরা যাস নে ঘরের বাহিরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ ধানের ক্ষেতে রৌদ্রছায়ায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ নবীন মেঘের সুর লেগেছে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ মেঘ কেটে গেছে সকালবেলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ শ্রাবণের পূর্ণিমাতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আজ যেমন ক’রে গাইছে আকাশ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আটকা পড়ে মুখের গ্রাস', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আঁধারে জ্বালিলে আলার শিখা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আঁধার বাতাশে ফুটায়ে দিলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আঁধার শাখা উজল করি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আঁধারে তোমার ডাকে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আছে দুঃখ, আছে মৃত্যু', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আছে তো সুর', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আছে দুঃখ আছে মৃত্যু বিরহদহন লাগে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' }, // Duplicate of আছে দুঃখ - keeping one
+   { title: 'আছে সে নয়ন তার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আন মন, আন মন', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আনন্দেরি সাগর হতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আনন্দধ্বনি জাগাও গগনে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আপনহারা মাতোয়ারা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আপন হতে বাহির হয়ে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আপন মনে গোপন কোণে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আপনারে দিয়ে রচিলি কি রে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আবার এসেছে আষাঢ়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আমায় ক্ষমো হে ক্ষমো', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আমায় ডাক দিল কে ভিতর-পানে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আমায় ডুবাইলি রে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' }, // Likely a folk song influence, but attributed in Gitabitan
+   { title: 'আমায় থাকতে দে-না আপন-মনে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
+   { title: 'আমায় তুমি যত দুঃখ দিয়েছ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
 
-  // Existing placeholder songs
-  { title: 'অকারন অকালে মোর পড়ল যখন ডাক', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-  { title: 'অকারণে চঞ্চল', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রকৃতি', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
-  { title: 'অগভীর জলের নদী', artist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...' },
 
   // Other Artists' Songs
   {
     title: 'একতারা তুই দেশের কথা',
-    artist: 'গাজী মাজহারুল আনোয়ার (গীতিকার)', // Updated artist/attribution
-    album: 'কালনীর ঢেউ', // Keeping existing album, genre, year as not specified for change
-    genre: 'দেশাত্মবোধক', // Changed genre to be more specific
-    releaseYear: 1970, // More accurate approximate year of popularity
+    artist: 'শাহনাজ রহমতউল্লাহ', // Specific artist
+    lyricist: 'গাজী মাজহারুল আনোয়ার', // Added lyricist
+    album: 'বিভিন্ন শিল্পী', // Common in compilations
+    genre: 'দেশাত্মবোধক',
+    releaseYear: 1970,
     lyrics: `একতারা তুই দেশের কথা
 বলরে এবার বল।
 আমাকে তুই বাউল করে
@@ -360,11 +435,12 @@ export const mockSongs: Song[] = [ // Export the array
 হয় যেন গো ঠাই রে
 হয় যেন গো ঠাই।
 তোমায় বরন করে
-যেন যেতে পারি মরে।` // Updated lyrics
+যেন যেতে পারি মরে।`
   },
    {
     title: 'আমি বাংলায় গান গাই',
     artist: 'প্রতুল মুখোপাধ্যায়',
+    lyricist: 'প্রতুল মুখোপাধ্যায়',
     album: 'পাথরের ফসল',
     genre: 'জীবনমুখী',
     releaseYear: 1994, // Approximate year
@@ -384,6 +460,7 @@ export const mockSongs: Song[] = [ // Export the array
    {
     title: 'কফি হাউসের সেই আড্ডাটা',
     artist: 'মান্না দে',
+    lyricist: 'গৌরীপ্রসন্ন মজুমদার', // Added lyricist
     album: 'বিভিন্ন শিল্পী', // Often part of compilations
     genre: 'আধুনিক বাংলা গান',
     releaseYear: 1971, // Original release year
@@ -404,6 +481,7 @@ export const mockSongs: Song[] = [ // Export the array
   {
     title: 'নতুন গান উদাহরণ', // More descriptive placeholder title
     artist: 'নতুন শিল্পী উদাহরণ', // More descriptive placeholder artist
+    lyricist: 'অজানা গীতিকার',
     album: 'অজানা অ্যালবাম',
     genre: 'পরীক্ষামূলক',
     releaseYear: 2024,
@@ -419,7 +497,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'ধনধান্য পুষ্পভরা',
-    artist: 'দ্বিজেন্দ্রলাল রায়',
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'দ্বিজেন্দ্রলাল রায়',
     album: 'পরপারে',
     genre: 'স্বদেশ',
     releaseYear: 1912,
@@ -431,7 +510,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'বকুল ফুল বকুল ফুল',
-    artist: 'সংগৃহীত',
+    artist: 'বিভিন্ন শিল্পী', // Folk song, many artists
+    lyricist: 'সংগৃহীত', // Traditional folk lyric
     album: 'লোকগীতি',
     genre: 'লোকগীতি',
     releaseYear: 1960, // Approximate era
@@ -441,7 +521,8 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'আমার ভাইয়ের রক্তে রাঙানো',
-    artist: 'আব্দুল গাফফার চৌধুরী (গীতিকার), আলতাফ মাহমুদ (সুরকার)', // Common attribution practice
+    artist: 'বিভিন্ন শিল্পী',
+    lyricist: 'আব্দুল গাফফার চৌধুরী',
     album: 'বিভিন্ন শিল্পী',
     genre: 'একুশের গান',
     releaseYear: 1952,
@@ -455,6 +536,7 @@ export const mockSongs: Song[] = [ // Export the array
   {
     title: 'এই পথ যদি না শেষ হয়',
     artist: 'হেমন্ত মুখোপাধ্যায় ও সন্ধ্যা মুখোপাধ্যায়',
+    lyricist: 'গৌরীপ্রসন্ন মজুমদার', // Added lyricist
     album: 'সপ্তপদী (চলচ্চিত্র)',
     genre: 'চলচ্চিত্রের গান',
     releaseYear: 1961,
@@ -465,10 +547,53 @@ export const mockSongs: Song[] = [ // Export the array
   }
 ];
 
+// Comprehensive list of lyricists (combining all lists, removing duplicates)
+const allLyricistsSet = new Set([
+  'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন',
+  'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য', 'নিধুবাবু (রামনিধি গুপ্ত)',
+  'কালি মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্থনি ফিরিঙ্গি',
+  'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী',
+  'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়',
+  'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
+  'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত',
+  'আসাদুজ্জামান নূর', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত',
+  'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন',
+  'কুমার জ্ঞানেন্দ্র', 'লালন ফকির', 'মনোজ মুর্শিদ', 'মাইকেল মধুসূদন দত্ত', 'গৌতম চট্টোপাধ্যায় (মোহিনের ঘোড়াগুলি)',
+  'নচিকেতা', 'নিরেন্দ্রনাথ চক্রবর্তী', 'নির্মলেন্দু গুণ', 'পবিত্র সরকার', 'প্রীতিভূষণ ভট্টাচার্য',
+  'প্রবীর মজুমদার', 'প্রিয় চট্টোপাধ্যায়', 'ফকির আলমগীর', 'বুদ্ধদেব দাশগুপ্ত', 'বেলাল চৌধুরী',
+  'মণীন্দ্র গুপ্ত', 'মন্টু মুখোপাধ্যায়', 'মলয় গাঙ্গুলি', 'রবি চট্টোপাধ্যায়', 'ঋতুপর্ণ ঘোষ',
+  'শিবরাম চক্রবর্তী', 'শ্যামল মিত্র', 'শ্রীজাত', 'সুদীপ্ত মুখোপাধ্যায়', 'সুধীরলাল চক্রবর্তী',
+  'সুনীল গঙ্গোপাধ্যায়', 'স্বপন চক্রবর্তী', 'তারাপদ রায়', 'তৃপ্তি মিত্র', 'তীর্থঙ্কর দাস',
+  'উত্তম কুমার', 'উজ্জ্বল মুখোপাধ্যায়', 'ঊষা গাঙ্গুলি', 'বাঈজী প্রীতিলতা', 'বিশ্বজিৎ চট্টোপাধ্যায়',
+  'বিভাস চক্রবর্তী', 'বিপ্লব চৌধুরী', 'মৌসুমী ভৌমিক', 'যশ চোপড়া', 'রূপম ইসলাম',
+  'অনুপম রায়', 'অনিন্দ্য চট্টোপাধ্যায় (চন্দ্রবিন্দু)', 'উপল সেনগুপ্ত (চন্দ্রবিন্দু)', 'প্রসেনজিৎ মুখোপাধ্যায়', 'ঋদ্ধি বন্দ্যোপাধ্যায়',
+  'আনন্দ গুপ্ত', 'অরিন্দম চট্টোপাধ্যায়', 'সপ্তর্ষি মুখোপাধ্যায়', 'শান্তনু মৈত্র', 'সৌম্য চট্টোপাধ্যায়',
+  'শান্তা দেবী', 'সৌরভ চৌধুরী', 'তানভীর ফয়সাল', 'জাহিদ আকবর', 'শাহাবুদ্দিন নাগরী',
+  'গাজী মাজহারুল আনোয়ার', 'কবির বকুল', 'মোহাম্মদ রফিকুজ্জামান', 'মাসুদ করিম', 'মনিরুজ্জামান মনির',
+  'সৈয়দ শামসুল হক', 'আহমেদ ইমতিয়াজ বুলবুল', 'খন্দকার নুরুল আলম', 'আপেল মাহমুদ', 'খন্দকার ফারুক আহমেদ',
+  'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু',
+  'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ',
+  'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থো বড়ুয়া',
+  'আনিসুল ইসলাম', 'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ',
+  'প্রীতম হাসান', 'নওশাদ আলী', 'তপন চৌধুরী', 'ফিরোজ শাই', 'রাশেদুল হাসান',
+  'শুমন সুধর', 'তৌফিক-ই-ইলাহী', 'ইমতিয়াজ আহমেদ', 'নোলক', 'ইমন চৌধুরী',
+  'জাহিদ নিপু', 'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম',
+  'শাহীন আলম', 'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত',
+  'সমরেশ মজুমদার', 'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার',
+  'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 'উৎপল কুমার বসু', 'প্রতুল মুখোপাধ্যায়', 'অরিজিৎ দাস',
+  'সন্দীপ চট্টোপাধ্যায়', 'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদ',
+  'তানজিদ তুহিন', 'নাজমুল হাসান', 'ফাহিম হোসেন', 'রবিন চন্দ', 'নাসিম আলী খান',
+  'রাজিব আহমেদ', 'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
+  'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য',
+  'তানিশা মুখার্জী', 'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'অজানা গীতিকার' // Add generic ones
+]);
+export const allLyricists: string[] = Array.from(allLyricistsSet).sort((a, b) => a.localeCompare(b, 'bn'));
+
+
 /**
  * Asynchronously retrieves song information based on a search query.
  * Simulates an API call with a delay.
- * Basic search matching title or artist.
+ * Enhanced search matching title, artist, genre, album, or lyricist.
  *
  * @param query The search query.
  * @returns A promise that resolves to an array of Song objects.
@@ -483,10 +608,11 @@ export async function searchSongs(query: string): Promise<Song[]> {
   }
 
   const lowerCaseQuery = query.toLowerCase();
-  // Basic search: check if title, artist, genre, or album (in lowercase) includes the query
+  // Enhanced search: check title, artist, genre, album, or lyricist
   const results = mockSongs.filter(song =>
     song.title.toLowerCase().includes(lowerCaseQuery) ||
     song.artist.toLowerCase().includes(lowerCaseQuery) ||
+    (song.lyricist && song.lyricist.toLowerCase().includes(lowerCaseQuery)) ||
     (song.genre && song.genre.toLowerCase().includes(lowerCaseQuery)) ||
     (song.album && song.album.toLowerCase().includes(lowerCaseQuery))
   );
@@ -505,15 +631,30 @@ export async function getPopularSongs(): Promise<Song[]> {
   console.log("Fetching popular songs...");
   await new Promise(resolve => setTimeout(resolve, 200));
   // Prioritize non-Tagore, add a couple of Tagore hits
-  const nonTagore = mockSongs.filter(song => song.artist !== 'রবীন্দ্রনাথ ঠাকুর' && song.artist !== 'গাজী মাজহারুল আনোয়ার (গীতিকার)'); // Exclude the updated artist as well for variety
+  const nonTagore = mockSongs.filter(song => song.lyricist !== 'রবীন্দ্রনাথ ঠাকুর');
   const tagoreHits = mockSongs.filter(song => ['আমার সোনার বাংলা', 'যদি তোর ডাক শুনে কেউ না আসে'].includes(song.title));
-  const shahnazHit = mockSongs.find(song => song.title === 'একতারা তুই দেশের কথা'); // Find by title, assuming artist field updated
-  const popular = [...nonTagore.slice(0, 1), ...tagoreHits.slice(0,1), ...nonTagore.slice(1,2)];
-  if (shahnazHit && !popular.find(s => s.title === shahnazHit.title)) { // Add Shahnaz song if not already included
+  const shahnazHit = mockSongs.find(song => song.title === 'একতারা তুই দেশের কথা');
+
+  // Start with a few non-Tagore songs
+  let popular = nonTagore.slice(0, 2);
+
+  // Add specific Tagore hits if found
+  popular = popular.concat(tagoreHits);
+
+  // Add the specific Shahnaz Rahmatullah song if found and not already included
+  if (shahnazHit && !popular.some(s => s.title === shahnazHit.title)) {
     popular.push(shahnazHit);
   }
 
-  return popular.slice(0, 4); // Mix and limit
+  // Fill remaining spots with other non-Tagore if needed, ensuring variety
+  const needed = 4 - popular.length;
+  if (needed > 0) {
+      const moreNonTagore = nonTagore.filter(s => !popular.some(p => p.title === s.title));
+      popular = popular.concat(moreNonTagore.slice(0, needed));
+  }
+
+
+  return popular.slice(0, 4); // Limit to 4
 }
 
 /**
@@ -529,12 +670,12 @@ export async function getNewSongs(): Promise<Song[]> {
    const popularTitles = (await getPopularSongs()).map(s => s.title);
    // Get Tagore songs not in popular list
    const newTagore = mockSongs.filter(song =>
-        song.artist === 'রবীন্দ্রনাথ ঠাকুর' &&
+        song.lyricist === 'রবীন্দ্রনাথ ঠাকুর' &&
         !popularTitles.includes(song.title)
    );
     // Get other songs not in popular list
     const otherNew = mockSongs.filter(song =>
-        song.artist !== 'রবীন্দ্রনাথ ঠাকুর' &&
+        song.lyricist !== 'রবীন্দ্রনাথ ঠাকুর' &&
         !popularTitles.includes(song.title)
    );
    // Combine, shuffle slightly, and take a slice
@@ -556,11 +697,13 @@ export async function getNewSongs(): Promise<Song[]> {
     // Use Set to get unique values, then convert back to array
     const uniqueArtists = Array.from(new Set(artists));
     console.log(`Found ${uniqueArtists.length} unique artists.`);
-    // Sort alphabetically, placing Rabindranath Tagore first if present
+    // Sort alphabetically, placing 'বিভিন্ন শিল্পী' and Tagore first if present
     return uniqueArtists.sort((a, b) => {
-      if (a === 'রবীন্দ্রনাথ ঠাকুর') return -1;
+      if (a === 'রবীন্দ্রনাথ ঠাকুর') return -1; // Prioritize Tagore if 'artist' is Tagore
       if (b === 'রবীন্দ্রনাথ ঠাকুর') return 1;
-      return a.localeCompare(b, 'bn'); // Bengali locale sort
+      if (a === 'বিভিন্ন শিল্পী') return -1; // Prioritize 'বিভিন্ন শিল্পী'
+      if (b === 'বিভিন্ন শিল্পী') return 1;
+      return a.localeCompare(b, 'bn'); // Bengali locale sort for others
     });
 }
 
@@ -584,3 +727,16 @@ export async function getAllGenres(): Promise<string[]> {
     return uniqueGenres.sort((a, b) => a.localeCompare(b, 'bn'));
 }
 
+/**
+ * Retrieves a unique list of lyricists from the predefined list.
+ *
+ * @returns A promise that resolves to an array of unique lyricist names (strings).
+ */
+export async function getAllLyricists(): Promise<string[]> {
+    console.log("Fetching all lyricists...");
+    // Simulate potential processing delay if needed
+    await new Promise(resolve => setTimeout(resolve, 40));
+    console.log(`Returning ${allLyricists.length} unique lyricists.`);
+    // Return the pre-sorted list
+    return allLyricists;
+}

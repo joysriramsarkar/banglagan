@@ -7,13 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 
 
 /**
- * Creates a URL-friendly slug from a song title and artist.
+ * Creates a URL-friendly slug from a song title, artist, and optionally lyricist.
  * Preserves Bengali characters, replaces spaces with hyphens, and removes most other symbols.
+ * Includes lyricist in the slug if provided to increase uniqueness.
  * @param title The song title.
  * @param artist The song artist.
+ * @param lyricist The song lyricist (optional).
  * @returns A string suitable for use in a URL path segment.
  */
-export const createSlug = (title: string, artist: string): string => {
+export const createSlug = (title: string, artist: string, lyricist?: string): string => {
   const sanitize = (text: string): string =>
     text
       .toLowerCase()
@@ -25,13 +27,20 @@ export const createSlug = (title: string, artist: string): string => {
 
   const titleSlug = sanitize(title);
   const artistSlug = sanitize(artist);
+  const lyricistSlug = lyricist ? sanitize(lyricist) : undefined;
+
 
   // Ensure slugs are not empty
   const safeTitleSlug = titleSlug || 'untitled';
   const safeArtistSlug = artistSlug || 'unknown-artist';
+  const safeLyricistSlug = lyricistSlug || 'unknown-lyricist'; // Provide default if lyricist was passed but sanitized to empty
 
-  // Combine with a separator that's unlikely to appear in names
-  return `${safeTitleSlug}-by-${safeArtistSlug}`;
+  // Combine with separators, including lyricist if available
+  if (lyricist) {
+    return `${safeTitleSlug}-by-${safeArtistSlug}-lyricist-${safeLyricistSlug}`;
+  } else {
+    return `${safeTitleSlug}-by-${safeArtistSlug}`;
+  }
 };
 
 /**

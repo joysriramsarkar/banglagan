@@ -67,12 +67,33 @@ const SidebarProvider = React.forwardRef<
     },
     ref
   ) => {
-    const isMobile = useIsMobile()
+    const isMobile = useIsMobile() // useIsMobile now correctly handles SSR
     const [openMobile, setOpenMobile] = React.useState(false)
+    const [initialStateSet, setInitialStateSet] = React.useState(false);
 
-    // This is the internal state of the sidebar.
-    // We use openProp and setOpenProp for control from outside the component.
-    const [_open, _setOpen] = React.useState(defaultOpen)
+    // Retrieve cookie value only on the client-side
+    const getInitialOpenState = () => {
+       if (typeof window === 'undefined') {
+          return defaultOpen; // Default during SSR
+       }
+       const cookieValue = document.cookie
+          .split('; ')
+          .find((row) => row.startsWith(`${SIDEBAR_COOKIE_NAME}=`))
+          ?.split('=')[1];
+       return cookieValue ? cookieValue === 'true' : defaultOpen;
+    }
+
+    // Use state initialized from cookie or default
+    const [_open, _setOpen] = React.useState(getInitialOpenState);
+
+    React.useEffect(() => {
+      // Once the component mounts on the client, set the initial state based on cookie
+      if (!initialStateSet) {
+        _setOpen(getInitialOpenState());
+        setInitialStateSet(true);
+      }
+    }, [initialStateSet]); // Run only once after mount
+
     const open = openProp ?? _open
     const setOpen = React.useCallback(
       (value: boolean | ((value: boolean) => boolean)) => {
@@ -83,21 +104,27 @@ const SidebarProvider = React.forwardRef<
           _setOpen(openState)
         }
 
-        // This sets the cookie to keep the sidebar state.
-        document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+        // Set cookie only on the client
+        if (typeof document !== 'undefined') {
+          document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+        }
       },
       [setOpenProp, open]
     )
 
     // Helper to toggle the sidebar.
     const toggleSidebar = React.useCallback(() => {
-      return isMobile
-        ? setOpenMobile((open) => !open)
-        : setOpen((open) => !open)
+      if (isMobile) {
+        setOpenMobile((current) => !current);
+      } else {
+        setOpen((current) => !current);
+      }
     }, [isMobile, setOpen, setOpenMobile])
 
     // Adds a keyboard shortcut to toggle the sidebar.
     React.useEffect(() => {
+       if (typeof window === 'undefined') return; // Client-side only
+
       const handleKeyDown = (event: KeyboardEvent) => {
         if (
           event.key === SIDEBAR_KEYBOARD_SHORTCUT &&
@@ -110,7 +137,7 @@ const SidebarProvider = React.forwardRef<
 
       window.addEventListener("keydown", handleKeyDown)
       return () => window.removeEventListener("keydown", handleKeyDown)
-    }, [toggleSidebar])
+    }, [toggleSidebar]) // Dependency includes toggleSidebar
 
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
@@ -192,6 +219,11 @@ const Sidebar = React.forwardRef<
       )
     }
 
+    // Render placeholder or null during SSR/initial client render when isMobile is undetermined
+    if (isMobile === undefined) {
+        return null; // Or a loading state/placeholder if preferred
+    }
+
     if (isMobile) {
       return (
         <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
@@ -212,6 +244,7 @@ const Sidebar = React.forwardRef<
       )
     }
 
+    // Desktop rendering (only when isMobile is false)
     return (
       <div
         ref={ref}
@@ -580,12 +613,14 @@ const SidebarMenuButton = React.forwardRef<
     return (
       <Tooltip>
         <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
-          side="right"
-          align="center"
-          hidden={state !== "collapsed" || isMobile}
-          {...tooltip}
-        />
+        {/* Conditionally render TooltipContent based on client-side check */}
+         {state === "collapsed" && !isMobile && (
+            <TooltipContent
+            side="right"
+            align="center"
+            {...tooltip}
+            />
+        )}
       </Tooltip>
     )
   }

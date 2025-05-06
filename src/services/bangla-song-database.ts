@@ -71,6 +71,82 @@ export const mockSongs: Song[] = [ // Export the array
 আবার দেখা যদি হল, সখা, প্রাণের মাঝে আয়॥`
   },
   {
+    title: 'যদি তোর ডাক শুনে কেউ না আসে',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'স্বদেশ',
+    releaseYear: 1905,
+    lyrics: `যদি তোর ডাক শুনে কেউ না আসে তবে একলা চলো রে।
+একলা চলো, একলা চলো, একলা চলো, একলা চলো রে॥
+যদি কেউ কথা না কয়, ওরে ওরে ও অভাগা,
+যদি সবাই থাকে মুখ ফিরায়ে সবাই করে ভয়—
+তবে পরান খুলে ও তুই মুখ ফুটে তোর মনের কথা একলা বলো রে॥ ...`
+  },
+    {
+    title: 'আগুনের পরশমণি',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'পূজা',
+    releaseYear: 1914,
+    lyrics: `আগুনের পরশমণি ছোঁয়াও প্রাণে।
+এ জীবন পুণ্য করো দহন-দানে॥
+আমার এই দেহখানি তুলে ধরো, তোমার ওই দেবালয়ের প্রদীপ করো—
+নিশিদিন আলোক-শিখা জ্বলুক গানে॥ ...`
+  },
+  {
+    title: 'গ্রামছাড়া ওই রাঙা মাটির পথ',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'প্রকৃতি',
+    releaseYear: 1922,
+    lyrics: `গ্রামছাড়া ওই রাঙা মাটির পথ আমার মন ভুলায় রে।
+ওরে কার পানে মন হাত বাড়িয়ে লুটিয়ে যায় ধুলায় রে॥
+ও যে আমায় ঘরের বাহির করে, পায়ে-পায়ে পায়ে ধরে—
+(মরি হায় হায় রে)
+ও যে কেড়ে আমায় নিয়ে যায় রে যায় রে কোন্ চুলায় রে॥ ...`
+  },
+  {
+    title: 'আমার হিয়ার মাঝে লুকিয়ে ছিলে',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'প্রেম',
+    releaseYear: 1895,
+    lyrics: `আমার হিয়ার মাঝে লুকিয়ে ছিলে দেখতে আমি পাই নি।
+তোমায় দেখতে আমি পাই নি।
+বাহির-পানে চোখ মেলেছি, আমার হৃদয়-পানে চাই নি॥ ...`
+  },
+  {
+    title: 'তুমি রবে নীরবে',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'প্রেম',
+    releaseYear: 1895,
+    lyrics: `তুমি রবে নীরবে হৃদয়ে মম
+নিবিড় নিভৃত পূর্ণিমানিশীথিনী-সম॥
+মম জীবন যৌবন মম অখিল ভুবন
+তুমি ভরিবে গৌরবে নিশীথিনী-সম॥ ...`
+  },
+  {
+    title: 'ভালোবেসে, সখী, নিভৃতে যতনে',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'প্রেম',
+    releaseYear: 1888,
+    lyrics: `ভালোবেসে, সখী, নিভৃতে যতনে আমার নামটি লিখো– তোমার মনের মন্দিরে।
+আমার পরানে যে গান বাজিছে তাহার তালটি শিখো– তোমার চরণমঞ্জীরে॥ ...`
+  },
+   {
+    title: 'ফুলে ফুলে ঢ’লে ঢ’লে',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'প্রকৃতি',
+    releaseYear: 1882,
+    lyrics: `ফুলে ফুলে ঢ’লে ঢ’লে বহে কিবা মৃদু বায়,
+তটিনী হিল্লোল তুলে কল্লোলে চলিয়া যায়।
+পিক কিবা কুঞ্জে কুঞ্জে কুহু কুহু কুহু গায়,
+কি জানি কিসেরি লাগি প্রাণ করে হায়-হায়। ...`
+  },
+  {
     title: 'একতারা তুই দেশের কথা',
     artist: 'শাহ আব্দুল করিম',
     album: 'কালনীর ঢেউ',
@@ -180,10 +256,12 @@ export async function searchSongs(query: string): Promise<Song[]> {
   }
 
   const lowerCaseQuery = query.toLowerCase();
-  // Basic search: check if title or artist (in lowercase) includes the query
+  // Basic search: check if title, artist, genre, or album (in lowercase) includes the query
   const results = mockSongs.filter(song =>
     song.title.toLowerCase().includes(lowerCaseQuery) ||
-    song.artist.toLowerCase().includes(lowerCaseQuery)
+    song.artist.toLowerCase().includes(lowerCaseQuery) ||
+    (song.genre && song.genre.toLowerCase().includes(lowerCaseQuery)) ||
+    (song.album && song.album.toLowerCase().includes(lowerCaseQuery))
   );
   console.log(`Found ${results.length} results for "${query}"`);
   return results;
@@ -192,30 +270,43 @@ export async function searchSongs(query: string): Promise<Song[]> {
 /**
  * Asynchronously retrieves a list of popular songs.
  * Simulates an API call. Returns a fixed subset for demo.
+ * Filters to include mostly non-Tagore songs for variety, plus a few Tagore hits.
  *
  * @returns A promise that resolves to an array of Song objects.
  */
 export async function getPopularSongs(): Promise<Song[]> {
   console.log("Fetching popular songs...");
-  // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 200));
-  // Return first 4 songs as "popular" for demo
-  return mockSongs.slice(0, 4);
+  // Prioritize non-Tagore, add a couple of Tagore hits
+  const nonTagore = mockSongs.filter(song => song.artist !== 'রবীন্দ্রনাথ ঠাকুর');
+  const tagoreHits = mockSongs.filter(song => ['আমার সোনার বাংলা', 'যদি তোর ডাক শুনে কেউ না আসে'].includes(song.title));
+  return [...nonTagore.slice(0, 2), ...tagoreHits, ...nonTagore.slice(2,3)].slice(0, 4); // Mix and limit
 }
 
 /**
  * Asynchronously retrieves a list of newly added songs.
  * Simulates an API call. Returns a different fixed subset for demo.
+ * Filters to show mostly Tagore songs here.
  *
  * @returns A promise that resolves to an array of Song objects.
  */
 export async function getNewSongs(): Promise<Song[]> {
    console.log("Fetching new songs...");
-   // Simulate network delay
    await new Promise(resolve => setTimeout(resolve, 250));
-   // Return next songs as "new" for demo
-   return mockSongs.slice(4, mockSongs.length);
+   // Prioritize Tagore songs not in popular list
+   const popularTitles = (await getPopularSongs()).map(s => s.title);
+   const newTagore = mockSongs.filter(song =>
+        song.artist === 'রবীন্দ্রনাথ ঠাকুর' &&
+        !popularTitles.includes(song.title)
+   );
+    const otherNew = mockSongs.filter(song =>
+        song.artist !== 'রবীন্দ্রনাথ ঠাকুর' &&
+        !popularTitles.includes(song.title)
+   );
+   // Combine and take a slice
+   return [...newTagore, ...otherNew].slice(0, 6); // Show more Tagore here
 }
+
 
 /**
  * Extracts and returns a unique list of artists from the mock database.
@@ -230,7 +321,12 @@ export async function getNewSongs(): Promise<Song[]> {
     // Use Set to get unique values, then convert back to array
     const uniqueArtists = Array.from(new Set(artists));
     console.log(`Found ${uniqueArtists.length} unique artists.`);
-    return uniqueArtists;
+    // Sort alphabetically, placing Rabindranath Tagore first if present
+    return uniqueArtists.sort((a, b) => {
+      if (a === 'রবীন্দ্রনাথ ঠাকুর') return -1;
+      if (b === 'রবীন্দ্রনাথ ঠাকুর') return 1;
+      return a.localeCompare(b, 'bn'); // Bengali locale sort
+    });
 }
 
 /**
@@ -249,5 +345,6 @@ export async function getAllGenres(): Promise<string[]> {
     // Use Set for uniqueness
     const uniqueGenres = Array.from(new Set(genres));
     console.log(`Found ${uniqueGenres.length} unique genres.`);
-    return uniqueGenres;
+    // Sort alphabetically using Bengali locale
+    return uniqueGenres.sort((a, b) => a.localeCompare(b, 'bn'));
 }

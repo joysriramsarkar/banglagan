@@ -1,20 +1,19 @@
-import Link from 'next/link'; // Import Link
+import Link from 'next/link';
 import SongList from '@/components/song-list';
 import SongSuggestions from '@/components/song-suggestions';
-import { getPopularSongs, getNewSongs, getAllArtists, getAllGenres, getAllLyricists } from '@/services/bangla-song-database';
+import { getPopularSongs, getNewSongs } from '@/services/bangla-song-database';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Users, Library, Feather } from 'lucide-react'; // Import icons
+import { Button } from '@/components/ui/button'; // Import Button
+import { Users, Library, Feather, ListMusic } from 'lucide-react'; // Import icons including ListMusic
 
 export default async function Home() {
-  // Fetch popular songs, new songs, artists, genres, and lyricists concurrently
-  const [popularSongs, newSongs, artists, genres, lyricists] = await Promise.all([
+  // Fetch popular songs and new songs concurrently
+  const [popularSongs, newSongs] = await Promise.all([
     getPopularSongs(),
     getNewSongs(),
-    getAllArtists(),
-    getAllGenres(),
-    getAllLyricists(), // Fetch lyricists
+    // Removed fetching all artists, genres, lyricists here
   ]);
 
   return (
@@ -32,6 +31,45 @@ export default async function Home() {
 
       <Separator />
 
+       {/* Explore Section */}
+       <section>
+           <Card>
+             <CardHeader>
+               <CardTitle className="text-primary">আরও অন্বেষণ করুন</CardTitle>
+             </CardHeader>
+             <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+               <Button variant="outline" asChild className="justify-start text-left h-auto py-3">
+                 <Link href="/songs">
+                   <ListMusic className="mr-2 h-4 w-4" />
+                   <span>সকল গান দেখুন</span>
+                 </Link>
+               </Button>
+               <Button variant="outline" asChild className="justify-start text-left h-auto py-3">
+                 <Link href="/artists">
+                   <Users className="mr-2 h-4 w-4" />
+                   <span>সকল শিল্পী দেখুন</span>
+                 </Link>
+               </Button>
+               <Button variant="outline" asChild className="justify-start text-left h-auto py-3">
+                 <Link href="/genres">
+                    <Library className="mr-2 h-4 w-4" />
+                   <span>সকল ধরণ দেখুন</span>
+                 </Link>
+               </Button>
+               <Button variant="outline" asChild className="justify-start text-left h-auto py-3">
+                 <Link href="/lyricists">
+                   <Feather className="mr-2 h-4 w-4" />
+                   <span>সকল গীতিকার দেখুন</span>
+                 </Link>
+               </Button>
+             </CardContent>
+           </Card>
+         </section>
+
+
+      <Separator />
+
+      {/* Popular and New Songs Section */}
       <section>
         <Tabs defaultValue="popular" className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
@@ -47,92 +85,8 @@ export default async function Home() {
         </Tabs>
       </section>
 
-      <Separator />
+      {/* Removed detailed Artists, Genres, and Lyricists sections */}
 
-       {/* Artists Section */}
-       <section>
-         <Card>
-           <CardHeader>
-             <CardTitle className="flex items-center gap-2 text-primary">
-                <Users className="w-5 h-5" />
-               <span>জনপ্রিয় শিল্পী</span>
-             </CardTitle>
-           </CardHeader>
-           <CardContent>
-             <div className="flex flex-wrap gap-2">
-               {artists.map((artist) => (
-                 // Link to search results for the artist
-                 <Link
-                   key={artist}
-                   href={`/search?q=${encodeURIComponent(artist)}`}
-                   passHref
-                   className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline" // Added no-underline
-                 >
-                   {artist}
-                 </Link>
-               ))}
-             </div>
-           </CardContent>
-         </Card>
-       </section>
-
-      <Separator />
-
-       {/* Genres Section */}
-       <section>
-         <Card>
-           <CardHeader>
-             <CardTitle className="flex items-center gap-2 text-primary">
-                <Library className="w-5 h-5" />
-               <span>গানের ধরণ</span>
-             </CardTitle>
-           </CardHeader>
-           <CardContent>
-             <div className="flex flex-wrap gap-2">
-               {genres.map((genre) => (
-                  // Link to search results for the genre
-                 <Link
-                   key={genre}
-                   href={`/search?q=${encodeURIComponent(genre)}`}
-                   passHref
-                   className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline" // Added no-underline
-                 >
-                   {genre}
-                 </Link>
-               ))}
-             </div>
-           </CardContent>
-         </Card>
-       </section>
-
-       <Separator />
-
-       {/* Lyricists Section */}
-       <section>
-         <Card>
-           <CardHeader>
-             <CardTitle className="flex items-center gap-2 text-primary">
-                <Feather className="w-5 h-5" /> {/* Feather icon for lyricist */}
-               <span>গীতিকার</span>
-             </CardTitle>
-           </CardHeader>
-           <CardContent>
-             <div className="flex flex-wrap gap-2">
-               {lyricists.map((lyricist) => (
-                 // Link to search results for the lyricist
-                 <Link
-                   key={lyricist}
-                   href={`/search?q=${encodeURIComponent(lyricist)}`}
-                   passHref
-                   className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline"
-                 >
-                   {lyricist}
-                 </Link>
-               ))}
-             </div>
-           </CardContent>
-         </Card>
-       </section>
     </div>
   );
 }

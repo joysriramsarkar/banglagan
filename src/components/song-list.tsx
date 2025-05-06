@@ -22,11 +22,13 @@ export default function SongList({ songs, title }: SongListProps) {
       {title && <h2 className="text-2xl font-semibold mb-4 text-primary">{title}</h2>}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {songs.map((song, index) => {
-          // Use createSlug for a more unique key, falling back to index if slug parts are missing
-          const key = createSlug(song.title, song.artist, song.lyricist) || `${song.title}-${song.artist}-${index}`;
+          // Ensure unique key by combining slug with index
+          const baseSlug = createSlug(song.title, song.artist, song.lyricist);
+          const key = `${baseSlug || 'song'}-${index}`;
           return <SongCard key={key} song={song} />;
         })}
       </div>
     </div>
   );
 }
+

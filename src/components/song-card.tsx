@@ -11,13 +11,14 @@ interface SongCardProps {
 
 
 export default function SongCard({ song }: SongCardProps) {
-  // Clean properties before use
-  const cleanTitle = cleanString(song.title) || 'শিরোনামহীন';
-  const cleanArtist = cleanString(song.artist) || 'অজানা শিল্পী';
-  const cleanLyricist = cleanString(song.lyricist);
+  // Clean properties before use for display and slug generation
+  const displayTitle = cleanString(song.title) || 'শিরোনামহীন';
+  const displayArtist = cleanString(song.artist) || 'অজানা শিল্পী';
+  const displayLyricist = cleanString(song.lyricist); // cleanString handles undefined
 
-  // Pass cleaned lyricist to createSlug if available
-  const slug = createSlug(cleanTitle, cleanArtist, cleanLyricist);
+  // Generate slug using cleaned properties
+  const slug = createSlug(displayTitle, displayArtist, displayLyricist);
+
 
   return (
     <Link href={`/song/${encodeURIComponent(slug)}`} passHref legacyBehavior>
@@ -26,18 +27,18 @@ export default function SongCard({ song }: SongCardProps) {
           <CardHeader className="pb-2">
              <div className="flex items-center gap-3 mb-1">
                 <Music className="w-5 h-5 text-primary flex-shrink-0" />
-                <CardTitle className="text-lg leading-tight">{cleanTitle}</CardTitle>
+                <CardTitle className="text-lg leading-tight">{displayTitle}</CardTitle>
              </div>
              <CardDescription className="text-sm text-muted-foreground space-y-0.5 pl-8"> {/* Indent description */}
                 <div className="flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 flex-shrink-0" />
-                    <span>{cleanArtist}</span>
+                    <span>{displayArtist}</span>
                 </div>
                 {/* Conditionally display lyricist if available and not generic */}
-                {cleanLyricist && cleanLyricist !== 'সংগৃহীত' && cleanLyricist !== 'অজানা গীতিকার' && (
+                {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা গীতিকার' && (
                     <div className="flex items-center gap-1.5">
                         <Feather className="w-3.5 h-3.5 flex-shrink-0" />
-                        <span>{cleanLyricist}</span>
+                        <span>{displayLyricist}</span>
                     </div>
                 )}
              </CardDescription>
@@ -48,4 +49,3 @@ export default function SongCard({ song }: SongCardProps) {
     </Link>
   );
 }
-

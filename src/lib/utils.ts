@@ -7,6 +7,28 @@ export function cn(...inputs: ClassValue[]) {
 
 
 /**
+ * Cleans a string by removing specific problematic characters like soft hyphens,
+ * multiple spaces, and leading/trailing hyphens.
+ * @param str The string to clean.
+ * @returns The cleaned string.
+ */
+export function cleanString(str: string | undefined | null): string | undefined {
+  if (typeof str !== 'string') {
+    return undefined; // Return undefined for null or non-string inputs
+  }
+  // Remove soft hyphens (U+00AD) and other problematic invisible characters
+  // Also trim whitespace and replace multiple hyphens/spaces with a single hyphen
+  return str
+    .replace(/\u00AD/g, '') // Remove soft hyphens
+    .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces and similar
+    .replace(/[’']/g, '') // Remove apostrophes and single quotes
+    .replace(/[,\.]/g, '') // Remove commas and periods that might break slugs
+    .trim() // Trim leading/trailing whitespace
+    .replace(/\s+/g, '-'); // Replace spaces with hyphens
+}
+
+
+/**
  * Creates a URL-friendly slug from a song title, artist, and optionally lyricist.
  * Preserves Bengali characters, replaces spaces with hyphens, and removes most other symbols.
  * Includes lyricist in the slug if provided and non-empty to increase uniqueness.
@@ -15,20 +37,21 @@ export function cn(...inputs: ClassValue[]) {
  * @param lyricist The song lyricist (optional).
  * @returns A string suitable for use in a URL path segment.
  */
-export const createSlug = (title: string, artist: string, lyricist?: string): string => {
-  const sanitize = (text: string): string =>
-    text
+export const createSlug = (title?: string, artist?: string, lyricist?: string): string => {
+  const sanitize = (text: string | undefined): string => {
+    if (!text) return '';
+    return cleanString(text)! // Use the enhanced cleanString
       .toLowerCase()
-      // Keep Unicode letters (\p{L}), numbers (\p{N}), spaces, and hyphens. Remove others.
-      .replace(/[^\p{L}\p{N}\s-]/gu, '')
-      // Replace multiple spaces/hyphens with a single hyphen
-      .trim()
-      .replace(/[\s-]+/g, '-');
+      // Keep Unicode letters (\p{L}), numbers (\p{N}), and hyphens. Remove others.
+      .replace(/[^\p{L}\p{N}-]/gu, '')
+      // Replace multiple hyphens with a single hyphen (already handled by cleanString, but good to have defense-in-depth)
+      .replace(/-+/g, '-')
+      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    };
 
   const titleSlug = sanitize(title);
   const artistSlug = sanitize(artist);
-  // Sanitize lyricist only if it's a non-empty string
-  const lyricistSlug = (lyricist && typeof lyricist === 'string' && lyricist.trim() !== '') ? sanitize(lyricist) : '';
+  const lyricistSlug = sanitize(lyricist);
 
 
   // Ensure slugs are not empty
@@ -48,7 +71,7 @@ export const createSlug = (title: string, artist: string, lyricist?: string): st
  * @param num The number or string to convert.
  * @returns A string with Bengali numerals. Returns an empty string if input is undefined or null.
  */
-export const toBengaliNumerals = (num: number | string | undefined): string => {
+export const toBengaliNumerals = (num: number | string | undefined | null): string => {
   if (num === undefined || num === null) return '';
   const numStr = String(num);
   const bengaliDigits: { [key: string]: string } = {
@@ -65,16 +88,3 @@ export const toBengaliNumerals = (num: number | string | undefined): string => {
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
-
-/**
- * Cleans a string by removing specific problematic characters like soft hyphens.
- * @param str The string to clean.
- * @returns The cleaned string.
- */
-export function cleanString(str: string | undefined): string | undefined {
-  if (typeof str !== 'string') {
-    return str;
-  }
-  // Remove soft hyphens (U+00AD) and other problematic invisible characters
-  return str.replace(/\u00AD/g, '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-}

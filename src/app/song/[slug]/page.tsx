@@ -1,49 +1,55 @@
 // app/song/[slug]/page.tsx
-import { mockSongs, type Song } from '@/services/bangla-song-database'; // Adjust path if needed and import mockSongs
+import { mockSongs, type Song } from '@/services/bangla-song-database';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather } from 'lucide-react'; // Added ListMusic, Feather icons
-import { createSlug, toBengaliNumerals, cleanString } from '@/lib/utils'; // Import converters and cleanString
-import { Separator } from '@/components/ui/separator'; // Import Separator
+import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather } from 'lucide-react';
+import { createSlug, toBengaliNumerals, cleanString } from '@/lib/utils';
+import { Separator } from '@/components/ui/separator';
 
-// Updated function to find the song directly from the mock list
 async function getSongBySlug(slug: string): Promise<Song | undefined> {
   const decodedSlug = decodeURIComponent(slug);
+  console.log(`getSongBySlug: received slug "${slug}", decoded: "${decodedSlug}"`);
 
   // Attempt to find a match by generating slugs for each song in mockSongs
   // and comparing with the decodedSlug.
-  // This approach is more robust to slight variations in how slugs might be generated or stored.
   const matchedSong = mockSongs.find(song => {
-    // Clean properties before generating slugs for comparison
-    const cleanTitle = cleanString(song.title) || 'untitled';
-    const cleanArtist = cleanString(song.artist) || 'unknown-artist';
-    const cleanLyricist = cleanString(song.lyricist); // Can be undefined
+    // IMPORTANT: Use the exact same cleaning and slug generation logic as used for link creation
+    const songTitleForSlug = cleanString(song.title);
+    const songArtistForSlug = cleanString(song.artist);
+    const songLyricistForSlug = cleanString(song.lyricist); // Can be undefined
 
-    // Try matching with lyricist if present in song data
-    const slugWithLyricist = createSlug(cleanTitle, cleanArtist, cleanLyricist);
-    if (slugWithLyricist === decodedSlug) {
-      return true;
-    }
+    // Generate slug using the same method as in SongCard/SongList
+    const currentSongSlug = createSlug(songTitleForSlug, songArtistForSlug, songLyricistForSlug);
+    
+    // console.log(`Comparing decodedSlug "${decodedSlug}" with generated slug "${currentSongSlug}" for song "${song.title}"`);
 
-    // Try matching without lyricist (in case the slug was generated without it or lyricist is undefined/empty)
-    const slugWithoutLyricist = createSlug(cleanTitle, cleanArtist, undefined);
-    if (slugWithoutLyricist === decodedSlug) {
+    if (currentSongSlug === decodedSlug) {
       return true;
     }
     
-    // Fallback for very old slugs that might have inconsistent formatting
-    // This part can be removed if slugs are consistently generated with the new createSlug logic
-    const titleSlugPart = sanitizeForFallback(cleanTitle);
-    const artistSlugPart = sanitizeForFallback(cleanArtist);
-    if (decodedSlug.includes(titleSlugPart) && decodedSlug.includes(artistSlugPart)) {
-      // Further check if lyricist part is also there or not needed
-      if (cleanLyricist) {
-        const lyricistSlugPart = sanitizeForFallback(cleanLyricist);
-        if (decodedSlug.includes(lyricistSlugPart)) return true;
-      } else {
-         // If no lyricist in song data, and slug also doesn't seem to have one
-         if (!decodedSlug.includes('-lyricist-')) return true;
-      }
+    // Fallback for cases where lyricist might be part of the slug but not consistently in the data
+    // or vice-versa. This attempts to match the most common patterns.
+    const slugWithoutLyricistPart = createSlug(songTitleForSlug, songArtistForSlug, undefined);
+     if (slugWithoutLyricistPart === decodedSlug) {
+       console.log(`Fallback match (no lyricist) for "${decodedSlug}" with song "${song.title}"`);
+       return true;
+     }
+
+    // A more direct comparison for simple cases, if the above fails
+    // This is less robust but can catch simple title-artist matches
+    const simpleExpectedSlug = `${cleanString(song.title)?.toLowerCase()}-by-${cleanString(song.artist)?.toLowerCase()}`;
+    if (decodedSlug.startsWith(simpleExpectedSlug)) {
+        // Check if lyricist part is also consistent if present
+        if (song.lyricist) {
+            const lyricistPart = `-lyricist-${cleanString(song.lyricist)?.toLowerCase()}`;
+            if (decodedSlug === `${simpleExpectedSlug}${lyricistPart}`) {
+                 console.log(`Fallback simple match (with lyricist) for "${decodedSlug}" with song "${song.title}"`);
+                return true;
+            }
+        } else if (decodedSlug === simpleExpectedSlug) { // No lyricist in data and slug
+             console.log(`Fallback simple match (no lyricist) for "${decodedSlug}" with song "${song.title}"`);
+            return true;
+        }
     }
 
 
@@ -52,13 +58,13 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
 
   if (!matchedSong) {
      console.warn(`No song found for decoded slug: "${decodedSlug}". Original slug: "${slug}"`);
+     // Optional: Log a few generated slugs from mockSongs to help debug
+     // For example, log the first 5 generated slugs:
+     // mockSongs.slice(0, 5).forEach(s => {
+     //   console.log(`Sample generated slug: ${createSlug(cleanString(s.title), cleanString(s.artist), cleanString(s.lyricist))}`);
+     // });
   }
   return matchedSong;
-}
-
-// Helper for fallback matching logic - simplified sanitization
-function sanitizeForFallback(text: string): string {
-  return text.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/[\s-]+/g, '-');
 }
 
 
@@ -76,13 +82,13 @@ export default async function SongPage({ params }: SongPageProps) {
     notFound(); // Show 404 if song not found
   }
 
-  // Clean song properties before display
-  const displayTitle = cleanString(song.title) || 'শিরোনাম উপলব্ধ নেই';
-  const displayArtist = cleanString(song.artist) || 'শিল্পী উপলব্ধ নেই';
-  const displayLyricist = cleanString(song.lyricist);
-  const displayAlbum = cleanString(song.album);
-  const displayGenre = cleanString(song.genre);
-  const displayLyrics = cleanString(song.lyrics);
+  // Clean song properties before display, ensuring undefined is handled gracefully
+  const displayTitle = song.title || 'শিরোনাম উপলব্ধ নেই';
+  const displayArtist = song.artist || 'শিল্পী উপলব্ধ নেই';
+  const displayLyricist = song.lyricist; // cleanString handles undefined
+  const displayAlbum = song.album;
+  const displayGenre = song.genre;
+  const displayLyrics = song.lyrics;
 
 
   return (
@@ -138,8 +144,8 @@ export default async function SongPage({ params }: SongPageProps) {
         </CardContent>
 
           {/* Lyrics Section */}
-          {displayLyrics && displayLyrics !== 'গানের কথা এখানে যোগ করা হবে...' && displayLyrics.trim() !== '' && (
-            <Card className="overflow-hidden shadow-lg bg-card">
+          {displayLyrics && displayLyrics !== 'গানের কথা এখানে যোগ করা হবে...' && displayLyrics.trim() !== '' && displayLyrics !== 'গানের কথা পাওয়া যায়নি' && (
+            <Card className="overflow-hidden shadow-lg bg-card mt-6">
               <CardHeader className="bg-secondary/10 p-6">
                 <CardTitle className="text-2xl font-semibold text-primary/90 flex items-center gap-2">
                   <ListMusic className="w-6 h-6 text-primary" />
@@ -162,13 +168,6 @@ export default async function SongPage({ params }: SongPageProps) {
 
 // Removed generateStaticParams to speed up build times.
 // Pages will be dynamically rendered.
-// export async function generateStaticParams() {
-//   // Pre-render paths for all songs in the mock database
-//   return mockSongs.map((song) => ({
-//     // Ensure slugs are URL-encoded here as Next.js expects raw segment values
-//     slug: encodeURIComponent(createSlug(cleanString(song.title)!, cleanString(song.artist)!, cleanString(song.lyricist))),
-//   }));
-// }
 
 export const dynamic = 'auto'; // Default, can be 'force-dynamic' if needed or 'error'
 export const revalidate = 3600; // Revalidate hourly, or adjust as needed
@@ -184,14 +183,14 @@ export async function generateMetadata({ params }: SongPageProps) {
     };
   }
 
-  const displayTitle = cleanString(song.title) || 'শিরোনামহীন গান';
-  const displayArtist = cleanString(song.artist) || 'অজানা শিল্পী';
+  const metaTitle = song.title || 'শিরোনামহীন গান';
+  const metaArtist = song.artist || 'অজানা শিল্পী';
 
   return {
-    title: `${displayTitle} - ${displayArtist} | বাংলা গান`,
-    description: `${displayTitle} গানের তথ্য ও লিরিক্স (যদি থাকে) ব্রাউজ করুন। শিল্পী: ${displayArtist}।`,
+    title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
+    description: `${metaTitle} গানের তথ্য ও লিরিক্স (যদি থাকে) ব্রাউজ করুন। শিল্পী: ${metaArtist}।`,
     openGraph: {
-        title: `${displayTitle} - ${displayArtist} | বাংলা গান`,
+        title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
         description: `গানের বিবরণ এবং লিরিক্স (যদি উপলব্ধ থাকে)।`,
         // images: [ ... ] // Optionally add an image URL for the song
     },

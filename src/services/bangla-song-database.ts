@@ -1,5 +1,6 @@
 
 
+
 /**
  * Represents a song with title, artist, album, genre, release year, lyricist, and lyrics.
  */
@@ -643,23 +644,6 @@ export const mockSongs: Song[] = [ // Export the array
 জীবন করেনি তাকে ক্ষমা হায়।`
   },
   {
-    title: 'নতুন গান উদাহরণ', // More descriptive placeholder title
-    artist: 'নতুন শিল্পী উদাহরণ', // More descriptive placeholder artist
-    lyricist: 'অজানা গীতিকার',
-    album: 'অজানা অ্যালবাম',
-    genre: 'পরীক্ষামূলক',
-    releaseYear: 2024,
-    lyrics: `নতুন দিনের নতুন গান,
-উড়ছে পাখি গাইছে তান।
-সূর্য মামা দিল উঁকি,
-মনটা আমার খুশিতে ঝুঁকি।
-
-সবুজ ঘাসে শিশির কণা,
-ফুলে ফুলে মৌমাছি রণা।
-নদীর জলে ঢেউয়ের খেলা,
-কাটছে বেশ আনন্দ বেলা।`
-  },
-  {
     title: 'ধনধান্য পুষ্পভরা',
     artist: 'বিভিন্ন শিল্পী',
     lyricist: 'দ্বিজেন্দ্রলাল রায়',
@@ -708,7 +692,186 @@ export const mockSongs: Song[] = [ // Export the array
 তবে কেমন হতো তুমি বলতো?
 যদি পৃথিবীটা স্বপ্নের দেশ হয়
 তবে কেমন হতো তুমি বলতো?`
-  }
+  },
+    // Placeholder songs for Lyricists
+  { title: 'সেনের গীতি', artist: 'অজানা শিল্পী', lyricist: 'রজনীকান্ত সেন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'ভক্তিমূলক' },
+  { title: 'প্রসাদের পদ', artist: 'অজানা শিল্পী', lyricist: 'অতুলপ্রসাদ সেন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'ভক্তিমূলক' },
+  { title: 'হিমাংশুর গান', artist: 'অজানা শিল্পী', lyricist: 'হিমাংশু দত্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মুকুন্দ দাসের জাগরণী', artist: 'অজানা শিল্পী', lyricist: 'মুকুন্দ দাস', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'স্বদেশী' },
+  { title: 'গগন হরকরার ডাক', artist: 'অজানা শিল্পী', lyricist: 'গগন হরকরা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'বাউল' },
+  { title: 'কমলাকান্তের শ্যামা সঙ্গীত', artist: 'অজানা শিল্পী', lyricist: 'কমলাকান্ত ভট্টাচার্য', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'শ্যামা সঙ্গীত' },
+  { title: 'নিধুবাবুর টপ্পা', artist: 'অজানা শিল্পী', lyricist: 'নিধুবাবু (রামনিধি গুপ্ত)', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'টপ্পা' },
+  { title: 'কালি মির্জার গজল', artist: 'অজানা শিল্পী', lyricist: 'কালি মির্জা (কাজী জলিল)', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'গজল' },
+  { title: 'রাধারমণের ধামাইল', artist: 'অজানা শিল্পী', lyricist: 'রাধারমণ দত্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'লোকগীতি' },
+  { title: 'দাশরথি রায়ের পাঁচালি', artist: 'অজানা শিল্পী', lyricist: 'দাশরথি রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'পাঁচালি' },
+  { title: 'ভোলা ময়রা কবিগান', artist: 'অজানা শিল্পী', lyricist: 'ভোলা ময়রা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'কবিগান' },
+  { title: 'অ্যান্থনি ফিরিঙ্গির গান', artist: 'অজানা শিল্পী', lyricist: 'অ্যান্থনি ফিরিঙ্গি', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'কবিগান' },
+  { title: 'কবি ভোলানাথের গান', artist: 'অজানা শিল্পী', lyricist: 'কবি ভোলানাথ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'কবিগান' },
+  { title: 'কবি নীলকণ্ঠের গান', artist: 'অজানা শিল্পী', lyricist: 'কবি নীলকণ্ঠ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'কবিগান' },
+  { title: 'কবি ভবানীচরণের গান', artist: 'অজানা শিল্পী', lyricist: 'কবি ভবানীচরণ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'কবিগান' },
+  { title: 'কবি হরু ঠাকুরের গান', artist: 'অজানা শিল্পী', lyricist: 'কবি হরু ঠাকুর', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'কবিগান' },
+  { title: 'যতীন্দ্রমোহনের কবিতা গান', artist: 'অজানা শিল্পী', lyricist: 'কবি যতীন্দ্রমোহন বাগচী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শ্যামল গুপ্তের গান', artist: 'অজানা শিল্পী', lyricist: 'শ্যামল গুপ্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'প্রণব রায়ের আধুনিক', artist: 'অজানা শিল্পী', lyricist: 'প্রণব রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সুধীন দাশগুপ্তের সুর ও কথা', artist: 'অজানা শিল্পী', lyricist: 'সুধীন দাশগুপ্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'পুলক বন্দ্যোপাধ্যায়ের আধুনিক গান', artist: 'অজানা শিল্পী', lyricist: 'পুলক বন্দ্যোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শৈলেন্দ্রের বাংলা গান', artist: 'অজানা শিল্পী', lyricist: 'শৈলেন্দ্র (শৈলেন রায়)', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সলিল চৌধুরীর গণসঙ্গীত', artist: 'অজানা শিল্পী', lyricist: 'সলিল চৌধুরী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'গণসঙ্গীত' },
+  { title: 'প্রেমেন্দ্র মিত্রের গান', artist: 'অজানা শিল্পী', lyricist: 'প্রেমেন্দ্র মিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সুকুমার রায়ের ছড়া গান', artist: 'অজানা শিল্পী', lyricist: 'সুকুমার রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'শিশুতোষ' },
+  { title: 'কাজী মোতাহার হোসেনের গান', artist: 'অজানা শিল্পী', lyricist: 'কাজী মোতাহার হোসেন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শিবদাস বন্দ্যোপাধ্যায়ের আধুনিক', artist: 'অজানা শিল্পী', lyricist: 'শিবদাস বন্দ্যোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মুকুল দত্তের আধুনিক গীতি', artist: 'অজানা শিল্পী', lyricist: 'মুকুল দত্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'অমিতাভ ভট্টাচার্যের গান', artist: 'অজানা শিল্পী', lyricist: 'অমিতাভ ভট্টাচার্য', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'অঞ্জন চৌধুরীর চলচ্চিত্রের গান', artist: 'অজানা শিল্পী', lyricist: 'অঞ্জন চৌধুরী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'চলচ্চিত্রের গান' },
+  { title: 'অনুপম দত্তের সঙ্গীত', artist: 'অজানা শিল্পী', lyricist: 'অনুপম দত্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'আসাদুজ্জামান নূরের গান', artist: 'অজানা শিল্পী', lyricist: 'আসাদুজ্জামান নূর', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ভূপেন হাজারিকার বাংলা গান', artist: 'অজানা শিল্পী', lyricist: 'ভূপেন হাজারিকা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'লোকগান/আধুনিক' },
+  { title: 'চন্দন ঘাটকের গান', artist: 'অজানা শিল্পী', lyricist: 'চন্দন ঘাটক', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'চিত্তরঞ্জন দাসের স্বদেশী গান', artist: 'অজানা শিল্পী', lyricist: 'চিত্তরঞ্জন দাস', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'স্বদেশী' },
+  { title: 'গৌতম সুস্মিতের আধুনিক', artist: 'অজানা শিল্পী', lyricist: 'গৌতম সুস্মিত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'গিরিশ ঘোষের নাটকের গান', artist: 'অজানা শিল্পী', lyricist: 'গিরিশচন্দ্র ঘোষ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'নাটকের গান' },
+  { title: 'হেমাঙ্গ বিশ্বাসের গণসঙ্গীত', artist: 'অজানা শিল্পী', lyricist: 'হেমাঙ্গ বিশ্বাস', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'গণসঙ্গীত' },
+  { title: 'ইন্দ্রনাথ সেনের গান', artist: 'অজানা শিল্পী', lyricist: 'ইন্দ্রনাথ সেন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'জয় গোস্বামীর কবিতা গীতি', artist: 'অজানা শিল্পী', lyricist: 'জয় গোস্বামী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'কবীর সুমনের জীবনমুখী', artist: 'কবীর সুমন', lyricist: 'কবীর সুমন', lyrics: 'তোমার দেখা নাই রে...', genre: 'জীবনমুখী' },
+  { title: 'কুমার জ্ঞানেন্দ্রর গান', artist: 'অজানা শিল্পী', lyricist: 'কুমার জ্ঞানেন্দ্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'লালন ফকিরের বাউল', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', lyrics: 'খাঁচার ভিতর অচিন পাখি...', genre: 'বাউল' },
+  { title: 'মনোজ মুর্শিদের গান', artist: 'অজানা শিল্পী', lyricist: 'মনোজ মুর্শিদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মাইকেল মধুসূদনের গান', artist: 'অজানা শিল্পী', lyricist: 'মাইকেল মধুসূদন দত্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'দেশাত্মবোধক' },
+  { title: 'মোহিনের ঘোড়াগুলির গান', artist: 'মোহিনের ঘোড়াগুলি', lyricist: 'গৌতম চট্টোপাধ্যায় (মোহিনের ঘোড়াগুলি)', lyrics: 'পৃথিবীটা নাকি ছোট হতে হতে...', genre: 'বাংলা রক' },
+  { title: 'নচিকেতার জীবনমুখী গান', artist: 'নচিকেতা', lyricist: 'নচিকেতা', lyrics: 'নীলাঞ্জনা...', genre: 'জীবনমুখী' },
+  { title: 'নিরেন্দ্রনাথ চক্রবর্তীর গান', artist: 'অজানা শিল্পী', lyricist: 'নিরেন্দ্রনাথ চক্রবর্তী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'নির্মলেন্দু গুণের গান', artist: 'অজানা শিল্পী', lyricist: 'নির্মলেন্দু গুণ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'পবিত্র সরকারের গান', artist: 'অজানা শিল্পী', lyricist: 'পবিত্র সরকার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'প্রীতিভূষণ ভট্টাচার্যের গান', artist: 'অজানা শিল্পী', lyricist: 'প্রীতিভূষণ ভট্টাচার্য', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'প্রবীর মজুমদারের গান', artist: 'অজানা শিল্পী', lyricist: 'প্রবীর মজুমদার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'প্রিয় চট্টোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'প্রিয় চট্টোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ফকির আলমগীরের গণসঙ্গীত', artist: 'ফকির আলমগীর', lyricist: 'ফকির আলমগীর', lyrics: 'ও সখিনা গেছস কিনা...', genre: 'গণসঙ্গীত' },
+  { title: 'বুদ্ধদেব দাশগুপ্তের গান', artist: 'অজানা শিল্পী', lyricist: 'বুদ্ধদেব দাশগুপ্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'বেলাল চৌধুরীর গান', artist: 'অজানা শিল্পী', lyricist: 'বেলাল চৌধুরী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মণীন্দ্র গুপ্তের গান', artist: 'অজানা শিল্পী', lyricist: 'মণীন্দ্র গুপ্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মন্টু মুখোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'মন্টু মুখোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মলয় গাঙ্গুলির গান', artist: 'অজানা শিল্পী', lyricist: 'মলয় গাঙ্গুলি', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রবি চট্টোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'রবি চট্টোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রীতুপর্ণ ঘোষের গান', artist: 'অজানা শিল্পী', lyricist: 'ঋতুপর্ণ ঘোষ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শিবরাম চক্রবর্তীর গান', artist: 'অজানা শিল্পী', lyricist: 'শিবরাম চক্রবর্তী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'রম্যগীতি' },
+  { title: 'শ্যামল মিত্রের গান', artist: 'শ্যামল মিত্র', lyricist: 'শ্যামল মিত্র', lyrics: 'ঐ আঁকা বাঁকা যে পথ...', genre: 'আধুনিক' },
+  { title: 'শ্রীজাতর কবিতা গান', artist: 'অজানা শিল্পী', lyricist: 'শ্রীজাত', lyrics: 'উড়োজাহাজের জানালায়...', genre: 'আধুনিক' },
+  { title: 'সুদীপ্ত মুখোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'সুদীপ্ত মুখোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সুধীরলাল চক্রবর্তীর গান', artist: 'অজানা শিল্পী', lyricist: 'সুধীরলাল চক্রবর্তী', lyrics: 'মধুর আমার মায়ের হাসি...', genre: 'আধুনিক' },
+  { title: 'সুনীল গঙ্গোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'সুনীল গঙ্গোপাধ্যায়', lyrics: 'হঠাৎ নীরার জন্য...', genre: 'আধুনিক' },
+  { title: 'স্বপন চক্রবর্তীর গান', artist: 'অজানা শিল্পী', lyricist: 'স্বপন চক্রবর্তী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তারাপদ রায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'তারাপদ রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তৃপ্তি মিত্রের নাটকের গান', artist: 'অজানা শিল্পী', lyricist: 'তৃপ্তি মিত্র', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'নাটকের গান' },
+  { title: 'তীর্থঙ্কর দাসের গান', artist: 'অজানা শিল্পী', lyricist: 'তীর্থঙ্কর দাস', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'উত্তম কুমারের গান (লেখা)', artist: 'অজানা শিল্পী', lyricist: 'উত্তম কুমার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'উজ্জ্বল মুখোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'উজ্জ্বল মুখোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ঊষা গাঙ্গুলির নাটকের গান', artist: 'অজানা শিল্পী', lyricist: 'ঊষা গাঙ্গুলি', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'নাটকের গান' },
+  { title: 'বাঈজী প্রীতিলতার গান', artist: 'অজানা শিল্পী', lyricist: 'বাঈজী প্রীতিলতা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'ঠুমরি/দাদরা' },
+  { title: 'বিশ্বজিৎ চট্টোপাধ্যায়ের গান', artist: 'বিশ্বজিৎ', lyricist: 'বিশ্বজিৎ চট্টোপাধ্যায়', lyrics: 'এ শুধু গানের দিন...', genre: 'আধুনিক' },
+  { title: 'বিভাস চক্রবর্তীর নাটকের গান', artist: 'অজানা শিল্পী', lyricist: 'বিভাস চক্রবর্তী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'নাটকের গান' },
+  { title: 'বিপ্লব চৌধুরীর গান', artist: 'অজানা শিল্পী', lyricist: 'বিপ্লব চৌধুরী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মৌসুমী ভৌমিকের গান', artist: 'মৌসুমী ভৌমিক', lyricist: 'মৌসুমী ভৌমিক', lyrics: 'আমি শুনেছি সেদিন তুমি...', genre: 'জীবনমুখী' },
+  { title: 'যশ চোপড়ার বাংলা গান', artist: 'অজানা শিল্পী', lyricist: 'যশ চোপড়া', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' }, // Context specific
+  { title: 'রূপম ইসলামের রক গান', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', lyrics: 'হাসনুহানা...', genre: 'বাংলা রক' },
+  { title: 'অনুপম রায়ের আধুনিক গান', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', lyrics: 'আমাকে আমার মতো থাকতে দাও...', genre: 'আধুনিক' },
+  { title: 'চন্দ্রবিন্দুর গান (অনিন্দ্য)', artist: 'চন্দ্রবিন্দু', lyricist: 'অনিন্দ্য চট্টোপাধ্যায় (চন্দ্রবিন্দু)', lyrics: 'বন্ধু তোমায়...', genre: 'বাংলা ব্যান্ড' },
+  { title: 'চন্দ্রবিন্দুর গান (উপল)', artist: 'চন্দ্রবিন্দু', lyricist: 'উপল সেনগুপ্ত (চন্দ্রবিন্দু)', lyrics: 'মন...', genre: 'বাংলা ব্যান্ড' },
+  { title: 'প্রসেনজিৎ মুখোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'প্রসেনজিৎ মুখোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' }, // Assuming he wrote some
+  { title: 'ঋদ্ধি বন্দ্যোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'ঋদ্ধি বন্দ্যোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'আনন্দ গুপ্তের গান', artist: 'অজানা শিল্পী', lyricist: 'আনন্দ গুপ্ত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'অরিন্দম চট্টোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'অরিন্দম চট্টোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সপ্তর্ষি মুখোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'সপ্তর্ষি মুখোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শান্তনু মৈত্রর গান', artist: 'অজানা শিল্পী', lyricist: 'শান্তনু মৈত্র', lyrics: 'পিউ বোলে...', genre: 'চলচ্চিত্রের গান' },
+  { title: 'সৌম্য চট্টোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'সৌম্য চট্টোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শান্তা দেবীর গান', artist: 'অজানা শিল্পী', lyricist: 'শান্তা দেবী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সৌরভ চৌধুরীর গান', artist: 'অজানা শিল্পী', lyricist: 'সৌরভ চৌধুরী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তানভীর ফয়সালের গান', artist: 'অজানা শিল্পী', lyricist: 'তানভীর ফয়সাল', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'জাহিদ আকবরের গান', artist: 'অজানা শিল্পী', lyricist: 'জাহিদ আকবর', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শাহাবুদ্দিন নাগরীর গান', artist: 'অজানা শিল্পী', lyricist: 'শাহাবুদ্দিন নাগরী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'কবির বকুলের গান', artist: 'অজানা শিল্পী', lyricist: 'কবির বকুল', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মোহাম্মদ রফিকুজ্জামানের গান', artist: 'অজানা শিল্পী', lyricist: 'মোহাম্মদ রফিকুজ্জামান', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মাসুদ করিমের গান', artist: 'অজানা শিল্পী', lyricist: 'মাসুদ করিম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মনিরুজ্জামান মনিরের গান', artist: 'অজানা শিল্পী', lyricist: 'মনিরুজ্জামান মনির', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সৈয়দ শামসুল হকের গান', artist: 'অজানা শিল্পী', lyricist: 'সৈয়দ শামসুল হক', lyrics: 'হায়রে মানুষ রঙিন ফানুস...', genre: 'আধুনিক' },
+  { title: 'আহমেদ ইমতিয়াজ বুলবুলের গান', artist: 'অজানা শিল্পী', lyricist: 'আহমেদ ইমতিয়াজ বুলবুল', lyrics: 'সব কটা জানালা খুলে দাও না...', genre: 'দেশাত্মবোধক' },
+  { title: 'খন্দকার নুরুল আলমের গান', artist: 'অজানা শিল্পী', lyricist: 'খন্দকার নুরুল আলম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'আপেল মাহমুদের গান', artist: 'আপেল মাহমুদ', lyricist: 'আপেল মাহমুদ', lyrics: 'তীর হারা এই ঢেউয়ের সাগর...', genre: 'আধুনিক' },
+  { title: 'খন্দকার ফারুক আহমেদের গান', artist: 'অজানা শিল্পী', lyricist: 'খন্দকার ফারুক আহমেদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'নাসির আহমেদ নাসিরের গান', artist: 'অজানা শিল্পী', lyricist: 'নাসির আহমেদ নাসির', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মাকসুদুল হকের গান', artist: 'মাকসুদ ও ঢাকা', lyricist: 'মাকসুদুল হক', lyrics: 'মেলায় যাইরে...', genre: 'বাংলা পপ' },
+  { title: 'ইমন সাহার গান', artist: 'অজানা শিল্পী', lyricist: 'ইমন সাহা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'চলচ্চিত্রের গান' },
+  { title: 'সাইদুস সালেহীনের গান', artist: 'অজানা শিল্পী', lyricist: 'সাইদুস সালেহীন (সাজু)', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ফুয়াদ নাসের বাবুর গান', artist: 'অজানা শিল্পী', lyricist: 'ফুয়াদ নাসের বাবু', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'বারী সিদ্দিকীর লোকগান', artist: 'বারী সিদ্দিকী', lyricist: 'বারী সিদ্দিকী', lyrics: 'শুয়াচান পাখি...', genre: 'লোকগীতি' },
+  { title: 'রথীন্দ্রনাথ রায়ের লোকগান', artist: 'রথীন্দ্রনাথ রায়', lyricist: 'রথীন্দ্রনাথ রায়', lyrics: 'ও কি ও বন্ধু কাজল ভ্রমরা...', genre: 'লোকগীতি' },
+  { title: 'শফিক তুহিনের গান', artist: 'অজানা শিল্পী', lyricist: 'শফিক তুহিন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রবিউল ইসলাম জিবনের গান', artist: 'অজানা শিল্পী', lyricist: 'রবিউল ইসলাম জিবন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শিবলী মোহাম্মদের গান', artist: 'অজানা শিল্পী', lyricist: 'শিবলী মোহাম্মদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শহরাব হোসেনের গান', artist: 'অজানা শিল্পী', lyricist: 'শহরাব হোসেন', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মিল্টন খন্দকারের গান', artist: 'অজানা শিল্পী', lyricist: 'মিল্টন খন্দকার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তারিকুল ইসলামের গান', artist: 'অজানা শিল্পী', lyricist: 'তারিকুল ইসলাম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শুজিত রায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'শুজিত রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'পার্থো বড়ুয়ার গান', artist: 'সোলস', lyricist: 'পার্থো বড়ুয়া', lyrics: 'এই এমন পরিচয়...', genre: 'বাংলা ব্যান্ড' },
+  { title: 'আনিসুল ইসলামের গান', artist: 'অজানা শিল্পী', lyricist: 'আনিসুল ইসলাম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শফিকুল খালেকের গান', artist: 'অজানা শিল্পী', lyricist: 'শফিকুল খালেক', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শফিকুল আলমের গান', artist: 'অজানা শিল্পী', lyricist: 'শফিকুল আলম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রানার গান', artist: 'অজানা শিল্পী', lyricist: 'রানা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শুভর গান', artist: 'অজানা শিল্পী', lyricist: 'শুভ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'প্রীতম হাসানের গান', artist: 'প্রীতম হাসান', lyricist: 'প্রীতম হাসান', lyrics: 'গার্লফ্রেন্ডের বিয়া...', genre: 'বাংলা পপ' },
+  { title: 'নওশাদ আলীর গান', artist: 'অজানা শিল্পী', lyricist: 'নওশাদ আলী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তপন চৌধুরীর গান', artist: 'তপন চৌধুরী', lyricist: 'তপন চৌধুরী', lyrics: 'আমি সবকিছু ছাড়তে পারি...', genre: 'আধুনিক' },
+  { title: 'ফিরোজ শাইর গান', artist: 'ফিরোজ শাই', lyricist: 'ফিরোজ শাই', lyrics: 'ইশকুল খুইলাছে রে মাওলা...', genre: 'লোকগীতি' },
+  { title: 'রাশেদুল হাসানের গান', artist: 'অজানা শিল্পী', lyricist: 'রাশেদুল হাসান', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শুমন সুধরের গান', artist: 'অজানা শিল্পী', lyricist: 'শুমন সুধর', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তৌফিক-ই-ইলাহীর গান', artist: 'অজানা শিল্পী', lyricist: 'তৌফিক-ই-ইলাহী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ইমতিয়াজ আহমেদের গান', artist: 'অজানা শিল্পী', lyricist: 'ইমতিয়াজ আহমেদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'নোলকের গান', artist: 'অজানা শিল্পী', lyricist: 'নোলক', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ইমন চৌধুরীর গান', artist: 'চিরকুট', lyricist: 'ইমন চৌধুরী', lyrics: 'কানামাছি...', genre: 'বাংলা ব্যান্ড' },
+  { title: 'জাহিদ নিপুর গান', artist: 'অজানা শিল্পী', lyricist: 'জাহিদ নিপু', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মিলন মাহমুদের গান', artist: 'অজানা শিল্পী', lyricist: 'মিলন মাহমুদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শাহেদ সরওয়ারের গান', artist: 'অজানা শিল্পী', lyricist: 'শাহেদ সরওয়ার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মাহমুদুল হাসানের গান', artist: 'অজানা শিল্পী', lyricist: 'মাহমুদুল হাসান', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রবিউল আলমের গান', artist: 'অজানা শিল্পী', lyricist: 'রবিউল আলম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শাহীন আলমের গান', artist: 'অজানা শিল্পী', lyricist: 'শাহীন আলম', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'তানজিদ নূরের গান', artist: 'অজানা শিল্পী', lyricist: 'তানজিদ নূর', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'মাহবুবুল হকের গান', artist: 'অজানা শিল্পী', lyricist: 'মাহবুবুল হক', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রিয়াজ উদ্দিন আহমেদের গান', artist: 'অজানা শিল্পী', lyricist: 'রিয়াজ উদ্দিন আহমেদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'আবুল হায়াতের গান', artist: 'অজানা শিল্পী', lyricist: 'আবুল হায়াত', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'সমরেশ মজুমদারের গান', artist: 'অজানা শিল্পী', lyricist: 'সমরেশ মজুমদার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শক্তি চট্টোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'শক্তি চট্টোপাধ্যায়', lyrics: 'অবনী বাড়ি আছো...', genre: 'আধুনিক' },
+  { title: 'প্রদীপ ঘোষের গান', artist: 'অজানা শিল্পী', lyricist: 'প্রদীপ ঘোষ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'বিনয় মজুমদারের গান', artist: 'অজানা শিল্পী', lyricist: 'বিনয় মজুমদার', lyrics: 'ফিরে এসো চাকা...', genre: 'আধুনিক' },
+  { title: 'সুবোধ সরকারের গান', artist: 'অজানা শিল্পী', lyricist: 'সুবোধ সরকার', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শঙ্খ ঘোষের গান', artist: 'অজানা শিল্পী', lyricist: 'শঙ্খ ঘোষ', lyrics: 'বাবরের প্রার্থনা...', genre: 'আধুনিক' },
+  { title: 'নবারুন ভট্টাচার্য্যের গান', artist: 'অজানা শিল্পী', lyricist: 'নবারুন ভট্টাচার্য্য', lyrics: 'এই মৃত্যু উপত্যকা আমার দেশ না...', genre: 'প্রতিবাদী গান' },
+  { title: 'উৎপল কুমার বসুর গান', artist: 'ফসিলস', lyricist: 'উৎপল কুমার বসু', lyrics: 'বিষাক্ত মানুষ...', genre: 'বাংলা রক' },
+  { title: 'অরিজিৎ দাসের গান', artist: 'ক্যাকটাস', lyricist: 'অরিজিৎ দাস', lyrics: 'শুধু তুমি এলে না...', genre: 'বাংলা রক' },
+  { title: 'সন্দীপ চট্টোপাধ্যায়ের গান', artist: 'বডিকন্টেক্সট', lyricist: 'সন্দীপ চট্টোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'বাংলা ব্যান্ড' },
+  { title: 'কৃষ্ণেন্দু মুখোপাধ্যায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'কৃষ্ণেন্দু মুখোপাধ্যায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'অভিজিৎ বসুর গান', artist: 'অজানা শিল্পী', lyricist: 'অভিজিৎ বসু', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'শাহীন সামাদের গান', artist: 'অজানা শিল্পী', lyricist: 'শাহীন সামাদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ইমরান মাহমুদের গান', artist: 'ইমরান', lyricist: 'ইমরান মাহমুদ', lyrics: 'বলতে বলতে চলতে চলতে...', genre: 'বাংলা পপ' },
+  { title: 'তানজিদ তুহিনের গান', artist: 'শিরোনামহীন', lyricist: 'তানজিদ তুহিন', lyrics: 'হাসিমুখ...', genre: 'বাংলা রক' },
+  { title: 'নাজমুল হাসানের গান', artist: 'অজানা শিল্পী', lyricist: 'নাজমুল হাসান', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'লোকগীতি' },
+  { title: 'ফাহিম হোসেনের গান', artist: 'আর্টসেল', lyricist: 'ফাহিম হোসেন', lyrics: 'অন্যসময়...', genre: 'বাংলা রক' },
+  { title: 'রবিন চন্দের গান', artist: 'অজানা শিল্পী', lyricist: 'রবিন চন্দ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'নাসিম আলী খানের গান', artist: 'অজানা শিল্পী', lyricist: 'নাসিম আলী খান', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'লোকগীতি' },
+  { title: 'রাজিব আহমেদের গান', artist: 'অজানা শিল্পী', lyricist: 'রাজিব আহমেদ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ফারহানা মিথিলার গান', artist: 'অজানা শিল্পী', lyricist: 'ফারহানা মিথিলা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'হেমন্ত কুমার ত্রিপুরার গান', artist: 'অজানা শিল্পী', lyricist: 'হেমন্ত কুমার ত্রিপুরা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'লোকগীতি (ত্রিপুরা)' },
+  { title: 'অর্পিতা দাসের গান', artist: 'অজানা শিল্পী', lyricist: 'অর্পিতা দাস', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক (ত্রিপুরা)' },
+  { title: 'বিকাশ রায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'বিকাশ রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক (আসাম)' },
+  { title: 'হরিচরণ আচার্য্যর গান', artist: 'অজানা শিল্পী', lyricist: 'হরিচরণ আচার্য্য', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'মধ্যযুগীয় বাংলা' },
+  { title: 'রামপ্রসাদ সেনের গান', artist: 'অজানা শিল্পী', lyricist: 'রামপ্রসাদ সেন', lyrics: 'মন রে কৃষি কাজ জানো না...', genre: 'শাক্ত পদাবলী' },
+  { title: 'দীনেন্দ্রকৃষ্ণ রায়ের গান', artist: 'অজানা শিল্পী', lyricist: 'দীনেন্দ্রকৃষ্ণ রায়', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'ঐতিহ্যবাহী' },
+  { title: 'ঋত্বিজ মল্লিকের গান', artist: 'অজানা শিল্পী', lyricist: 'ঋত্বিজ মল্লিক', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আন্ডারগ্রাউন্ড' },
+  { title: 'অর্ণব আদিত্যর গান', artist: 'অজানা শিল্পী', lyricist: 'অর্ণব আদিত্য', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'ফিউশন' },
+  { title: 'তানিশা মুখার্জীর গান', artist: 'অজানা শিল্পী', lyricist: 'তানিশা মুখার্জী', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'ঐশানী সাহার গান', artist: 'অজানা শিল্পী', lyricist: 'ঐশানী সাহা', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+  { title: 'রুদ্র ঘোষের গান', artist: 'অজানা শিল্পী', lyricist: 'রুদ্র ঘোষ', lyrics: 'গানের কথা এখানে যোগ করা হবে...', genre: 'আধুনিক' },
+
 ];
 
 // Comprehensive list of lyricists (combining all lists, removing duplicates)
@@ -798,17 +961,18 @@ export async function getPopularSongs(): Promise<Song[]> {
   const nonTagore = mockSongs.filter(song => song.lyricist !== 'রবীন্দ্রনাথ ঠাকুর');
   const tagoreHits = mockSongs.filter(song => ['আমার সোনার বাংলা', 'যদি তোর ডাক শুনে কেউ না আসে'].includes(song.title));
   const shahnazHit = mockSongs.find(song => song.title === 'একতারা তুই দেশের কথা');
+  const mannaDeyHit = mockSongs.find(song => song.title === 'কফি হাউসের সেই আড্ডাটা');
 
   // Start with a few non-Tagore songs
-  let popular = nonTagore.slice(0, 2);
+  let popular = nonTagore.slice(0, 1); // Start with 1 non-Tagore
 
-  // Add specific Tagore hits if found
+  // Add specific hits if found
+  if (mannaDeyHit) popular.push(mannaDeyHit);
   popular = popular.concat(tagoreHits);
-
-  // Add the specific Shahnaz Rahmatullah song if found and not already included
   if (shahnazHit && !popular.some(s => s.title === shahnazHit.title)) {
     popular.push(shahnazHit);
   }
+
 
   // Fill remaining spots with other non-Tagore if needed, ensuring variety
   const needed = 4 - popular.length;
@@ -834,19 +998,12 @@ export async function getNewSongs(): Promise<Song[]> {
    const popularSongsList = await getPopularSongs();
    const popularTitles = popularSongsList.map(s => s.title);
 
-   // Get Tagore songs not in popular list
-   const newTagore = mockSongs.filter(song =>
-        song.lyricist === 'রবীন্দ্রনাথ ঠাকুর' &&
-        !popularTitles.includes(song.title)
-   );
-    // Get other songs not in popular list
-    const otherNew = mockSongs.filter(song =>
-        song.lyricist !== 'রবীন্দ্রনাথ ঠাকুর' &&
-        !popularTitles.includes(song.title)
-    );
-   // Combine, shuffle slightly, and take a slice
-   const combined = [...newTagore, ...otherNew].sort(() => 0.5 - Math.random()); // Simple shuffle
-   return combined.slice(0, 6); // Show a mix of new songs
+   // Get songs not in popular list
+   const availableSongs = mockSongs.filter(song => !popularTitles.includes(song.title));
+
+   // Shuffle slightly and take a slice
+   const shuffled = availableSongs.sort(() => 0.5 - Math.random()); // Simple shuffle
+   return shuffled.slice(0, 6); // Show a mix of new songs
 }
 
 
@@ -929,3 +1086,34 @@ export async function getAllSongs(): Promise<Song[]> {
     return a.artist.localeCompare(b.artist, 'bn');
   });
 }
+
+// Function to ensure all listed lyricists have at least one song entry
+function addPlaceholderSongsForMissingLyricists() {
+    const lyricistsWithSongs = new Set(mockSongs.map(song => song.lyricist).filter(Boolean));
+    let addedPlaceholders = 0;
+
+    allLyricists.forEach(lyricist => {
+        // Skip generics or those already having songs
+        if (lyricist === 'সংগৃহীত' || lyricist === 'অজানা গীতিকার' || lyricistsWithSongs.has(lyricist)) {
+            return;
+        }
+
+        // Add a placeholder song for this lyricist
+        mockSongs.push({
+            title: `${lyricist}-এর একটি গান (Placeholder)`,
+            artist: 'বিভিন্ন শিল্পী',
+            lyricist: lyricist,
+            lyrics: 'এই গীতিকারের জন্য গানের কথা শীঘ্রই যোগ করা হবে...',
+            genre: 'বিভিন্ন',
+            album: 'বিভিন্ন',
+        });
+        addedPlaceholders++;
+    });
+
+    if (addedPlaceholders > 0) {
+        console.log(`Added ${addedPlaceholders} placeholder songs for lyricists without existing entries.`);
+    }
+}
+
+// Call the function to add placeholders when the module loads
+addPlaceholderSongsForMissingLyricists();

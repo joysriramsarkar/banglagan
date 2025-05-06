@@ -9,24 +9,31 @@ import { Separator } from '@/components/ui/separator'; // Import Separator
 // Updated function to find the song directly from the mock list
 async function getSongBySlug(slug: string): Promise<Song | undefined> {
   const decodedSlug = decodeURIComponent(slug);
-  // console.log(`Decoded slug: ${decodedSlug}`); // Keep for debugging if needed
 
-  // Find the song in the mock database whose generated slug matches the input slug
   const matchedSong = mockSongs.find(song => {
-    // Pass lyricist to createSlug if available, otherwise pass undefined
     const generatedSlug = createSlug(song.title, song.artist, song.lyricist);
-    // console.log(`Comparing ${decodedSlug} with generated ${generatedSlug} for "${song.title}"`); // Keep for debugging if needed
     return generatedSlug === decodedSlug;
   });
 
-  if (matchedSong) {
-      // console.log(`Found direct match for slug ${decodedSlug}: "${matchedSong.title}" by ${matchedSong.artist}`); // Keep for debugging if needed
+  if (!matchedSong) {
+     // If no direct match, try a more flexible search for problematic slugs
+     // This is a fallback for cases where URL encoding or slug generation might have inconsistencies
+     // For example, if a lyricist part was unexpectedly missing in the slug during generation
+     // or if there are very similar titles/artists.
+     const fallbackMatch = mockSongs.find(song => {
+        const titleSlug = createSlug(song.title, '', undefined); // slug based on title only
+        const artistSlug = createSlug('', song.artist, undefined); // slug based on artist only
+        // Check if the decoded slug contains significant parts of title and artist slugs
+        return decodedSlug.includes(titleSlug.split('-by-')[0]) && // Check title part
+               decodedSlug.includes(artistSlug.split('-by-')[1]); // Check artist part
+     });
+     if (fallbackMatch) {
+        console.log(`Fallback match for slug ${decodedSlug}: "${fallbackMatch.title}" by ${fallbackMatch.artist}`);
+        return fallbackMatch;
+     }
   } else {
-       console.log(`No direct match found for slug: ${decodedSlug}. Consider fallback search if needed.`);
-      // Optional Fallback can be added here if necessary
+    // console.log(`Direct match for slug ${decodedSlug}: "${matchedSong.title}" by ${matchedSong.artist}`);
   }
-
-
   return matchedSong;
 }
 
@@ -94,20 +101,12 @@ export default async function SongPage({ params }: SongPageProps) {
                         <span>{toBengaliNumerals(song.releaseYear)}</span>
                     </div>
                  )}
-                 {/* Lyricist information again if needed, or just keep in description */}
-                 {/* {song.lyricist && (
-                    <div className="flex items-center gap-2">
-                        <Feather className="w-5 h-5 text-primary/80 flex-shrink-0"/>
-                        <span className="font-medium">গীতিকার:</span>
-                        <span>{song.lyricist}</span>
-                    </div>
-                 )} */}
              </div>
         </CardContent>
       </Card>
 
       {/* Lyrics Section */}
-      {song.lyrics && song.lyrics !== 'গানের কথা এখানে যোগ করা হবে...' && ( // Check if lyrics exist and are not placeholder
+      {song.lyrics && song.lyrics !== 'গানের কথা এখানে যোগ করা হবে...' && song.lyrics.trim() !== '' && (
         <Card className="overflow-hidden shadow-lg bg-card">
             <CardHeader className="bg-secondary/10 p-6">
                 <CardTitle className="text-2xl font-semibold text-primary/90 flex items-center gap-2">
@@ -128,11 +127,15 @@ export default async function SongPage({ params }: SongPageProps) {
 }
 
 
-// Optional: Generate static paths if you have a known list of songs
-export async function generateStaticParams() {
-  // Pre-render paths for all songs in the mock database
-  return mockSongs.map((song) => ({
-    // Ensure slugs are URL-encoded here as Next.js expects raw segment values
-    slug: encodeURIComponent(createSlug(song.title, song.artist, song.lyricist)),
-  }));
-}
+// Removed generateStaticParams to speed up build times.
+// Pages will be dynamically rendered.
+// export async function generateStaticParams() {
+//   // Pre-render paths for all songs in the mock database
+//   return mockSongs.map((song) => ({
+//     // Ensure slugs are URL-encoded here as Next.js expects raw segment values
+//     slug: encodeURIComponent(createSlug(song.title, song.artist, song.lyricist)),
+//   }));
+// }
+
+export const dynamic = 'auto'; // Default, can be 'force-dynamic' if needed or 'error'
+export const revalidate = false; // No revalidation for these pages by default for this mock setup

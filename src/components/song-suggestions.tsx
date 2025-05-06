@@ -7,6 +7,21 @@ import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link'; // Import Link
 
+// Helper function to create slugs (copied from song-card.tsx, consider centralizing)
+const createSlug = (title: string, artist: string) => {
+  const titleSlug = title.toLowerCase()
+                       .replace(/[^\p{L}\p{N}\s-]/gu, '')
+                       .trim()
+                       .replace(/\s+/g, '-');
+  const artistSlug = artist.toLowerCase()
+                         .replace(/[^\p{L}\p{N}\s-]/gu, '')
+                         .trim()
+                         .replace(/\s+/g, '-');
+  const safeTitleSlug = titleSlug || 'untitled';
+  const safeArtistSlug = artistSlug || 'unknown-artist';
+  return `${safeTitleSlug}-by-${safeArtistSlug}`;
+};
+
 export default function SongSuggestions() {
   const [suggestions, setSuggestions] = React.useState<SuggestSongsOutput['suggestions'] | null>(null);
   const [loading, setLoading] = React.useState(false);
@@ -36,10 +51,6 @@ export default function SongSuggestions() {
     }
   }, []); // Empty dependency array ensures this runs once on mount
 
-  // Function to create slugs (reuse from SongCard or centralize it)
-  const createSlug = (title: string, artist: string) => {
-    return `${title.toLowerCase().replace(/\s+/g, '-')}-by-${artist.toLowerCase().replace(/\s+/g, '-')}`;
-  };
 
   if (searchHistory.length === 0) {
     return null; // Don't show the component if there's no search history
@@ -69,10 +80,12 @@ export default function SongSuggestions() {
         {!loading && !error && suggestions && suggestions.length > 0 && (
           <ul className="space-y-2">
             {suggestions.map((song, index) => {
+              // Use the updated createSlug function
               const slug = createSlug(song.title, song.artist);
               return (
                 <li key={index} className="text-sm">
-                  <Link href={`/song/${slug}`} className="text-primary hover:text-accent hover:underline transition-colors">
+                  {/* Ensure the slug is properly encoded for the URL */}
+                  <Link href={`/song/${encodeURIComponent(slug)}`} className="text-primary hover:text-accent hover:underline transition-colors">
                      <span className="font-medium">{song.title}</span> - {song.artist}
                   </Link>
                 </li>

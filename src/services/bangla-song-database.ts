@@ -16,11 +16,11 @@ export interface Song {
   lyrics: string;
 }
 
-// Larger mock database
+// Larger mock database with Bengali titles and artists
 const mockSongs: Song[] = [
   {
-    title: 'Amar Sonar Bangla',
-    artist: 'Rabindranath Tagore',
+    title: 'আমার সোনার বাংলা',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
     lyrics: `আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।
 চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি॥
 ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে,
@@ -34,8 +34,8 @@ const mockSongs: Song[] = [
 মা, তোর বদনখানি মলিন হলে, ও মা, আমি নয়নজলে ভাসি॥`
   },
   {
-    title: 'Purano Sei Diner Kotha',
-    artist: 'Rabindranath Tagore',
+    title: 'পুরানো সেই দিনের কথা',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
     lyrics: `পুরানো সেই দিনের কথা ভুলবি কি রে হায়।
 ও সেই চোখের দেখা, প্রাণের কথা, সে কি ভোলা যায়।
 আয় আর-একটিবার আয় রে সখা, প্রাণের মাঝে আয়।
@@ -47,8 +47,8 @@ const mockSongs: Song[] = [
 আবার দেখা যদি হল, সখা, প্রাণের মাঝে আয়॥`
   },
   {
-    title: 'Ektara Tui Desher Kotha',
-    artist: 'Shah Abdul Karim',
+    title: 'একতারা তুই দেশের কথা',
+    artist: 'শাহ আব্দুল করিম',
     lyrics: `একতারা তুই দেশের কথা বল রে এবার বল
 আমাকে তুই বাউল করে সঙ্গে নিয়ে চল।
 জীবন মরন মাঝে তোর সুর যেন জীবন ভরে তোলে।
@@ -63,8 +63,8 @@ const mockSongs: Song[] = [
 আমাকে তুই বাউল করে সঙ্গে নিয়ে চল ।।`
   },
    {
-    title: 'Ami Banglay Gaan Gai',
-    artist: 'Pratul Mukhopadhyay',
+    title: 'আমি বাংলায় গান গাই',
+    artist: 'প্রতুল মুখোপাধ্যায়',
     lyrics: `আমি বাংলায় গান গাই, আমি বাংলার গান গাই
 আমি আমার আমিকে চিরদিন এই বাংলায় খুঁজে পাই।
 আমি বাংলায় দেখি স্বপ্ন, আমি বাংলায় বাঁধি সুর
@@ -79,8 +79,8 @@ const mockSongs: Song[] = [
 বাংলা আমার দৃপ্ত স্লোগান ক্ষিপ্ত তীর ধনুক।`
   },
    {
-    title: 'Coffee Houser Sei Adda Ta',
-    artist: 'Manna Dey',
+    title: 'কফি হাউসের সেই আড্ডাটা',
+    artist: 'মান্না দে',
     lyrics: `কফি হাউসের সেই আড্ডাটা আজ আর নেই
 আজ আর নেই।
 কোথায় হারিয়ে গেল সোনালী বিকেলগুলো সেই
@@ -96,8 +96,8 @@ const mockSongs: Song[] = [
 জীবন করেনি তাকে ক্ষমা হায়।`
   },
   {
-    title: 'Notun Gaan',
-    artist: 'New Artist',
+    title: 'নতুন গান',
+    artist: 'নতুন শিল্পী',
     lyrics: `নতুন দিনের নতুন গান,
 উড়ছে পাখি গাইছে তান।
 সূর্য মামা দিল উঁকি,
@@ -109,8 +109,8 @@ const mockSongs: Song[] = [
 কাটছে বেশ আনন্দ বেলা।`
   },
   {
-      title: 'Megher Kole Rod Heseche',
-      artist: 'Traditional Rhyme',
+      title: 'মেঘের কোলে রোদ হেসেছে',
+      artist: 'প্রচলিত ছড়া',
       lyrics: `মেঘের কোলে রোদ হেসেছে, বাদল গেছে টুটি।
 আজ আমাদের ছুটি ও ভাই, আজ আমাদের ছুটি।
 কি করি আজ ভেবে না পাই, পথ হারিয়ে কোন বনে যাই,
@@ -141,6 +141,9 @@ export async function searchSongs(query: string): Promise<Song[]> {
   }
 
   const lowerCaseQuery = query.toLowerCase();
+  // Basic search: check if title or artist (in lowercase) includes the query
+  // This might need refinement for Bengali script matching if simple includes isn't sufficient.
+  // Consider using Intl.Collator for more robust language-sensitive searching if needed.
   const results = mockSongs.filter(song =>
     song.title.toLowerCase().includes(lowerCaseQuery) ||
     song.artist.toLowerCase().includes(lowerCaseQuery)
@@ -174,5 +177,6 @@ export async function getNewSongs(): Promise<Song[]> {
    // Simulate network delay
    await new Promise(resolve => setTimeout(resolve, 250));
    // Return next 4 songs as "new" for demo
-   return mockSongs.slice(4, 8);
+   // Adjust slicing if the total number of songs changed
+   return mockSongs.slice(4, mockSongs.length); // Assuming we want the rest as 'new'
 }

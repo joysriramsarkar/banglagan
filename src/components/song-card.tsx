@@ -7,16 +7,35 @@ interface SongCardProps {
   song: Omit<Song, 'lyrics'>; // Only need title and artist for the card
 }
 
+// Helper function to create slugs (consider moving to a utility file)
+// Handles basic replacement, might need more robust logic for complex names
+// Preserves Bengali characters but replaces spaces and removes unsafe chars.
+const createSlug = (title: string, artist: string) => {
+  // Keep letters, numbers, spaces, hyphens. Remove others. Replace spaces with hyphens.
+  const titleSlug = title.toLowerCase()
+                       .replace(/[^\p{L}\p{N}\s-]/gu, '') // Keep Unicode letters, numbers, space, hyphen
+                       .trim()
+                       .replace(/\s+/g, '-'); // Replace spaces with hyphens
+  const artistSlug = artist.toLowerCase()
+                         .replace(/[^\p{L}\p{N}\s-]/gu, '')
+                         .trim()
+                         .replace(/\s+/g, '-');
+
+  // Ensure slugs are not empty and URL-safe (though full URL encoding is handled by Link/browser)
+  const safeTitleSlug = titleSlug || 'untitled';
+  const safeArtistSlug = artistSlug || 'unknown-artist';
+
+  // Combine with a separator
+  return `${safeTitleSlug}-by-${safeArtistSlug}`;
+};
+
+
 export default function SongCard({ song }: SongCardProps) {
-  // Basic slug function (replace with a more robust one if needed)
-  const createSlug = (title: string, artist: string) => {
-    return `${title.toLowerCase().replace(/\s+/g, '-')}-by-${artist.toLowerCase().replace(/\s+/g, '-')}`;
-  };
 
   const slug = createSlug(song.title, song.artist);
 
   return (
-    <Link href={`/song/${slug}`} passHref legacyBehavior>
+    <Link href={`/song/${encodeURIComponent(slug)}`} passHref legacyBehavior>
       <a className="block hover:shadow-lg transition-shadow duration-200 rounded-lg">
         <Card className="h-full bg-card hover:bg-secondary/80 cursor-pointer transition-colors duration-200">
           <CardHeader className="flex flex-row items-center gap-4 pb-2">

@@ -6,26 +6,52 @@ import { Separator } from '@/components/ui/separator';
 import { Music, User } from 'lucide-react';
 
 // Helper function to find the song based on slug parts
-// This is a basic implementation and might need refinement depending on how slugs are generated
-// and how robust the matching needs to be. It currently assumes a simple title-artist structure.
+// Improved to handle potential encoding issues and provide better matching
 async function getSongBySlug(slug: string): Promise<Song | undefined> {
-  // Example slug: amar-sonar-bangla-by-rabindranath-tagore
-  const parts = slug.split('-by-');
-  if (parts.length !== 2) return undefined;
+  // Decode the slug in case of URL encoding issues with Bengali characters
+  const decodedSlug = decodeURIComponent(slug);
 
-  const titleQuery = parts[0].replace(/-/g, ' ');
-  const artistQuery = parts[1].replace(/-/g, ' ');
+  // Example slug: আমার-সোনার-বাংলা-by-রবীন্দ্রনাথ-ঠাকুর
+  // Split by a unique separator, assuming '-by-' structure
+  const parts = decodedSlug.split('-by-');
+  if (parts.length !== 2) {
+      console.warn(`Unexpected slug format: ${decodedSlug}`);
+      // Fallback: try searching with the whole slug as a title query
+      try {
+          const results = await searchSongs(decodedSlug.replace(/-/g, ' '));
+          // If there's an exact title match (or a close one), return it
+          return results.find(song => song.title.toLowerCase() === decodedSlug.replace(/-/g, ' ').toLowerCase()) || results[0];
+      } catch (error) {
+          console.error("Error in fallback search:", error);
+          return undefined;
+      }
+  }
 
-  // We use searchSongs as a stand-in. In a real app, you'd likely have a getSongById or getSongBySlug API call.
+  const titleQuery = parts[0].replace(/-/g, ' ').toLowerCase();
+  const artistQuery = parts[1].replace(/-/g, ' ').toLowerCase();
+
   try {
-    const results = await searchSongs(`${titleQuery} ${artistQuery}`); // Search combining parts
+    // Search combining parts for better initial filtering
+    const results = await searchSongs(`${titleQuery} ${artistQuery}`);
 
-    // Find the best match (needs better logic in a real scenario)
+    // Find the best match: Prioritize exact matches, then close matches.
+    // Normalize strings for comparison (lowercase and trim)
     const matchedSong = results.find(
       (song) =>
-        song.title.toLowerCase().includes(titleQuery) &&
-        song.artist.toLowerCase().includes(artistQuery)
+        song.title.toLowerCase().trim() === titleQuery &&
+        song.artist.toLowerCase().trim() === artistQuery
     );
+
+    // If no exact match, try a less strict find (e.g., includes) as a fallback
+    if (!matchedSong) {
+        console.log(`No exact match for slug: ${decodedSlug}. Trying partial match.`);
+        return results.find(
+            (song) =>
+                song.title.toLowerCase().includes(titleQuery) &&
+                song.artist.toLowerCase().includes(artistQuery)
+        );
+    }
+
 
     return matchedSong;
   } catch (error) {
@@ -75,10 +101,21 @@ export default async function SongPage({ params }: SongPageProps) {
   );
 }
 
+
+// Helper function to create slugs (consider moving to a utility file)
+// Handles basic replacement, might need more robust logic for complex names
+const createSlug = (title: string, artist: string) => {
+    const titleSlug = title.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').replace(/\s+/g, '-');
+    const artistSlug = artist.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').replace(/\s+/g, '-');
+    // Ensure slugs are not empty
+    return `${titleSlug || 'untitled'}-by-${artistSlug || 'unknown-artist'}`;
+};
+
+
 // Optional: Generate static paths if you have a known list of songs
 // export async function generateStaticParams() {
 //   // Fetch all songs or a subset to pre-render
-//   // const songs = await getAllSongs();
+//   // const songs = await getAllSongs(); // You'd need a function like this
 //   // return songs.map((song) => ({
 //   //   slug: createSlug(song.title, song.artist),
 //   // }));

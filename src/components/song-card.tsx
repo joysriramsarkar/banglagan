@@ -2,33 +2,12 @@ import type { Song } from '@/services/bangla-song-database';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music } from 'lucide-react';
+import { createSlug } from '@/lib/utils'; // Import from utils
 
 interface SongCardProps {
   // Update to use the full Song type, but only display title/artist
   song: Song;
 }
-
-// Helper function to create slugs (consider moving to a utility file)
-// Handles basic replacement, might need more robust logic for complex names
-// Preserves Bengali characters but replaces spaces and removes unsafe chars.
-const createSlug = (title: string, artist: string) => {
-  // Keep letters, numbers, spaces, hyphens. Remove others. Replace spaces with hyphens.
-  const titleSlug = title.toLowerCase()
-                       .replace(/[^\p{L}\p{N}\s-]/gu, '') // Keep Unicode letters, numbers, space, hyphen
-                       .trim()
-                       .replace(/\s+/g, '-'); // Replace spaces with hyphens
-  const artistSlug = artist.toLowerCase()
-                         .replace(/[^\p{L}\p{N}\s-]/gu, '')
-                         .trim()
-                         .replace(/\s+/g, '-');
-
-  // Ensure slugs are not empty and URL-safe (though full URL encoding is handled by Link/browser)
-  const safeTitleSlug = titleSlug || 'untitled';
-  const safeArtistSlug = artistSlug || 'unknown-artist';
-
-  // Combine with a separator
-  return `${safeTitleSlug}-by-${safeArtistSlug}`;
-};
 
 
 export default function SongCard({ song }: SongCardProps) {

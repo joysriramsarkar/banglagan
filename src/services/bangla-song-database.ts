@@ -35,7 +35,7 @@ export interface Song {
 }
 
 // Larger mock database with Bengali titles and artists and additional info
-const mockSongs: Song[] = [
+export const mockSongs: Song[] = [ // Export the array
   {
     title: 'আমার সোনার বাংলা',
     artist: 'রবীন্দ্রনাথ ঠাকুর',

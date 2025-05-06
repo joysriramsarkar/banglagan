@@ -6,21 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link'; // Import Link
-
-// Helper function to create slugs (copied from song-card.tsx, consider centralizing)
-const createSlug = (title: string, artist: string) => {
-  const titleSlug = title.toLowerCase()
-                       .replace(/[^\p{L}\p{N}\s-]/gu, '')
-                       .trim()
-                       .replace(/\s+/g, '-');
-  const artistSlug = artist.toLowerCase()
-                         .replace(/[^\p{L}\p{N}\s-]/gu, '')
-                         .trim()
-                         .replace(/\s+/g, '-');
-  const safeTitleSlug = titleSlug || 'untitled';
-  const safeArtistSlug = artistSlug || 'unknown-artist';
-  return `${safeTitleSlug}-by-${safeArtistSlug}`;
-};
+import { createSlug } from '@/lib/utils'; // Import from utils
 
 export default function SongSuggestions() {
   const [suggestions, setSuggestions] = React.useState<SuggestSongsOutput['suggestions'] | null>(null);

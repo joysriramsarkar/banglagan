@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Music } from 'lucide-react';
 
 interface SongCardProps {
-  song: Omit<Song, 'lyrics'>; // Only need title and artist for the card
+  // Update to use the full Song type, but only display title/artist
+  song: Song;
 }
 
 // Helper function to create slugs (consider moving to a utility file)

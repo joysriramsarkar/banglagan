@@ -1,26 +1,47 @@
 /**
- * Represents a song with title, artist, and lyrics.
+ * Represents a song with title, artist, album, genre, release year, and lyrics.
  */
 export interface Song {
   /**
-   * The title of the song.
+   * The title of the song in Bengali.
+   * গানের শিরোনাম (বাংলায়)।
    */
   title: string;
   /**
-   * The artist of the song.
+   * The artist of the song in Bengali.
+   * শিল্পীর নাম (বাংলায়)।
    */
   artist: string;
   /**
-   * The lyrics of the song.
+   * The album the song belongs to (optional).
+   * অ্যালবামের নাম (যদি থাকে)।
    */
-  lyrics: string;
+  album?: string;
+  /**
+   * The genre of the song (optional).
+   * গানের ধরণ (যদি থাকে)।
+   */
+  genre?: string;
+   /**
+   * The release year of the song (optional).
+   * প্রকাশের বছর (যদি থাকে)।
+   */
+  releaseYear?: number;
+  /**
+   * The lyrics of the song.
+   * গানের কথা।
+   */
+  lyrics: string; // Keep lyrics in the data model, but won't display on page for now
 }
 
-// Larger mock database with Bengali titles and artists
+// Larger mock database with Bengali titles and artists and additional info
 const mockSongs: Song[] = [
   {
     title: 'আমার সোনার বাংলা',
     artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'স্বদেশ',
+    releaseYear: 1905,
     lyrics: `আমার সোনার বাংলা, আমি তোমায় ভালোবাসি।
 চিরদিন তোমার আকাশ, তোমার বাতাস, আমার প্রাণে বাজায় বাঁশি॥
 ও মা, ফাগুনে তোর আমের বনে ঘ্রাণে পাগল করে,
@@ -36,6 +57,9 @@ const mockSongs: Song[] = [
   {
     title: 'পুরানো সেই দিনের কথা',
     artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'স্মৃতি',
+    releaseYear: 1885,
     lyrics: `পুরানো সেই দিনের কথা ভুলবি কি রে হায়।
 ও সেই চোখের দেখা, প্রাণের কথা, সে কি ভোলা যায়।
 আয় আর-একটিবার আয় রে সখা, প্রাণের মাঝে আয়।
@@ -49,6 +73,9 @@ const mockSongs: Song[] = [
   {
     title: 'একতারা তুই দেশের কথা',
     artist: 'শাহ আব্দুল করিম',
+    album: 'কালনীর ঢেউ',
+    genre: 'লোকগীতি',
+    releaseYear: 2000, // Approximate release year of album/common recording
     lyrics: `একতারা তুই দেশের কথা বল রে এবার বল
 আমাকে তুই বাউল করে সঙ্গে নিয়ে চল।
 জীবন মরন মাঝে তোর সুর যেন জীবন ভরে তোলে।
@@ -65,6 +92,9 @@ const mockSongs: Song[] = [
    {
     title: 'আমি বাংলায় গান গাই',
     artist: 'প্রতুল মুখোপাধ্যায়',
+    album: 'পাথরের ফসল',
+    genre: 'জীবনমুখী',
+    releaseYear: 1994, // Approximate year
     lyrics: `আমি বাংলায় গান গাই, আমি বাংলার গান গাই
 আমি আমার আমিকে চিরদিন এই বাংলায় খুঁজে পাই।
 আমি বাংলায় দেখি স্বপ্ন, আমি বাংলায় বাঁধি সুর
@@ -81,6 +111,9 @@ const mockSongs: Song[] = [
    {
     title: 'কফি হাউসের সেই আড্ডাটা',
     artist: 'মান্না দে',
+    album: 'বিভিন্ন শিল্পী', // Often part of compilations
+    genre: 'আধুনিক বাংলা গান',
+    releaseYear: 1971, // Original release year
     lyrics: `কফি হাউসের সেই আড্ডাটা আজ আর নেই
 আজ আর নেই।
 কোথায় হারিয়ে গেল সোনালী বিকেলগুলো সেই
@@ -96,8 +129,11 @@ const mockSongs: Song[] = [
 জীবন করেনি তাকে ক্ষমা হায়।`
   },
   {
-    title: 'নতুন গান',
-    artist: 'নতুন শিল্পী',
+    title: 'নতুন গান উদাহরণ', // More descriptive placeholder title
+    artist: 'নতুন শিল্পী উদাহরণ', // More descriptive placeholder artist
+    album: 'অজানা অ্যালবাম',
+    genre: 'পরীক্ষামূলক',
+    releaseYear: 2024,
     lyrics: `নতুন দিনের নতুন গান,
 উড়ছে পাখি গাইছে তান।
 সূর্য মামা দিল উঁকি,
@@ -110,7 +146,10 @@ const mockSongs: Song[] = [
   },
   {
       title: 'মেঘের কোলে রোদ হেসেছে',
-      artist: 'প্রচলিত ছড়া',
+      artist: 'রবীন্দ্রনাথ ঠাকুর', // Often attributed or set to music based on his poem
+      album: 'শিশু ভোলানাথ', // Poem source
+      genre: 'শিশুতোষ',
+      releaseYear: 1922, // Poem publication year
       lyrics: `মেঘের কোলে রোদ হেসেছে, বাদল গেছে টুটি।
 আজ আমাদের ছুটি ও ভাই, আজ আমাদের ছুটি।
 কি করি আজ ভেবে না পাই, পথ হারিয়ে কোন বনে যাই,
@@ -176,7 +215,6 @@ export async function getNewSongs(): Promise<Song[]> {
    console.log("Fetching new songs...");
    // Simulate network delay
    await new Promise(resolve => setTimeout(resolve, 250));
-   // Return next 4 songs as "new" for demo
-   // Adjust slicing if the total number of songs changed
-   return mockSongs.slice(4, mockSongs.length); // Assuming we want the rest as 'new'
+   // Return next songs as "new" for demo
+   return mockSongs.slice(4, mockSongs.length);
 }

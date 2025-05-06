@@ -3,7 +3,7 @@ import { searchSongs, Song } from '@/services/bangla-song-database'; // Adjust p
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Music, User } from 'lucide-react';
+import { Music, User, Disc3, Tag, Calendar } from 'lucide-react'; // Import new icons
 
 // Helper function to find the song based on slug parts
 // Improved to handle potential encoding issues and provide better matching
@@ -32,6 +32,7 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
 
   try {
     // Search combining parts for better initial filtering
+    // Note: searchSongs might need adjustment if it doesn't search artists effectively enough alone
     const results = await searchSongs(`${titleQuery} ${artistQuery}`);
 
     // Find the best match: Prioritize exact matches, then close matches.
@@ -45,11 +46,13 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
     // If no exact match, try a less strict find (e.g., includes) as a fallback
     if (!matchedSong) {
         console.log(`No exact match for slug: ${decodedSlug}. Trying partial match.`);
-        return results.find(
+        const partialMatch = results.find(
             (song) =>
                 song.title.toLowerCase().includes(titleQuery) &&
                 song.artist.toLowerCase().includes(artistQuery)
         );
+        // If still no match, perhaps return the first result if the search was reasonably specific
+        return partialMatch || (results.length === 1 ? results[0] : undefined);
     }
 
 
@@ -77,24 +80,51 @@ export default async function SongPage({ params }: SongPageProps) {
     <div className="space-y-6">
       <Card className="overflow-hidden shadow-lg bg-card">
         <CardHeader className="bg-primary/10 p-6">
-          <div className="flex items-center gap-3">
-            <Music className="w-8 h-8 text-primary" />
-            <div>
-              <CardTitle className="text-3xl font-bold text-primary">{song.title}</CardTitle>
+          <div className="flex items-start gap-4"> {/* Adjusted alignment */}
+            <Music className="w-8 h-8 text-primary mt-1 flex-shrink-0" /> {/* Added mt-1 and flex-shrink-0 */}
+            <div className="flex-grow"> {/* Added flex-grow */}
+              <CardTitle className="text-3xl font-bold text-primary mb-1">{song.title}</CardTitle>
               <CardDescription className="text-lg flex items-center gap-2 text-foreground/80 pt-1">
-                 <User className="w-4 h-4" />
-                 {song.artist}
+                 <User className="w-4 h-4 flex-shrink-0" />
+                 <span>{song.artist}</span>
               </CardDescription>
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6">
+        <CardContent className="p-6 space-y-4">
+           <h2 className="text-2xl font-semibold text-primary/90 border-b pb-2 mb-4">গানের তথ্য</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-base text-foreground/90">
+                 {song.album && (
+                    <div className="flex items-center gap-2">
+                        <Disc3 className="w-5 h-5 text-primary/80 flex-shrink-0"/>
+                        <span className="font-medium">অ্যালবাম:</span>
+                        <span>{song.album}</span>
+                    </div>
+                )}
+                {song.genre && (
+                    <div className="flex items-center gap-2">
+                        <Tag className="w-5 h-5 text-primary/80 flex-shrink-0"/>
+                        <span className="font-medium">ধরণ:</span>
+                        <span>{song.genre}</span>
+                    </div>
+                 )}
+                 {song.releaseYear && (
+                    <div className="flex items-center gap-2">
+                        <Calendar className="w-5 h-5 text-primary/80 flex-shrink-0"/>
+                        <span className="font-medium">প্রকাশের বছর:</span>
+                        <span>{song.releaseYear}</span>
+                    </div>
+                 )}
+             </div>
+
+          {/* Lyrics Section Removed as per request */}
+          {/*
           <h2 className="text-2xl font-semibold mb-4 text-primary/90">লিরিক্স</h2>
           <Separator className="mb-4 bg-primary/20" />
-          {/* Preserve whitespace and line breaks in lyrics */}
           <pre className="text-base leading-relaxed whitespace-pre-wrap font-sans text-foreground">
             {song.lyrics}
           </pre>
+          */}
         </CardContent>
       </Card>
     </div>

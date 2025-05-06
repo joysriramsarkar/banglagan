@@ -1,3 +1,4 @@
+import Link from 'next/link'; // Import Link
 import SongList from '@/components/song-list';
 import SongSuggestions from '@/components/song-suggestions';
 import { getPopularSongs, getNewSongs, getAllArtists, getAllGenres } from '@/services/bangla-song-database';
@@ -59,10 +60,15 @@ export default async function Home() {
            <CardContent>
              <div className="flex flex-wrap gap-2">
                {artists.map((artist) => (
-                 // Later, this could link to an artist page: /artist/[artist-slug]
-                 <span key={artist} className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors">
+                 // Link to search results for the artist
+                 <Link
+                   key={artist}
+                   href={`/search?q=${encodeURIComponent(artist)}`}
+                   passHref
+                   className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline" // Added no-underline
+                 >
                    {artist}
-                 </span>
+                 </Link>
                ))}
              </div>
            </CardContent>
@@ -83,10 +89,15 @@ export default async function Home() {
            <CardContent>
              <div className="flex flex-wrap gap-2">
                {genres.map((genre) => (
-                  // Later, this could link to a genre page: /genre/[genre-slug]
-                 <span key={genre} className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors">
+                  // Link to search results for the genre
+                 <Link
+                   key={genre}
+                   href={`/search?q=${encodeURIComponent(genre)}`}
+                   passHref
+                   className="px-3 py-1 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline" // Added no-underline
+                 >
                    {genre}
-                 </span>
+                 </Link>
                ))}
              </div>
            </CardContent>

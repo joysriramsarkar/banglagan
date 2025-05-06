@@ -3,7 +3,7 @@ import { mockSongs, type Song } from '@/services/bangla-song-database'; // Adjus
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar } from 'lucide-react';
-import { createSlug } from '@/lib/utils'; // Import from utils
+import { createSlug, toBengaliNumerals } from '@/lib/utils'; // Import converters
 
 // Updated function to find the song directly from the mock list
 async function getSongBySlug(slug: string): Promise<Song | undefined> {
@@ -90,7 +90,8 @@ export default async function SongPage({ params }: SongPageProps) {
                     <div className="flex items-center gap-2">
                         <Calendar className="w-5 h-5 text-primary/80 flex-shrink-0"/>
                         <span className="font-medium">প্রকাশের বছর:</span>
-                        <span>{song.releaseYear}</span>
+                        {/* Convert release year to Bengali numerals */}
+                        <span>{toBengaliNumerals(song.releaseYear)}</span>
                     </div>
                  )}
              </div>

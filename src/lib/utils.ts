@@ -33,3 +33,26 @@ export const createSlug = (title: string, artist: string): string => {
   // Combine with a separator that's unlikely to appear in names
   return `${safeTitleSlug}-by-${safeArtistSlug}`;
 };
+
+/**
+ * Converts a number or string containing Arabic numerals to Bengali numerals.
+ * @param num The number or string to convert.
+ * @returns A string with Bengali numerals. Returns an empty string if input is undefined or null.
+ */
+export const toBengaliNumerals = (num: number | string | undefined): string => {
+  if (num === undefined || num === null) return '';
+  const numStr = String(num);
+  const bengaliDigits: { [key: string]: string } = {
+    '0': '০',
+    '1': '১',
+    '2': '২',
+    '3': '৩',
+    '4': '৪',
+    '5': '৫',
+    '6': '৬',
+    '7': '৭',
+    '8': '৮',
+    '9': '৯',
+  };
+  return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
+};

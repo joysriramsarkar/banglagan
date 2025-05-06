@@ -2,23 +2,24 @@
 import { mockSongs, type Song } from '@/services/bangla-song-database'; // Adjust path if needed and import mockSongs
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar } from 'lucide-react';
+import { Music, User, Disc3, Tag, Calendar, ListMusic } from 'lucide-react'; // Added ListMusic icon
 import { createSlug, toBengaliNumerals } from '@/lib/utils'; // Import converters
+import { Separator } from '@/components/ui/separator'; // Import Separator
 
 // Updated function to find the song directly from the mock list
 async function getSongBySlug(slug: string): Promise<Song | undefined> {
   const decodedSlug = decodeURIComponent(slug);
-  console.log(`Decoded slug: ${decodedSlug}`);
+  // console.log(`Decoded slug: ${decodedSlug}`); // Keep for debugging if needed
 
   // Find the song in the mock database whose generated slug matches the input slug
   const matchedSong = mockSongs.find(song => {
     const generatedSlug = createSlug(song.title, song.artist);
-    // console.log(`Comparing ${decodedSlug} with generated ${generatedSlug} for "${song.title}"`);
+    // console.log(`Comparing ${decodedSlug} with generated ${generatedSlug} for "${song.title}"`); // Keep for debugging if needed
     return generatedSlug === decodedSlug;
   });
 
   if (matchedSong) {
-      console.log(`Found direct match for slug ${decodedSlug}: "${matchedSong.title}" by ${matchedSong.artist}`);
+      // console.log(`Found direct match for slug ${decodedSlug}: "${matchedSong.title}" by ${matchedSong.artist}`); // Keep for debugging if needed
   } else {
        console.log(`No direct match found for slug: ${decodedSlug}. Consider fallback search if needed.`);
       // Optional Fallback (using previous logic if direct match fails):
@@ -55,7 +56,7 @@ export default async function SongPage({ params }: SongPageProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8"> {/* Increased spacing */}
       <Card className="overflow-hidden shadow-lg bg-card">
         <CardHeader className="bg-primary/10 p-6">
           <div className="flex items-start gap-4">
@@ -97,6 +98,24 @@ export default async function SongPage({ params }: SongPageProps) {
              </div>
         </CardContent>
       </Card>
+
+      {/* Lyrics Section */}
+      {song.lyrics && (
+        <Card className="overflow-hidden shadow-lg bg-card">
+            <CardHeader className="bg-secondary/10 p-6">
+                <CardTitle className="text-2xl font-semibold text-primary/90 flex items-center gap-2">
+                    <ListMusic className="w-6 h-6 text-primary" />
+                    <span>গানের কথা</span>
+                </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+                {/* Use pre for preserving whitespace and line breaks */}
+                <pre className="whitespace-pre-wrap text-base leading-relaxed font-sans text-foreground/90">
+                    {song.lyrics}
+                </pre>
+            </CardContent>
+        </Card>
+      )}
     </div>
   );
 }

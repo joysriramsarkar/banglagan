@@ -24,12 +24,14 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
         const titleSlug = createSlug(song.title, '', undefined); // slug based on title only
         const artistSlug = createSlug('', song.artist, undefined); // slug based on artist only
         // Check if the decoded slug contains significant parts of title and artist slugs
-        return decodedSlug.includes(titleSlug.split('-by-')[0]) && // Check title part
-               decodedSlug.includes(artistSlug.split('-by-')[1]); // Check artist part
+        return decodedSlug.includes(titleSlug.split('-by-')[0] ?? '') && // Check title part
+               decodedSlug.includes(artistSlug.split('-by-')[1] ?? ''); // Check artist part
      });
      if (fallbackMatch) {
         console.log(`Fallback match for slug ${decodedSlug}: "${fallbackMatch.title}" by ${fallbackMatch.artist}`);
         return fallbackMatch;
+     } else {
+       console.log(`No direct or fallback match found for slug ${decodedSlug}.`);
      }
   } else {
     // console.log(`Direct match for slug ${decodedSlug}: "${matchedSong.title}" by ${matchedSong.artist}`);
@@ -103,25 +105,25 @@ export default async function SongPage({ params }: SongPageProps) {
                  )}
              </div>
         </CardContent>
-      </Card>
 
-      {/* Lyrics Section */}
-      {song.lyrics && song.lyrics !== 'গানের কথা এখানে যোগ করা হবে...' && song.lyrics.trim() !== '' && (
-        <Card className="overflow-hidden shadow-lg bg-card">
-            <CardHeader className="bg-secondary/10 p-6">
+          {/* Lyrics Section */}
+          {song.lyrics && song.lyrics !== 'গানের কথা এখানে যোগ করা হবে...' && song.lyrics.trim() !== '' && (
+            <Card className="overflow-hidden shadow-lg bg-card">
+              <CardHeader className="bg-secondary/10 p-6">
                 <CardTitle className="text-2xl font-semibold text-primary/90 flex items-center gap-2">
-                    <ListMusic className="w-6 h-6 text-primary" />
-                    <span>গানের কথা</span>
+                  <ListMusic className="w-6 h-6 text-primary" />
+                  <span>গানের কথা</span>
                 </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6">
+              </CardHeader>
+              <CardContent className="p-6">
                 {/* Use pre for preserving whitespace and line breaks */}
                 <pre className="whitespace-pre-wrap text-base leading-relaxed font-sans text-foreground/90">
-                    {song.lyrics}
+                  {song.lyrics}
                 </pre>
-            </CardContent>
-        </Card>
-      )}
+              </CardContent>
+            </Card>
+          )}
+      </Card>
     </div>
   );
 }

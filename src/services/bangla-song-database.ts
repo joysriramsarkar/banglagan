@@ -181,8 +181,6 @@ export async function searchSongs(query: string): Promise<Song[]> {
 
   const lowerCaseQuery = query.toLowerCase();
   // Basic search: check if title or artist (in lowercase) includes the query
-  // This might need refinement for Bengali script matching if simple includes isn't sufficient.
-  // Consider using Intl.Collator for more robust language-sensitive searching if needed.
   const results = mockSongs.filter(song =>
     song.title.toLowerCase().includes(lowerCaseQuery) ||
     song.artist.toLowerCase().includes(lowerCaseQuery)
@@ -217,4 +215,39 @@ export async function getNewSongs(): Promise<Song[]> {
    await new Promise(resolve => setTimeout(resolve, 250));
    // Return next songs as "new" for demo
    return mockSongs.slice(4, mockSongs.length);
+}
+
+/**
+ * Extracts and returns a unique list of artists from the mock database.
+ *
+ * @returns A promise that resolves to an array of unique artist names (strings).
+ */
+ export async function getAllArtists(): Promise<string[]> {
+    console.log("Fetching all artists...");
+    // Simulate potential processing delay if needed
+    await new Promise(resolve => setTimeout(resolve, 50));
+    const artists = mockSongs.map(song => song.artist);
+    // Use Set to get unique values, then convert back to array
+    const uniqueArtists = Array.from(new Set(artists));
+    console.log(`Found ${uniqueArtists.length} unique artists.`);
+    return uniqueArtists;
+}
+
+/**
+ * Extracts and returns a unique list of genres from the mock database.
+ * Filters out undefined/null genres.
+ *
+ * @returns A promise that resolves to an array of unique genre names (strings).
+ */
+export async function getAllGenres(): Promise<string[]> {
+    console.log("Fetching all genres...");
+    // Simulate potential processing delay
+    await new Promise(resolve => setTimeout(resolve, 60));
+    const genres = mockSongs
+      .map(song => song.genre)
+      .filter((genre): genre is string => !!genre); // Filter out undefined/null and type guard
+    // Use Set for uniqueness
+    const uniqueGenres = Array.from(new Set(genres));
+    console.log(`Found ${uniqueGenres.length} unique genres.`);
+    return uniqueGenres;
 }

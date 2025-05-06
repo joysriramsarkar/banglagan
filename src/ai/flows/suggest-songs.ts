@@ -38,17 +38,17 @@ const prompt = ai.definePrompt({
   name: 'suggestSongsPrompt',
   input: {schema: SuggestSongsInputSchema},
   output: {schema: SuggestSongsOutputSchema},
-  prompt: `Based on the user's search history, suggest three songs that the user might enjoy.
+  prompt: `ব্যবহারকারীর অনুসন্ধানের ইতিহাসের উপর ভিত্তি করে, তিনটি বাংলা গান প্রস্তাব করুন যা ব্যবহারকারী উপভোগ করতে পারে।
 
-Search History: {{{searchHistory}}}
+অনুসন্ধানের ইতিহাস: {{{searchHistory}}}
 
-Return the suggestions in JSON format.
+JSON ফরম্যাটে প্রস্তাবনাগুলি ফেরত দিন।
 
 {
   "suggestions": [
       {
-          "title": "song title",
-          "artist": "artist name"
+          "title": "গানের শিরোনাম",
+          "artist": "শিল্পীর নাম"
       }
   ]
 }`,
@@ -73,7 +73,7 @@ const suggestSongsBasedOnHistoryFlow = ai.defineFlow(
     const allSongs = searchResults.flat();
 
     // Extract the song titles and artists from the search results.
-    const songInfo = allSongs.map(song => `${song.title} by ${song.artist}`).join(', ');
+    const songInfo = allSongs.map(song => `${song.title} - ${song.artist}`).join(', '); // Changed 'by' to '-' for potentially better LLM understanding
 
     // Pass the song information to the prompt.
     const {output} = await prompt({

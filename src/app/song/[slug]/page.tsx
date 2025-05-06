@@ -63,7 +63,7 @@ export default async function SongPage({ params }: SongPageProps) {
           </div>
         </CardHeader>
         <CardContent className="p-6">
-          <h2 className="text-2xl font-semibold mb-4 text-primary/90">Lyrics</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-primary/90">লিরিক্স</h2>
           <Separator className="mb-4 bg-primary/20" />
           {/* Preserve whitespace and line breaks in lyrics */}
           <pre className="text-base leading-relaxed whitespace-pre-wrap font-sans text-foreground">

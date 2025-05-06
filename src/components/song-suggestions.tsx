@@ -28,7 +28,7 @@ export default function SongSuggestions() {
         })
         .catch((err) => {
           console.error("Error fetching song suggestions:", err);
-          setError("Could not fetch song suggestions at this time.");
+          setError("এই মুহূর্তে গানের পরামর্শ আনা সম্ভব হচ্ছে না।");
         })
         .finally(() => {
           setLoading(false);
@@ -50,19 +50,19 @@ export default function SongSuggestions() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-primary">
           <Lightbulb className="w-5 h-5 text-accent" />
-          <span>Songs You Might Like</span>
+          <span>আপনার পছন্দের গান হতে পারে</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
         {loading && (
           <div className="flex items-center justify-center p-4">
             <Loader2 className="h-6 w-6 animate-spin text-primary" />
-            <span className="ml-2 text-muted-foreground">Generating recommendations...</span>
+            <span className="ml-2 text-muted-foreground">সুপারিশ তৈরি করা হচ্ছে...</span>
           </div>
         )}
         {error && (
           <Alert variant="destructive">
-            <AlertTitle>Error</AlertTitle>
+            <AlertTitle>ত্রুটি</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
@@ -73,7 +73,7 @@ export default function SongSuggestions() {
               return (
                 <li key={index} className="text-sm">
                   <Link href={`/song/${slug}`} className="text-primary hover:text-accent hover:underline transition-colors">
-                     <span className="font-medium">{song.title}</span> by {song.artist}
+                     <span className="font-medium">{song.title}</span> - {song.artist}
                   </Link>
                 </li>
               );
@@ -81,7 +81,7 @@ export default function SongSuggestions() {
           </ul>
         )}
          {!loading && !error && (!suggestions || suggestions.length === 0) && (
-            <p className="text-muted-foreground text-sm">No suggestions available based on your recent searches.</p>
+            <p className="text-muted-foreground text-sm">আপনার সাম্প্রতিক অনুসন্ধানের উপর ভিত্তি করে কোন পরামর্শ উপলব্ধ নেই।</p>
          )}
       </CardContent>
     </Card>

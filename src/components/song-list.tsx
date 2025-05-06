@@ -11,7 +11,7 @@ export default function SongList({ songs, title }: SongListProps) {
     return (
       <div>
         {title && <h2 className="text-2xl font-semibold mb-4 text-primary">{title}</h2>}
-        <p className="text-muted-foreground">No songs found.</p>
+        <p className="text-muted-foreground">কোন গান পাওয়া যায়নি।</p>
       </div>
     );
   }

@@ -14,9 +14,9 @@ export default async function Home() {
   return (
     <div className="space-y-8">
       <section>
-        <h1 className="text-3xl font-bold text-primary mb-4">Discover Bengali Music</h1>
+        <h1 className="text-3xl font-bold text-primary mb-4">বাংলা সঙ্গীত আবিষ্কার করুন</h1>
         <p className="text-lg text-muted-foreground">
-          Explore popular hits, new releases, and find lyrics for your favorite Bangla songs.
+          জনপ্রিয় হিট, নতুন রিলিজ অন্বেষণ করুন এবং আপনার প্রিয় বাংলা গানের লিরিক্স খুঁজুন।
         </p>
       </section>
 
@@ -29,14 +29,14 @@ export default async function Home() {
       <section>
         <Tabs defaultValue="popular" className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
-            <TabsTrigger value="popular">Popular Songs</TabsTrigger>
-            <TabsTrigger value="new">New Releases</TabsTrigger>
+            <TabsTrigger value="popular">জনপ্রিয় গান</TabsTrigger>
+            <TabsTrigger value="new">নতুন রিলিজ</TabsTrigger>
           </TabsList>
           <TabsContent value="popular">
-            <SongList songs={popularSongs} title="Popular Songs" />
+            <SongList songs={popularSongs} title="জনপ্রিয় গান" />
           </TabsContent>
           <TabsContent value="new">
-             <SongList songs={newSongs} title="New Releases" />
+             <SongList songs={newSongs} title="নতুন রিলিজ" />
           </TabsContent>
         </Tabs>
       </section>

@@ -12,8 +12,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'বাংলা গান - Bangla Song Database',
-  description: 'Search, discover, and explore Bengali song lyrics and information.',
+  title: 'বাংলা গান - আপনার গানের ডাটাবেস',
+  description: 'বাংলা গানের লিরিক্স এবং তথ্য অনুসন্ধান করুন, আবিষ্কার করুন এবং অন্বেষণ করুন।',
   // Add Bengali meta tags if needed
 };
 
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en"> {/* Consider changing lang="bn" if primarily Bengali */}
+    <html lang="bn"> {/* Changed lang to Bengali */}
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',

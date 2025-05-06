@@ -54,7 +54,7 @@ export default function SearchPage() {
       })
       .catch((err) => {
         console.error('Error searching songs:', err);
-        setError('Failed to fetch search results. Please try again later.');
+        setError('অনুসন্ধান ফলাফল আনতে ব্যর্থ। অনুগ্রহ করে পরে আবার চেষ্টা করুন।');
       })
       .finally(() => {
         setLoading(false);
@@ -64,7 +64,7 @@ export default function SearchPage() {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-bold text-primary">
-        Search Results {query && `for "${query}"`}
+        অনুসন্ধান ফলাফল {query && `"${query}" এর জন্য`}
       </h1>
 
       {loading && <LoadingSkeleton />}
@@ -72,7 +72,7 @@ export default function SearchPage() {
       {error && (
          <Alert variant="destructive">
             <Frown className="h-4 w-4" />
-           <AlertTitle>Error</AlertTitle>
+           <AlertTitle>ত্রুটি</AlertTitle>
            <AlertDescription>{error}</AlertDescription>
          </Alert>
       )}
@@ -80,8 +80,8 @@ export default function SearchPage() {
       {!loading && !error && songs.length === 0 && query && (
          <Alert>
             <Frown className="h-4 w-4" />
-           <AlertTitle>No Results</AlertTitle>
-           <AlertDescription>No songs found matching your search criteria.</AlertDescription>
+           <AlertTitle>কোন ফলাফল পাওয়া যায়নি</AlertTitle>
+           <AlertDescription>আপনার অনুসন্ধানের সাথে মিলে যাওয়া কোনো গান পাওয়া যায়নি।</AlertDescription>
          </Alert>
       )}
 
@@ -90,7 +90,7 @@ export default function SearchPage() {
       )}
 
        {!loading && !error && !query && (
-         <p className="text-muted-foreground">Please enter a search term to find songs.</p>
+         <p className="text-muted-foreground">গান খুঁজতে অনুগ্রহ করে একটি অনুসন্ধান শব্দ লিখুন।</p>
        )}
     </div>
   );

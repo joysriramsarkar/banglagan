@@ -31,7 +31,7 @@ export interface Song {
    * The lyrics of the song.
    * গানের কথা।
    */
-  lyrics: string; // Keep lyrics in the data model, but won't display on page for now
+  lyrics: string;
 }
 
 // Larger mock database with Bengali titles and artists and additional info
@@ -148,22 +148,32 @@ export const mockSongs: Song[] = [ // Export the array
   },
   {
     title: 'একতারা তুই দেশের কথা',
-    artist: 'শাহ আব্দুল করিম',
-    album: 'কালনীর ঢেউ',
+    artist: 'শাহনাজ রহমতউল্লাহ', // Updated artist
+    album: 'কালনীর ঢেউ', // Keeping existing album, genre, year as not specified for change
     genre: 'লোকগীতি',
-    releaseYear: 2000, // Approximate release year of album/common recording
-    lyrics: `একতারা তুই দেশের কথা বল রে এবার বল
-আমাকে তুই বাউল করে সঙ্গে নিয়ে চল।
-জীবন মরন মাঝে তোর সুর যেন জীবন ভরে তোলে।
-তোর সুর যেন ভোরের পাখি জাগিয়ে দিয়ে বলে ।।
+    releaseYear: 2000,
+    lyrics: `একতারা তুই দেশের কথা
+বলরে এবার বল।
+আমাকে তুই বাউল করে
+সঙ্গে নিয়ে চল।
+জীবন মরন মাঝে
+তোর সুর যেন বাজে।
 
-কৃষক মজুর সবার কথা বল রে এবার বল
-আমাকে তুই বাউল করে সঙ্গে নিয়ে চল ।।
+একটি গানই আমি শুধু
+গেয়ে যেতে চাই।
+বাংলা আমার আমি যে তার
+আর তো চাওয়া নাই রে…
+আর তো চাওয়া নাই।
+প্রানের প্রিয় তুমি
+মোর সাধের জন্মভূমি।
 
-মনের কথা গানের সুরে বলে যা তুই মোরে
-এই মাটির পরশ দিয়ে দে রে আমার প্রানটা ভরে।
-আমার একতারা তুই দেশের কথা বল রে এবার বল
-আমাকে তুই বাউল করে সঙ্গে নিয়ে চল ।।`
+একটি কথায় শুধু আমি
+বলে যেতে চাই।
+বাংলায় আমার সুখে দুঃখে
+হয় যেন গো ঠাই রে
+হয় যেন গো ঠাই।
+তোমায় বরন করে
+যেন যেতে পারি মরে।` // Updated lyrics
   },
    {
     title: 'আমি বাংলায় গান গাই',
@@ -235,6 +245,65 @@ export const mockSongs: Song[] = [ // Export the array
 বৃষ্টি ঝরে পড়ছে রিমঝিম করে গাছের পাতা নড়ছে।
 হাওয়ায় দোলে ফুলের বন, নাচছে কেমন দেখ না মন,
 আয়রে মেঘ আয়রে মেঘ, আয়রে আমার বুকে।`
+  },
+  {
+    title: 'ধনধান্য পুষ্পভরা',
+    artist: 'দ্বিজেন্দ্রলাল রায়',
+    album: 'পরপারে',
+    genre: 'স্বদেশ',
+    releaseYear: 1912,
+    lyrics: `ধনধান্য পুষ্পভরা আমাদের এই বসুন্ধরা
+তাহার মাঝে আছে দেশ এক সকল দেশের সেরা
+ও সে স্বপ্ন দিয়ে তৈরি সে দেশ স্মৃতি দিয়ে ঘেরা
+এমন দেশটি কোথাও খুঁজে পাবে নাকো তুমি
+সকল দেশের রানি সে যে আমার জন্মভূমি।`
+  },
+  {
+    title: 'বকুল ফুল বকুল ফুল',
+    artist: 'সংগৃহীত',
+    album: 'লোকগীতি',
+    genre: 'লোকগীতি',
+    releaseYear: 1960, // Approximate era
+    lyrics: `বকুল ফুল বকুল ফুল সোনা দিয়া হাত কেনে বান্ধাইলি।
+শালুক ফুলের লাজ নাই রাইতে শালুক ফোটে লো রাইতে শালুক ফোটে।
+যার সনে যার ভালোবাসা সেই তো মজা লোটে লো সেই তো মজা লোটে।`
+  },
+  {
+    title: 'আকাশ ভরা সূর্য তারা',
+    artist: 'রবীন্দ্রনাথ ঠাকুর',
+    album: 'গীতবিতান',
+    genre: 'প্রকৃতি',
+    releaseYear: 1910,
+    lyrics: `আকাশভরা সূর্য-তারা, বিশ্বভরা প্রাণ,
+তাহারি মাঝখানে আমি পেয়েছি মোর স্থান,
+বিস্ময়ে তাই জাগে আমার গান॥
+অসীম কালের যে হিল্লোলে জোয়ার-ভাঁটায় ভুবন দোলে
+নাড়ীতে মোর রক্তধারায় লেগেছে তার টান,
+বিস্ময়ে তাই জাগে আমার গান॥`
+  },
+  {
+    title: 'আমার ভাইয়ের রক্তে রাঙানো',
+    artist: 'আব্দুল গাফফার চৌধুরী (গীতিকার), আলতাফ মাহমুদ (সুরকার)', // Common attribution practice
+    album: 'বিভিন্ন শিল্পী',
+    genre: 'একুশের গান',
+    releaseYear: 1952,
+    lyrics: `আমার ভাইয়ের রক্তে রাঙানো একুশে ফেব্রুয়ারি
+আমি কি ভুলিতে পারি।
+ছেলেহারা শত মায়ের অশ্রু-গড়া-এ ফেব্রুয়ারি
+আমি কি ভুলিতে পারি।
+আমার সোনার দেশের রক্তে রাঙানো একুশে ফেব্রুয়ারি
+আমি কি ভুলিতে পারি।`
+  },
+  {
+    title: 'এই পথ যদি না শেষ হয়',
+    artist: 'হেমন্ত মুখোপাধ্যায় ও সন্ধ্যা মুখোপাধ্যায়',
+    album: 'সপ্তপদী (চলচ্চিত্র)',
+    genre: 'চলচ্চিত্রের গান',
+    releaseYear: 1961,
+    lyrics: `এই পথ যদি না শেষ হয়
+তবে কেমন হতো তুমি বলতো?
+যদি পৃথিবীটা স্বপ্নের দেশ হয়
+তবে কেমন হতো তুমি বলতো?`
   }
 ];
 
@@ -278,9 +347,15 @@ export async function getPopularSongs(): Promise<Song[]> {
   console.log("Fetching popular songs...");
   await new Promise(resolve => setTimeout(resolve, 200));
   // Prioritize non-Tagore, add a couple of Tagore hits
-  const nonTagore = mockSongs.filter(song => song.artist !== 'রবীন্দ্রনাথ ঠাকুর');
+  const nonTagore = mockSongs.filter(song => song.artist !== 'রবীন্দ্রনাথ ঠাকুর' && song.artist !== 'শাহনাজ রহমতউল্লাহ'); // Exclude the updated artist as well for variety
   const tagoreHits = mockSongs.filter(song => ['আমার সোনার বাংলা', 'যদি তোর ডাক শুনে কেউ না আসে'].includes(song.title));
-  return [...nonTagore.slice(0, 2), ...tagoreHits, ...nonTagore.slice(2,3)].slice(0, 4); // Mix and limit
+  const shahnazHit = mockSongs.find(song => song.title === 'একতারা তুই দেশের কথা');
+  const popular = [...nonTagore.slice(0, 1), ...tagoreHits.slice(0,1), ...nonTagore.slice(1,2)];
+  if (shahnazHit && !popular.find(s => s.title === shahnazHit.title)) { // Add Shahnaz song if not already included
+    popular.push(shahnazHit);
+  }
+
+  return popular.slice(0, 4); // Mix and limit
 }
 
 /**
@@ -293,7 +368,6 @@ export async function getPopularSongs(): Promise<Song[]> {
 export async function getNewSongs(): Promise<Song[]> {
    console.log("Fetching new songs...");
    await new Promise(resolve => setTimeout(resolve, 250));
-   // Prioritize Tagore songs not in popular list
    const popularTitles = (await getPopularSongs()).map(s => s.title);
    const newTagore = mockSongs.filter(song =>
         song.artist === 'রবীন্দ্রনাথ ঠাকুর' &&

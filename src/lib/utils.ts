@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 /**
  * Creates a URL-friendly slug from a song title, artist, and optionally lyricist.
  * Preserves Bengali characters, replaces spaces with hyphens, and removes most other symbols.
- * Includes lyricist in the slug if provided to increase uniqueness.
+ * Includes lyricist in the slug if provided and non-empty to increase uniqueness.
  * @param title The song title.
  * @param artist The song artist.
  * @param lyricist The song lyricist (optional).
@@ -27,17 +27,17 @@ export const createSlug = (title: string, artist: string, lyricist?: string): st
 
   const titleSlug = sanitize(title);
   const artistSlug = sanitize(artist);
-  const lyricistSlug = lyricist ? sanitize(lyricist) : undefined;
+  // Sanitize lyricist only if it's a non-empty string
+  const lyricistSlug = (lyricist && typeof lyricist === 'string' && lyricist.trim() !== '') ? sanitize(lyricist) : '';
 
 
   // Ensure slugs are not empty
   const safeTitleSlug = titleSlug || 'untitled';
   const safeArtistSlug = artistSlug || 'unknown-artist';
-  const safeLyricistSlug = lyricistSlug || 'unknown-lyricist'; // Provide default if lyricist was passed but sanitized to empty
 
-  // Combine with separators, including lyricist if available
-  if (lyricist) {
-    return `${safeTitleSlug}-by-${safeArtistSlug}-lyricist-${safeLyricistSlug}`;
+  // Combine with separators, including lyricist if available and non-empty
+  if (lyricistSlug) {
+    return `${safeTitleSlug}-by-${safeArtistSlug}-lyricist-${lyricistSlug}`;
   } else {
     return `${safeTitleSlug}-by-${safeArtistSlug}`;
   }
@@ -65,3 +65,16 @@ export const toBengaliNumerals = (num: number | string | undefined): string => {
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
+
+/**
+ * Cleans a string by removing specific problematic characters like soft hyphens.
+ * @param str The string to clean.
+ * @returns The cleaned string.
+ */
+export function cleanString(str: string | undefined): string | undefined {
+  if (typeof str !== 'string') {
+    return str;
+  }
+  // Remove soft hyphens (U+00AD) and other problematic invisible characters
+  return str.replace(/\u00AD/g, '').replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
+}

@@ -6,7 +6,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link'; // Import Link
-import { createSlug } from '@/lib/utils'; // Import from utils
+import { createSlug, cleanString } from '@/lib/utils'; // Import from utils
 import { mockSongs } from '@/services/bangla-song-database'; // Import mockSongs to find lyricist
 
 export default function SongSuggestions() {
@@ -39,8 +39,8 @@ export default function SongSuggestions() {
   }, []); // Empty dependency array ensures this runs once on mount
 
 
-  if (searchHistory.length === 0) {
-    return null; // Don't show the component if there's no search history
+  if (searchHistory.length === 0 && !loading) { // Also check loading state
+    return null; // Don't show the component if there's no search history and not loading
   }
 
   return (
@@ -67,27 +67,42 @@ export default function SongSuggestions() {
         {!loading && !error && suggestions && suggestions.length > 0 && (
           <ul className="space-y-2">
             {suggestions.map((song, index) => {
+              // Clean suggested song title and artist
+              const suggestedTitleClean = cleanString(song.title);
+              const suggestedArtistClean = cleanString(song.artist);
+
               // Find the full song details from mock data to get the lyricist
-              const fullSong = mockSongs.find(s => s.title === song.title && s.artist === song.artist);
+              const fullSong = mockSongs.find(s => 
+                cleanString(s.title) === suggestedTitleClean && 
+                cleanString(s.artist) === suggestedArtistClean
+              );
+              
               // Use the createSlug function with title, artist, and lyricist (if found)
-              const slug = createSlug(song.title, song.artist, fullSong?.lyricist);
+              const slug = createSlug(
+                suggestedTitleClean || 'শিরোনামহীন', 
+                suggestedArtistClean || 'অজানা শিল্পী', 
+                cleanString(fullSong?.lyricist)
+              );
               return (
                 <li key={index} className="text-sm">
                   {/* Ensure the slug is properly encoded for the URL */}
                   <Link href={`/song/${encodeURIComponent(slug)}`} className="text-primary hover:text-accent hover:underline transition-colors">
-                     <span className="font-medium">{song.title}</span> - {song.artist}
-                     {/* Optionally display lyricist here too */}
-                     {/* {fullSong?.lyricist && ` (${fullSong.lyricist})`} */}
+                     <span className="font-medium">{suggestedTitleClean || 'শিরোনাম পাওয়া যায়নি'}</span> - {suggestedArtistClean || 'শিল্পী পাওয়া যায়নি'}
                   </Link>
                 </li>
               );
             })}
           </ul>
         )}
-         {!loading && !error && (!suggestions || suggestions.length === 0) && (
+         {!loading && !error && (!suggestions || suggestions.length === 0) && searchHistory.length > 0 && (
             <p className="text-muted-foreground text-sm">আপনার সাম্প্রতিক অনুসন্ধানের উপর ভিত্তি করে কোন পরামর্শ উপলব্ধ নেই।</p>
+         )}
+         {/* Case for no history and not loading, but component still shown due to loading initially */}
+         {!loading && !error && searchHistory.length === 0 && (
+            <p className="text-muted-foreground text-sm">কোনো অনুসন্ধানের ইতিহাস পাওয়া যায়নি।</p>
          )}
       </CardContent>
     </Card>
   );
 }
+

@@ -12,53 +12,56 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
   const decodedSlug = decodeURIComponent(slug);
 
   // Example slug: আমার-সোনার-বাংলা-by-রবীন্দ্রনাথ-ঠাকুর
-  // Split by a unique separator, assuming '-by-' structure
+  // Split by '-by-' separator
   const parts = decodedSlug.split('-by-');
   if (parts.length !== 2) {
-      console.warn(`Unexpected slug format: ${decodedSlug}`);
-      // Fallback: try searching with the whole slug as a title query
+      console.warn(`Unexpected slug format: ${decodedSlug}. Trying fallback search.`);
+      // Fallback: search using the whole slug (hyphens replaced by spaces)
       try {
-          const results = await searchSongs(decodedSlug.replace(/-/g, ' '));
-          // If there's an exact title match (or a close one), return it
-          return results.find(song => song.title.toLowerCase() === decodedSlug.replace(/-/g, ' ').toLowerCase()) || results[0];
+          const fallbackQuery = decodedSlug.replace(/-/g, ' ');
+          const results = await searchSongs(fallbackQuery);
+          // If there's an exact title match or close match, return it
+          return results.find(song =>
+              song.title.toLowerCase().trim() === fallbackQuery.toLowerCase().trim() ||
+              `${song.title.toLowerCase().trim()} ${song.artist.toLowerCase().trim()}` === fallbackQuery.toLowerCase().trim()
+          ) || (results.length > 0 ? results[0] : undefined); // Return first result as a last resort
       } catch (error) {
-          console.error("Error in fallback search:", error);
+          console.error("Error in fallback slug search:", error);
           return undefined;
       }
   }
 
-  const titleQuery = parts[0].replace(/-/g, ' ').toLowerCase();
-  const artistQuery = parts[1].replace(/-/g, ' ').toLowerCase();
+  const titleQuery = parts[0].replace(/-/g, ' ').trim().toLowerCase();
+  const artistQuery = parts[1].replace(/-/g, ' ').trim().toLowerCase();
+
+  if (!titleQuery || !artistQuery) {
+    console.warn(`Could not extract valid title/artist from slug: ${decodedSlug}`);
+    return undefined;
+  }
 
   try {
-    // Search combining parts for better initial filtering
-    // Note: searchSongs might need adjustment if it doesn't search artists effectively enough alone
-    const results = await searchSongs(`${titleQuery} ${artistQuery}`);
+    // 1. Search primarily by title - this should be more reliable
+    const titleResults = await searchSongs(titleQuery);
 
-    // Find the best match: Prioritize exact matches, then close matches.
-    // Normalize strings for comparison (lowercase and trim)
-    const matchedSong = results.find(
-      (song) =>
-        song.title.toLowerCase().trim() === titleQuery &&
-        song.artist.toLowerCase().trim() === artistQuery
+    // 2. Filter the title results by the exact artist match (case-insensitive, trimmed)
+    const matchedSong = titleResults.find(
+      (song) => song.artist.toLowerCase().trim() === artistQuery
     );
 
-    // If no exact match, try a less strict find (e.g., includes) as a fallback
-    if (!matchedSong) {
-        console.log(`No exact match for slug: ${decodedSlug}. Trying partial match.`);
-        const partialMatch = results.find(
-            (song) =>
-                song.title.toLowerCase().includes(titleQuery) &&
-                song.artist.toLowerCase().includes(artistQuery)
-        );
-        // If still no match, perhaps return the first result if the search was reasonably specific
-        return partialMatch || (results.length === 1 ? results[0] : undefined);
+    if (matchedSong) {
+        console.log(`Exact match found for slug: ${decodedSlug}`);
+        return matchedSong;
+    } else {
+        console.log(`No exact artist match for title "${titleQuery}" and artist "${artistQuery}". Found ${titleResults.length} potential title matches.`);
+        // Optional: If no exact match, you could implement looser matching here if needed,
+        // but returning undefined is safer to avoid showing the wrong song.
+        // For example, return the first title result if only one was found:
+        // return titleResults.length === 1 ? titleResults[0] : undefined;
+        return undefined; // Strict matching: if artist doesn't match, return undefined
     }
 
-
-    return matchedSong;
   } catch (error) {
-    console.error("Error fetching song by slug:", error);
+    console.error(`Error fetching song by slug "${decodedSlug}":`, error);
     return undefined; // Return undefined on error
   }
 }
@@ -73,6 +76,7 @@ export default async function SongPage({ params }: SongPageProps) {
   const song = await getSongBySlug(params.slug);
 
   if (!song) {
+    console.log(`Song not found for slug: ${params.slug}`);
     notFound(); // Show 404 if song not found
   }
 
@@ -115,12 +119,13 @@ export default async function SongPage({ params }: SongPageProps) {
                         <span>{song.releaseYear}</span>
                     </div>
                  )}
+                 {/* Add more details if available in your Song interface */}
              </div>
 
           {/* Lyrics Section Removed as per request */}
           {/*
+          <Separator className="my-4 bg-primary/20" />
           <h2 className="text-2xl font-semibold mb-4 text-primary/90">লিরিক্স</h2>
-          <Separator className="mb-4 bg-primary/20" />
           <pre className="text-base leading-relaxed whitespace-pre-wrap font-sans text-foreground">
             {song.lyrics}
           </pre>
@@ -135,8 +140,8 @@ export default async function SongPage({ params }: SongPageProps) {
 // Helper function to create slugs (consider moving to a utility file)
 // Handles basic replacement, might need more robust logic for complex names
 const createSlug = (title: string, artist: string) => {
-    const titleSlug = title.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').replace(/\s+/g, '-');
-    const artistSlug = artist.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').replace(/\s+/g, '-');
+    const titleSlug = title.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s+/g, '-');
+    const artistSlug = artist.toLowerCase().replace(/[^\p{L}\p{N}\s-]/gu, '').trim().replace(/\s+/g, '-');
     // Ensure slugs are not empty
     return `${titleSlug || 'untitled'}-by-${artistSlug || 'unknown-artist'}`;
 };

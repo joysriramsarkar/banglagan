@@ -36,7 +36,7 @@ export default function SearchBar() {
         aria-label="গান, শিল্পী বা গীতিকার অনুসন্ধান করুন"
       />
       <Button type="submit" size="sm" className="absolute right-1 top-1/2 h-8 -translate-y-1/2">
-        অনুসন্ধান
+        আমার
       </Button>
     </form>
   );

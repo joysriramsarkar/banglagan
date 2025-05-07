@@ -52,6 +52,23 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   return cleanedText;
 }
 
+/**
+ * Cleans a string for display purposes.
+ * Removes soft hyphens, zero-width spaces, trims, and normalizes multiple spaces to one.
+ * @param str The string to clean.
+ * @returns The cleaned string, or undefined if input is invalid/empty.
+ */
+export function cleanDisplayString(str: string | undefined | null): string | undefined {
+    if (!str || typeof str !== 'string' || !str.trim()) {
+        return undefined;
+    }
+    return str
+        .replace(/\u00AD/g, '') // Remove soft hyphens
+        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+        .trim()
+        .replace(/\s+/g, ' '); // Normalize multiple spaces to one
+}
+
 
 /**
  * Creates a URL-friendly slug from a song title, artist, and optionally lyricist.
@@ -116,3 +133,4 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
+

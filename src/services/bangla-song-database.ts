@@ -1,5 +1,5 @@
 
-import { cleanString, createSlug, toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
+import { cleanString, createSlug, toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 
 /**
  * Represents a song with title, artist, album, genre, release year, lyricist, and lyrics.
@@ -41,20 +41,6 @@ export interface Song {
    */
   lyrics: string;
 }
-
-// Helper function to clean strings for display (less aggressive than for slugs)
-// Keeps spaces, removes only problematic chars, trims.
-function cleanDisplayString(str: string | undefined | null): string | undefined {
-    if (!str || typeof str !== 'string' || !str.trim()) {
-        return undefined;
-    }
-    return str
-        .replace(/\u00AD/g, '') // Remove soft hyphens
-        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
-        .trim()
-        .replace(/\s+/g, ' '); // Normalize multiple spaces to one
-}
-
 
 // Larger mock database with Bengali titles and artists and additional info
 let mockSongsDb: Song[] = [ // Renamed to avoid immediate export
@@ -321,7 +307,7 @@ let mockSongsDb: Song[] = [ // Renamed to avoid immediate export
   // Add details to 100 placeholder Tagore songs
    { title: 'অগ্নিবীণা বাজাও তুমি কেমন করে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'অগ্নিবীণা বাজাও তুমি কেমন করে, আমি অবাক হয়ে শুনি শুধু শুনি। তোমার সুরের পাকে পাকে বাঁধন খোলে, মুক্তি আসে সব ভুলে গিয়ে মুনি।' },
    { title: 'অগ্রপথিক হে সেনাপতি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'স্বদেশ', lyrics: 'অগ্রপথিক, হে সেনাপতি, তব রথের ধ্বনি ঐ যে শুনি। তোমার হাতে জয় পতাকা, তোমার চোখে দীপ্ত শিখা, নবযুগের আনলে লেখা নবীন কাহিনী।' },
-   { title: 'অজানা খনির নূতন মণির', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'অজানা খনির নূতন মণির মতো কাহার জীবন ঝলকে। ক্ষণেকতরে এ ধূলির ’পরে আলোক দিল সে পলকে।' },
+   { title: 'অজানা খনির নূতন মণির', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'অজানা খনির নূতন মণির মতো কাহার জীবন ঝলকে। ক্ষণেকতরে এ ধূলির পরে আলোক দিল সে পলকে।' },
    { title: 'অজানা সুর কে দিয়ে যায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'অজানা সুর কে দিয়ে যায় কানে কানে, কত দিনের কত ব্যথা কত গানে। ভোরের আলোয় রাতের ছায়ায় উদাস করে, এই কি তোমার চরণধ্বনি আমার প্রাণে?' },
    { title: 'অঞ্জলি লহ মোর সঙ্গীতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'অঞ্জলি লহ মোর সঙ্গীতে, হৃদয়কমল বিকাশ কর। তব চরণেতে রাখি বেদনারতি, প্রেমের অমৃতে জীবন ভর।' },
    { title: 'অত চুপি চুপি কেন কথা কও', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'অত চুপি চুপি কেন কথা কও, সখী, আধো রাতে। ওকি প্রণয়েরি ভাষা, নাকি ভীরু হৃদয়ের আশা, ফুলগন্ধসম আসে যায় সাথে সাথে।' },
@@ -503,7 +489,7 @@ let mockSongsDb: Song[] = [ // Renamed to avoid immediate export
   { title: 'আমার প্রাণের ’পরে চলে গেল কে বসন্তের বাতাসটুকুর মতো', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'আমার প্রাণের ’পরে চলে গেল কে বসন্তের বাতাসটুকুর মতো। সে যে ছুঁয়ে গেল, নুপূর বাজিল চরণে– সে যে শুধু গেল, আর ফিরে চাহিল না মনোকাননে।' },
   { title: 'আমার মন চেয়ে রয় মনে মনে হেরে মাধুরী', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'প্রেম', lyrics: 'আমার মন চেয়ে রয় মনে মনে হেরে মাধুরী। না বলা বাণীর ঘন যামিনীর মাঝে। কবে তুমি আসবে সোনার স্বপন সঞ্চারি নীরব নির্জন রাতে।' },
   { title: 'আমার মন যখন জাগলি না রে ওরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'আমার মন, যখন জাগলি না রে ওরে, তখন আঁধার ছিল হৃদয় জুড়ে। তুমি যে এসে দাঁড়ালে দ্বারে, ডাক দিলে করুণ সুরে। ঘুম টুটে গেল, আলো ফুটল, মন ছুটে গেল বহুদূরে।' },
-   { title: 'আমার মনের মাঝে যে গান বাজে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'আমার মনের মাঝে যে গান বাজে, সে তো শুধু তোমারই লাগি। সেথায় দুঃখ সুখ সব মেশামেশি, তবু তোমাকেই মাগি। যদি তুমি না আসো পাশে, এ গান বাতাসে ভাসে, তোমার আশায় পথ চেয়ে রই, দিবানিশি জাগি।' },
+   { title: 'আমার মনের মাঝে যে গান বাজে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'আমার মনের মাঝে যে গান বাজে, সে তো শুধু তোমারি লাগি। সেথায় দুঃখ সুখ সব মেশামেশি, তবু তোমাকেই মাগি। যদি তুমি না আসো পাশে, এ গান বাতাসে ভাসে, তোমার আশায় পথ চেয়ে রই, দিবানিশি জাগি।' },
    { title: 'আমার মাথা নত করে দাও হে তোমার চরণধুলার তলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'আমার মাথা নত করে দাও হে তোমার চরণধুলার তলে। সকল অহংকার হে আমার ডুবাও চোখের জলে। নিজেরে করিতে গৌরব দান নিজেরে কেবলি করি অপমান, আপনারে শুধু ঘেরিয়া ঘেরিয়া ঘুরে মরি পলে পলে।' },
    { title: 'আমার মাঝে তোমারই মায়া জাগালে তুমি নাথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'পূজা', lyrics: 'আমার মাঝে তোমারই মায়া জাগালে তুমি নাথ। আমার চোখে তোমারি ছায়া দেখি দিবসরাত। এ ভুবন তোমারি দান, তব প্রেমে মুগ্ধ প্রাণ, তোমারি চরণে জানাই আমার সশ্রদ্ধ প্রণিপাত।' },
    { title: 'আমার শেষ রাগিণীর প্রথম ধুয়ো ধরলি না যে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'বিচিত্র', lyrics: 'আমার শেষ রাগিণীর প্রথম ধুয়ো ধরলি না যে তুই। ঘুমিয়ে বুঝি ছিলি ওরে পাখি? আমি বৃথাই তোরে ডাকি। বেলা গেল, আলো নিবল, এবার আমি যাই।' },
@@ -577,6 +563,19 @@ let mockSongsDb: Song[] = [ // Renamed to avoid immediate export
 মম ললাটে রুদ্র ভগবান জ্বলে রাজ-রাজটীকা দীপ্ত জয়শ্রীর!
 বল বীর –
 আমি চির উন্নত শির! ...`
+  },
+  {
+    title: 'তোরা সব জয়ধ্বনি কর',
+    artist: 'নজরুল ইসলাম',
+    lyricist: 'কাজী নজরুল ইসলাম',
+    album: 'অগ্নিবীণা',
+    genre: 'বিপ্লবী',
+    releaseYear: 1922,
+    lyrics: `তোরা সব জয়ধ্বনি কর!
+তোরা সব জয়ধ্বনি কর!
+ঐ নূতনের কেতন ওড়ে কালবোশেখীর ঝড়।
+তোরা সব জয়ধ্বনি কর!
+তোরা সব জয়ধ্বনি কর! ...`
   },
   {
     title: 'মোরা আর জনমে হংস মিথুন ছিলাম',
@@ -1536,7 +1535,7 @@ export async function getTotalSongCount(): Promise<number> {
 // Function to ensure all listed lyricists have at least one song entry
 function addPlaceholderSongsForMissingLyricists() {
     const mutableMockSongs: Song[] = [...mockSongsDb]; // Work with a mutable copy
-    const lyricistsWithSongs = new Set(mutableMockSongs.map(song => song.lyricist).filter(Boolean));
+    const lyricistsWithSongs = new Set(mutableMockSongs.map(song => song.lyricist).filter(Boolean).map(cleanDisplayString));
     let addedPlaceholders = 0;
 
     const cleanedPlaceholderLyricist = cleanDisplayString('সংগৃহীত');
@@ -1550,11 +1549,11 @@ function addPlaceholderSongsForMissingLyricists() {
 
         mutableMockSongs.push({
             title: `${cleanedLyricist} এর একটি গান placeholder`,
-            artist: 'বিভিন্ন শিল্পী', // Cleaned already
+            artist: 'বিভিন্ন শিল্পী',
             lyricist: cleanedLyricist,
             lyrics: 'এই গীতিকারের জন্য গানের কথা শীঘ্রই যোগ করা হবে...',
-            genre: 'বিভিন্ন', // Cleaned already
-            album: 'বিভিন্ন', // Cleaned already
+            genre: 'বিভিন্ন',
+            album: 'বিভিন্ন',
             releaseYear: undefined
         });
         addedPlaceholders++;

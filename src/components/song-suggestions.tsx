@@ -7,21 +7,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link'; // Import Link
-import { createSlug } from '@/lib/utils'; // Import from utils
+import { createSlug, cleanDisplayString } from '@/lib/utils'; // Import from utils
+import type { Song } from '@/services/bangla-song-database'; // Import Song type
 import { mockSongs } from '@/services/bangla-song-database'; // Import mockSongs to find lyricist
-
-// Helper function to clean strings for display (less aggressive than for slugs)
-// Keeps spaces, removes only problematic chars, trims.
-function cleanDisplayString(str: string | undefined | null): string | undefined {
-    if (!str || typeof str !== 'string' || !str.trim()) {
-        return undefined;
-    }
-    return str
-        .replace(/\u00AD/g, '') // Remove soft hyphens
-        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
-        .trim()
-        .replace(/\s+/g, ' '); // Normalize multiple spaces to one
-}
 
 
 export default function SongSuggestions() {
@@ -81,31 +69,53 @@ export default function SongSuggestions() {
         )}
         {!loading && !error && suggestions && suggestions.length > 0 && (
           <ul className="space-y-2">
-            {suggestions.map((song, index) => {
-              // Clean suggested song title and artist for display
-              const suggestedTitleForDisplay = cleanDisplayString(song.title);
-              const suggestedArtistForDisplay = cleanDisplayString(song.artist);
+            {suggestions.map((suggestedSong, index) => {
+              // Clean suggested song title and artist from LLM for display and matching
+              const suggestedTitleForDisplay = cleanDisplayString(suggestedSong.title);
+              const suggestedArtistForDisplay = cleanDisplayString(suggestedSong.artist);
 
-              // Find the full song details from mock data to get the lyricist
-              // Match using cleaned display strings for consistency with how they are stored
-              const fullSong = mockSongs.find(s => 
-                cleanDisplayString(s.title) === suggestedTitleForDisplay && 
-                cleanDisplayString(s.artist) === suggestedArtistForDisplay
+              // Find the full song details from mockSongs database
+              // Match using cleaned display strings for consistency
+              const fullSongFromDb: Song | undefined = mockSongs.find(dbSong =>
+                cleanDisplayString(dbSong.title) === suggestedTitleForDisplay && // Ensure dbSong.title is also cleaned for comparison
+                cleanDisplayString(dbSong.artist) === suggestedArtistForDisplay // Ensure dbSong.artist is also cleaned for comparison
               );
-              
-              // Use the createSlug function with original/uncleaned title, artist, and lyricist (if found)
-              // createSlug will handle its own cleaning for URL safety
-              const slug = createSlug(
-                song.title, // Original title for slug
-                song.artist, // Original artist for slug
-                fullSong?.lyricist // Original lyricist for slug (if found)
-              );
+
+              let linkHref: string;
+              let displayText = `${suggestedTitleForDisplay || 'শিরোনাম পাওয়া যায়নি'} - ${suggestedArtistForDisplay || 'শিল্পী পাওয়া যায়নি'}`;
+
+              if (fullSongFromDb) {
+                // If a direct match is found in our database, create a slug using canonical data from the DB
+                const slug = createSlug(
+                  fullSongFromDb.title,
+                  fullSongFromDb.artist,
+                  fullSongFromDb.lyricist
+                );
+                linkHref = `/song/${encodeURIComponent(slug)}`;
+              } else {
+                // Fallback: If no direct match, link to a search page with the LLM's suggested (raw) title and artist
+                // Use original, potentially uncleaned values for search query as LLM might have specific phrasing
+                const searchQuery = `${suggestedSong.title || ''} ${suggestedSong.artist || ''}`.trim();
+                if (searchQuery) {
+                    linkHref = `/search?q=${encodeURIComponent(searchQuery)}`;
+                    // Optionally, modify display text to indicate it's a search
+                    // displayText += " (অনুসন্ধান করুন)";
+                } else {
+                    // Cannot make a meaningful link if LLM provided no usable title/artist
+                    linkHref = '#'; // Or don't render the link at all
+                }
+              }
+
               return (
-                <li key={index} className="text-sm">
-                  {/* Ensure the slug is properly encoded for the URL */}
-                  <Link href={`/song/${encodeURIComponent(slug)}`} className="text-primary hover:text-accent hover:underline transition-colors">
-                     <span className="font-medium">{suggestedTitleForDisplay || 'শিরোনাম পাওয়া যায়নি'}</span> - {suggestedArtistForDisplay || 'শিল্পী পাওয়া যায়নি'}
-                  </Link>
+                <li key={`${linkHref}-${index}`} className="text-sm">
+                  {linkHref !== '#' ? (
+                    <Link href={linkHref} className="text-primary hover:text-accent hover:underline transition-colors">
+                       {displayText}
+                    </Link>
+                  ) : (
+                    // Render non-interactive text if no meaningful link can be formed
+                    <span className="text-muted-foreground">{displayText} (লিঙ্ক তৈরি করা যায়নি)</span>
+                  )}
                 </li>
               );
             })}
@@ -122,3 +132,4 @@ export default function SongSuggestions() {
     </Card>
   );
 }
+

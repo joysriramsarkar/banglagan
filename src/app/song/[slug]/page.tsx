@@ -1,13 +1,14 @@
 // app/song/[slug]/page.tsx
+'use client'; // This page uses client-side hooks for data fetching and state management
+
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/types/song';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff } from 'lucide-react'; // Added WifiOff
+import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff, Frown } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Frown } from 'lucide-react';
 import * as React from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
@@ -69,90 +70,67 @@ export default function SongPage({ params }: SongPageProps) {
       setIsLoading(true);
       setError(null);
       try {
+        if (!params.slug || typeof params.slug !== 'string' || params.slug.trim() === '') {
+            console.error("SongPage: No valid slug provided.");
+            setError("গান সনাক্তকারী অনুপস্থিত বা ত্রুটিপূর্ণ।");
+            setIsLoading(false);
+            // notFound(); // This would immediately show the not-found page.
+                         // Depending on UX, might want to show error message first.
+            return;
+        }
+        
         console.log(`Attempting to fetch song with slug: ${params.slug}`);
         const fetchedSong = await getSongBySlug(params.slug);
+        
         if (!fetchedSong) {
           console.error(`SongPage: Song not found for slug: ${params.slug}. Decoded: ${decodeURIComponent(params.slug)}`);
-          notFound(); 
-          return; 
+          // setError will be handled by the main return block to show "Not Found" message
+          // notFound() will be called if song is still undefined after loading
         }
         setSong(fetchedSong);
       } catch (e: any) {
-        console.error("SongPage: Error fetching song:", e);
-        console.error("SongPage: Error name:", e.name);
-        console.error("SongPage: Error code:", e.code);
-        console.error("SongPage: Error message:", e.message);
-
-        if (e.name === 'FirebaseError' &&
-            (e.code === 'unavailable' || 
-             e.message?.toLowerCase().includes('offline') ||
-             e.message?.toLowerCase().includes('network error') ||
-             e.message?.toLowerCase().includes('failed to get document') ||
-             e.message?.toLowerCase().includes('could not reach cloud firestore backend')
-            )
-           ) {
-          setError("গানটি লোড করা সম্ভব হচ্ছে না। আপনার ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা পরে আবার চেষ্টা করুন।");
-        } else {
-          setError("গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।");
-        }
+        console.error("SongPage: Error fetching song (mock):", e);
+        setError("গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।");
       } finally {
         setIsLoading(false);
       }
     }
-
-    if (params.slug && typeof params.slug === 'string' && params.slug.trim() !== '') {
-      loadSong();
-    } else {
-      console.error("SongPage: No valid slug provided.");
-      setError("গান সনাক্তকারী অনুপস্থিত বা ত্রুটিপূর্ণ।");
-      setIsLoading(false);
-       // Optionally, trigger notFound() if slug is fundamentally invalid for routing
-      // notFound(); 
-    }
+    loadSong();
   }, [params.slug]);
 
-  const displayTitle = song ? cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই' : undefined;
-  const displayArtist = song ? cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই' : undefined;
-  const displayLyricist = song ? cleanDisplayString(song.lyricist) : undefined;
-  const displayAlbum = song ? cleanDisplayString(song.album) : undefined;
-  const displayGenre = song ? cleanDisplayString(song.genre) : undefined;
-  const displayLyrics = song ? cleanLyricsForDisplay(song.lyrics) : undefined;
 
   if (isLoading) {
     return <SongPageSkeleton />;
   }
 
-  if (error) {
+  if (error) { // If an explicit error was set during fetching (other than not found)
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <Alert variant="destructive" className="max-w-md">
-          <WifiOff className="h-5 w-5" />
-          <AlertTitle>সংযোগ সমস্যা</AlertTitle>
+          {/* Using WifiOff icon generally for fetch errors, but could be more generic */}
+          <WifiOff className="h-5 w-5" /> 
+          <AlertTitle>তথ্য আনতে সমস্যা</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       </div>
     );
   }
   
-  // If not loading, no error, but song is still not found (e.g., slug was valid but no data after notFound() was called and effect finished)
-  // This case should ideally be fully handled by notFound() called inside useEffect,
-  // but as a final check if rendering proceeds.
-  if (!song) {
-     // This state implies notFound() should have redirected, or there's an issue.
-     // Displaying a generic "not found" here as a fallback.
-     // Note: `notFound()` itself will throw an error that Next.js catches to render the not-found page.
-     // So, execution might not reach here if `notFound()` works as expected.
-    return (
-         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-           <Alert variant="destructive">
-             <Frown className="h-4 w-4" />
-             <AlertTitle>গান পাওয়া যায়নি</AlertTitle>
-             <AlertDescription>আপনি যে গানটি খুঁজছেন সেটি এই মুহূর্তে উপলব্ধ নেই অথবা লিঙ্কটি ভুল।</AlertDescription>
-           </Alert>
-         </div>
-       );
+  if (!song) { 
+    // This handles the case where loading is done, no explicit error was set, but song is still undefined.
+    // This implies the song was not found by getSongBySlug.
+    // We call notFound() here to render the dedicated not-found.tsx page.
+    notFound();
+    return null; // notFound() throws an error, so this line might not be reached.
+                 // It's good practice for type safety and to satisfy React's need for a return.
   }
 
+  const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
+  const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
+  const displayLyricist = cleanDisplayString(song.lyricist);
+  const displayAlbum = cleanDisplayString(song.album);
+  const displayGenre = cleanDisplayString(song.genre);
+  const displayLyrics = cleanLyricsForDisplay(song.lyrics);
 
   return (
     <div className="space-y-8">
@@ -161,11 +139,11 @@ export default function SongPage({ params }: SongPageProps) {
           <div className="flex items-start gap-4">
             <Music className="w-8 h-8 text-primary mt-1 flex-shrink-0" />
             <div className="flex-grow">
-              <CardTitle className="text-3xl font-bold text-primary mb-1">{displayTitle || 'শিরোনাম লোড হচ্ছে...'}</CardTitle>
+              <CardTitle className="text-3xl font-bold text-primary mb-1">{displayTitle}</CardTitle>
               <CardDescription className="text-lg text-foreground/80 pt-1 space-y-1">
                  <div className="flex items-center gap-2">
                      <User className="w-4 h-4 flex-shrink-0" />
-                     <span>{displayArtist || 'শিল্পী লোড হচ্ছে...'}</span>
+                     <span>{displayArtist}</span>
                  </div>
                   {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা গীতিকার' && (
                     <div className="flex items-center gap-2 text-sm">
@@ -224,11 +202,12 @@ export default function SongPage({ params }: SongPageProps) {
   );
 }
 
+// Keep dynamic for development, can be re-evaluated for production
 export const dynamic = 'force-dynamic'; 
-// export const revalidate = 3600; 
 
 export async function generateMetadata({ params }: SongPageProps) {
   try {
+    // getSongBySlug will use the mock data service
     const song = await getSongBySlug(params.slug);
 
     if (!song) {
@@ -250,8 +229,7 @@ export async function generateMetadata({ params }: SongPageProps) {
       },
     };
   } catch (error) {
-    console.error(`generateMetadata: Error for slug ${params.slug}:`, error);
-    // Fallback metadata in case of error, e.g. network issue during build/SSR
+    console.error(`generateMetadata: Error for slug ${params.slug} (mock):`, error);
     return {
       title: 'তথ্য লোড করতে সমস্যা - বাংলা গান',
       description: 'গানটির তথ্য এই মুহূর্তে আনা সম্ভব হচ্ছে না।',

@@ -1,4 +1,4 @@
-'use client'; // Required for using useSearchParams
+'use client'; 
 
 import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -6,7 +6,7 @@ import { searchSongs, type Song } from '@/services/bangla-song-database';
 import SongList from '@/components/song-list';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Frown } from 'lucide-react';
+import { Frown, WifiOff } from 'lucide-react'; // Added WifiOff for generic error
 
 // Helper component for loading state
 function LoadingSkeleton() {
@@ -48,18 +48,18 @@ export default function SearchPage() {
 
     setLoading(true);
     setError(null);
-    searchSongs(query)
+    searchSongs(query) // This now calls the mock service
       .then((results) => {
-        setSongs(results);
+        setSongs(results || []); // Ensure results is an array
       })
       .catch((err) => {
-        console.error('Error searching songs:', err);
+        console.error('Error searching songs (mock):', err);
         setError('অনুসন্ধান ফলাফল আনতে ব্যর্থ। অনুগ্রহ করে পরে আবার চেষ্টা করুন।');
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [query]); // Re-run effect when query changes
+  }, [query]); 
 
   return (
     <div className="space-y-6">
@@ -71,7 +71,7 @@ export default function SearchPage() {
 
       {error && (
          <Alert variant="destructive">
-            <Frown className="h-4 w-4" />
+            <WifiOff className="h-4 w-4" /> {/* Using a more generic error icon */}
            <AlertTitle>ত্রুটি</AlertTitle>
            <AlertDescription>{error}</AlertDescription>
          </Alert>

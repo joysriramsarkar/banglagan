@@ -1,5 +1,3 @@
-
-
 'use client';
 
 import * as React from 'react';
@@ -10,7 +8,8 @@ import { Separator } from '@/components/ui/separator';
 import { ListMusic, WifiOff } from 'lucide-react';
 import PaginationControls from '@/components/pagination';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
+// QueryDocumentSnapshot and DocumentData are Firebase specific, not needed for mock
+// import type { QueryDocumentSnapshot, DocumentData } from 'firebase/firestore'; 
 import { toBengaliNumerals } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
@@ -42,9 +41,8 @@ export default function AllSongsPage() {
   const [totalPages, setTotalPages] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
-  // pageCursors stores the *starting* document of each page. pageCursors[0] is null (for page 1).
-  // pageCursors[i] is the document to start *after* for page i+1.
-  const [pageStartCursors, setPageStartCursors] = React.useState<(QueryDocumentSnapshot<DocumentData> | null)[]>([null]);
+  // Cursors are not needed for simple mock pagination
+  // const [pageStartCursors, setPageStartCursors] = React.useState<(QueryDocumentSnapshot<DocumentData> | null)[]>([null]);
 
 
   React.useEffect(() => {
@@ -52,30 +50,20 @@ export default function AllSongsPage() {
       setLoading(true);
       setError(null);
       try {
-        const totalCount = await getTotalSongCount();
+        const totalCount = await getTotalSongCount(); // Calls mock service
         const calculatedTotalPages = Math.ceil(totalCount / SONGS_PER_PAGE);
         setTotalPages(calculatedTotalPages);
 
         if (calculatedTotalPages > 0) {
-          const { songs: initialSongs, nextPageCursor } = await getPaginatedSongs(1, SONGS_PER_PAGE, null);
-          setSongs(initialSongs);
-          if (nextPageCursor) {
-            setPageStartCursors(prev => {
-              const newCursors = [...prev];
-              newCursors[1] = nextPageCursor; // Cursor for the start of page 2
-              return newCursors;
-            });
-          }
+          // Fetch the first page using mock pagination logic
+          const { songs: initialSongs } = await getPaginatedSongs(1, SONGS_PER_PAGE); // Calls mock service
+          setSongs(initialSongs || []);
         } else {
           setSongs([]);
         }
       } catch (err: any) {
-        console.error('Error fetching initial song data:', err);
-        if (err.message?.toLowerCase().includes('offline') || err.code === 'unavailable') {
-             setError("গানগুলি লোড করা যায়নি কারণ আপনি অফলাইনে আছেন বা সার্ভারের সাথে সংযোগ করতে পারছেন না।");
-        } else {
-            setError('মোট গানের সংখ্যা আনতে ব্যর্থ।');
-        }
+        console.error('Error fetching initial song data (mock):', err);
+        setError('গানগুলি লোড করতে ব্যর্থ। অনুগ্রহ করে পৃষ্ঠাটি রিফ্রেশ করুন।');
         setTotalPages(0);
         setSongs([]);
       } finally {
@@ -87,45 +75,39 @@ export default function AllSongsPage() {
 
   React.useEffect(() => {
     async function loadSongsForPage() {
-      if (currentPage === 1 || totalPages === 0) return; // Initial load handled by previous useEffect or no pages
+      if (currentPage === 1 || totalPages === 0) return; // Initial load handled or no pages
 
       setLoading(true);
       setError(null);
       try {
-        // Get the cursor for the previous page to start after
-        const startAfterCursor = pageStartCursors[currentPage - 1] || null;
+        // Fetch the current page using mock pagination logic
+        const { songs: paginatedSongs } = await getPaginatedSongs(currentPage, SONGS_PER_PAGE); // Calls mock service
+        setSongs(paginatedSongs || []);
         
-        const { songs: paginatedSongs, nextPageCursor } = await getPaginatedSongs(currentPage, SONGS_PER_PAGE, startAfterCursor);
-        setSongs(paginatedSongs);
-        
-        if (nextPageCursor) {
-            setPageStartCursors(prevCursors => {
-                const newCursors = [...prevCursors];
-                newCursors[currentPage] = nextPageCursor; // Cursor for the start of page currentPage + 1
-                return newCursors;
-            });
-        }
       } catch (err: any) {
-        console.error(`Error fetching songs for page ${currentPage}:`, err);
-        if (err.message?.toLowerCase().includes('offline') || err.code === 'unavailable') {
-             setError("গানগুলি লোড করা যায়নি কারণ আপনি অফলাইনে আছেন বা সার্ভারের সাথে সংযোগ করতে পারছেন না।");
-        } else {
-           setError('গানগুলি আনতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।');
-        }
-        setSongs([]);
+        console.error(`Error fetching songs for page ${currentPage} (mock):`, err);
+        setError('গানগুলি আনতে ব্যর্থ। অনুগ্রহ করে আবার চেষ্টা করুন।');
+        setSongs([]); // Clear songs on error
       } finally {
         setLoading(false);
       }
     }
     
-    if (currentPage > 1 && totalPages > 0) {
+    // Only load if not the first page (which was handled in initial load)
+    if (currentPage > 1) {
         loadSongsForPage();
+    } else if (currentPage === 1 && totalPages > 0 && songs.length === 0 && !loading && !error) {
+        // If we somehow ended up on page 1 with no songs after initial load, try loading again.
+        loadSongsForPage(); 
     }
-  }, [currentPage, totalPages, pageStartCursors]); // Rerun if currentPage or totalPages changes (after initial)
+    
+  }, [currentPage, totalPages]); // Rerun if currentPage or totalPages changes (after initial)
 
   const handlePageChange = (newPage: number) => {
     if (newPage > 0 && (totalPages === 0 || newPage <= totalPages) && newPage !== currentPage) {
         setCurrentPage(newPage);
+        // Scroll to top when page changes for better UX
+        window.scrollTo(0, 0); 
     }
   };
 
@@ -178,4 +160,3 @@ export default function AllSongsPage() {
     </div>
   );
 }
-

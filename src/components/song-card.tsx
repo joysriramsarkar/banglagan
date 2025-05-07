@@ -15,7 +15,9 @@ export default function SongCard({ song }: SongCardProps) {
   const displayArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
   const displayLyricist = cleanDisplayString(song.lyricist);
 
-  const slug = createSlug(song.title, song.artist, song.lyricist);
+  // Use song.id as the unique identifier for slug creation
+  // This ensures the slug matches the one generated when mockSongs were initialized
+  const slug = createSlug(song.title, song.artist, song.lyricist, song.id);
 
 
   return (
@@ -32,7 +34,7 @@ export default function SongCard({ song }: SongCardProps) {
                     <User className="w-3 h-3 flex-shrink-0" /> {/* Smaller icon */}
                     <span>{displayArtist}</span>
                 </div>
-                {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা গীতিকার' && (
+                {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা-গীতিকার' && displayLyricist !== 'অজানা গীতিকার' && (
                     <div className="flex items-center gap-1"> {/* Reduced gap */}
                         <Feather className="w-3 h-3 flex-shrink-0" /> {/* Smaller icon */}
                         <span>{displayLyricist}</span>
@@ -46,3 +48,4 @@ export default function SongCard({ song }: SongCardProps) {
     </Link>
   );
 }
+

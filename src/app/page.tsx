@@ -1,27 +1,18 @@
+'use client';
+
 import Link from 'next/link';
 import SongList from '@/components/song-list';
 import SongSuggestions from '@/components/song-suggestions';
-import { getPopularSongs, getNewSongs, seedDatabase } from '@/services/bangla-song-database'; 
+import { getPopularSongs, getNewSongs } from '@/services/bangla-song-database';
 import type { Song } from '@/types/song';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Library, Feather, ListMusic, Database, WifiOff } from 'lucide-react'; 
+import { Users, Library, Feather, ListMusic, Database, WifiOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import * as React from 'react';
-
-async function handleSeedDatabase() {
-  'use server';
-  try {
-    console.log("Attempting to seed database from Server Action...");
-    await seedDatabase();
-    console.log("Database seeding initiated or completed.");
-  } catch (error) {
-    console.error("Error seeding database:", error);
-  }
-}
-
+import { handleSeedDatabase } from '@/lib/actions';
 
 export default async function Home() {
   let popularSongs: Song[] = [];
@@ -86,7 +77,7 @@ export default async function Home() {
               </Button>
             </form>
             <p className="text-xs text-muted-foreground mt-2">
-              এই বোতামটি ফায়ারস্টোর ডাটাবেসে নমুনা গান যুক্ত করবে। এটি শুধুমাত্র একবার ডেভেলপমেন্টের জন্য ব্যবহার করুন।
+              এই বোতামটি ফায়ারস্টোর ডাটাবেসে নমুনা গান যুক্ত করবে। এটি শুধুমাত্র একবার ডেভেলপমেন্টের জন্য ব্যবহার করুন।
             </p>
           </CardContent>
         </Card>
@@ -169,4 +160,3 @@ export default async function Home() {
     </div>
   );
 }
-

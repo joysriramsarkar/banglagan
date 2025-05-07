@@ -24,6 +24,9 @@ export default async function Home() {
   } catch (error: any) {
     console.error("Home page: Error fetching songs:", error);
     let message = "গানগুলি লোড করা যায়নি।";
+    if (error.message?.toLowerCase().includes('offline') || error.code === 'unavailable') {
+      message = "গানগুলি লোড করা যায়নি কারণ আপনি অফলাইনে আছেন।";
+    }
     fetchError = message;
   }
 

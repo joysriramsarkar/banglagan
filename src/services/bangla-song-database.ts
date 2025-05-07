@@ -1,18 +1,20 @@
 'use server';
 
-import { createSlug, toBengaliNumerals, cleanLyricsForDisplay, cleanString } from '@/lib/utils';
+import { createSlug, toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString, cleanString } from '@/lib/utils';
 import type { Song as SongInterface } from '@/types/song';
 
 // Add id and slug to the Song interface for clarity, even if not stored in mockSongs directly
 export interface Song extends SongInterface {
   id?: string;
   slug?: string;
-  keywords?: string[]; // Keep keywords if needed, though not used in this simplified mock
-  matchCount?: number; // Keep for search ranking
+  keywords?: string[];
+  matchCount?: number;
 }
 
 // Base mock data without pre-computed id/slug/keywords
-const mockSongs: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'createdAt'>[] = [
+// IMPORTANT: For consistency, ensure names (artist, lyricist) here use spaces as natural separators.
+// The cleaning functions will handle conversion to hyphens for slugs/internal keys if needed.
+const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'createdAt'>[] = [
   // Rabindranath Tagore Songs (Expanded Sample)
   {
     title: 'আমার সোনার বাংলা',
@@ -568,7 +570,7 @@ const mockSongs: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'created
   {
     title: 'একতারা তুই দেশের কথা',
     artist: 'শাহনাজ রহমতউল্লাহ',
-    lyricist: 'গাজী মাজহারুল আনোয়ার',
+    lyricist: 'গাজী মাজহারুল আনোয়ার', // Corrected: was গাজী মাজহারুল আনোয়ার
     album: 'বিভিন্ন শিল্পী',
     genre: 'দেশাত্মবোধক',
     releaseYear: 1970,
@@ -836,7 +838,7 @@ const mockSongs: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'created
   { title: 'গায়ত্রী', artist: 'বিভিন্ন শিল্পী', lyricist: 'বিনয় মজুমদার', lyrics: 'গায়ত্রী।', genre: 'আধুনিক' },
   { title: 'কলকাতা (সুবোধ সরকার)', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুবোধ সরকার', lyrics: 'কলকাতা।', genre: 'আধুনিক' },
   { title: 'মুখ ঢেকে যায় বিজ্ঞাপনে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শঙ্খ ঘোষ', lyrics: 'মুখ ঢেকে যায় বিজ্ঞাপনে।', genre: 'আধুনিক' },
-  { title: 'হারবার্ট', artist: 'বিভিন্ন শিল্পী', lyricist: 'নবারুন ভট্টাচার্য্য', lyrics: 'হারবার্ট।', genre: 'প্রতিবাদী গান' },
+  { title: 'হারবার্ট', artist: 'বিভিন্ন শিল্পী', lyricist: 'নবারুন ভট্টাচার্য্য', genre: 'প্রতিবাদী গান' },
   { title: 'শয়তান', artist: 'ফসিলস', lyricist: 'উৎপল কুমার বসু', lyrics: 'শয়তান।', genre: 'বাংলা রক' },
   { title: 'হলুদ পাখি', artist: 'ক্যাকটাস', lyricist: 'অরিজিৎ দাস', lyrics: 'হলুদ পাখি।', genre: 'বাংলা রক' },
   { title: 'গানের খাতা', artist: 'বডিকন্টেক্সট', lyricist: 'সন্দীপ চট্টোপাধ্যায়', lyrics: 'গানের খাতা।', genre: 'বাংলা ব্যান্ড' },
@@ -1013,9 +1015,9 @@ const mockSongs: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'created
 বেঁচে থাকার গান গাইছি আমি।`
   },
   {
-    title: 'একলা চলো রে',
-    artist: 'অনুপম রায়',
-    lyricist: 'রবীন্দ্রনাথ ঠাকুর',
+    title: 'একলা চলো রে', // This is a Rabindra Sangeet, Anupam Roy covered it.
+    artist: 'অনুপম রায়', // Artist is Anupam Roy for this version
+    lyricist: 'রবীন্দ্রনাথ ঠাকুর', // Original lyricist
     album: '২২শে শ্রাবণ (চলচ্চিত্র)',
     genre: 'আধুনিক রবীন্দ্রসঙ্গীত',
     releaseYear: 2011,
@@ -1166,19 +1168,89 @@ const mockSongs: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'created
 এই তো জীবন, এই তো খেলা, হাসি কান্না সুখে দুখে ভরা
 সবকিছু মেনে নিয়ে, চল এগিয়ে যাই মোরা।`
   },
-  // Add more songs here...
+  // Placeholder Songs for Missing Lyricists are handled by the addPlaceholderSongs function
 ];
 
+// Process the raw data to add slugs and potentially other computed fields
+// Using index in slug generation for guaranteed uniqueness in mock data
+const mockSongs: Song[] = mockSongsData.map((song, index) => ({
+  ...song,
+  slug: createSlug(song.title, song.artist, song.lyricist, index), // Add index here
+  lyrics: cleanLyricsForDisplay(song.lyrics),
+  album: cleanDisplayString(song.album),
+  genre: cleanDisplayString(song.genre),
+}));
 
-// Helper to generate slug dynamically (this replaces pre-computed slugs)
-function generateSongSlug(song: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'createdAt'>): string {
-    return createSlug(song.title, song.artist, song.lyricist) || `${song.title}-${song.artist}-${Date.now()}`; // Fallback with timestamp for uniqueness
+
+// Helper function to ensure every listed lyricist has at least one song entry
+function addPlaceholderSongsForMissingLyricists() {
+    const allKnownLyricists = [
+        'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন',
+        'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য', 'নিধুবাবু (রামনিধি গুপ্ত)',
+        'কালী মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্থনি ফিরিঙ্গি',
+        'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী',
+        'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়',
+        'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
+        'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত',
+        'আসাদুজ্জামান নূর', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত',
+        'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন',
+        'কুমার জ্ঞানেন্দ্র', 'লালন ফকির', 'মনোজ মুর্শিদ', 'মাইকেল মধুসূদন দত্ত', 'গৌতম চট্টোপাধ্যায়',
+        'নচিকেতা চক্রবর্তী', 'নিরেন্দ্রনাথ চক্রবর্তী', 'নির্মলেন্দু গুণ', 'পবিত্র সরকার', 'প্রীতিভূষণ ভট্টাচার্য',
+        'প্রবীর মজুমদার', 'প্রিয় চট্টোপাধ্যায়', 'ফকির আলমগীর', 'বুদ্ধদেব দাশগুপ্ত', 'বেলাল চৌধুরী',
+        'মণীন্দ্র গুপ্ত', 'মন্টু মুখোপাধ্যায়', 'মলয় গাঙ্গুলি', 'রবি চট্টোপাধ্যায়', 'ঋতুপর্ণ ঘোষ',
+        'শিবরাম চক্রবর্তী', 'শ্যামল মিত্র', 'শ্রীজাত', 'সুদীপ্ত মুখোপাধ্যায়', 'সুধীরলাল চক্রবর্তী',
+        'সুনীল গঙ্গোপাধ্যায়', 'স্বপন চক্রবর্তী', 'তারাপদ রায়', 'তৃপ্তি মিত্র', 'তীর্থঙ্কর দাস',
+        'উত্তম কুমার', 'উজ্জ্বল মুখোপাধ্যায়', 'ঊষা গাঙ্গুলি', 'বাঈজী প্রীতিলতা', 'বিশ্বজিৎ চট্টোপাধ্যায়',
+        'বিভাস চক্রবর্তী', 'বিপ্লব চৌধুরী', 'মৌসুমী ভৌমিক', 'যশ চোপড়া', 'রূপম ইসলাম',
+        'অনুপম রায়', 'অনিন্দ্য চট্টোপাধ্যায়', 'উপল সেনগুপ্ত', 'প্রসেনজিৎ মুখোপাধ্যায়', 'ঋদ্ধি বন্দ্যোপাধ্যায়',
+        'আনন্দ গুপ্ত', 'অরিন্দম চট্টোপাধ্যায়', 'সপ্তর্ষি মুখোপাধ্যায়', 'শান্তনু মৈত্র', 'সৌম্য চট্টোপাধ্যায়',
+        'শান্তা দেবী', 'সৌরভ চৌধুরী', 'তানভীর ফয়সাল', 'জাহিদ আকবর', 'শাহাবুদ্দিন নাগরী',
+        'গাজী মাজহারুল আনোয়ার', 'কবির বকুল', 'মোহাম্মদ রফিকুজ্জামান', 'মাসুদ করিম', 'মনিরুজ্জামান মনির',
+        'সৈয়দ শামসুল হক', 'আহমেদ ইমতিয়াজ বুলবুল', 'খন্দকার নুরুল আলম', 'আপেল মাহমুদ', 'খন্দকার ফারুক আহমেদ',
+        'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু',
+        'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ',
+        'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থ বড়ুয়া',
+        'আনিসুল ইসলাম', 'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ',
+        'প্রীতম হাসান', 'নওশাদ আলী', 'তপন চৌধুরী', 'ফিরোজ শাই', 'রাশেদুল হাসান',
+        'শুমন সুধর', 'তৌফিক-ই-ইলাহী চৌধুরী', 'ইমতিয়াজ আহমেদ', 'নোলক বাবু', 'ইমন চৌধুরী',
+        'জাহিদ নিপু', 'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম',
+        'শাহীন আলম', 'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত',
+        'সমরেশ মজুমদার', 'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার',
+        'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 'উৎপল কুমার বসু', 'অরিজিৎ দাস', 'সন্দীপ চট্টোপাধ্যায়',
+        'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন',
+        'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
+        'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়', 'হরিচরণ আচার্য্য',
+        'রামপ্রসাদ সেন', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
+        'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত' // Added সংগৃহীত here
+    ];
+
+    const existingLyricists = new Set(mockSongs.map(song => song.lyricist).filter(Boolean) as string[]);
+    let placeholderIndex = mockSongsData.length; // Start index for placeholders
+
+    allKnownLyricists.forEach(lyricist => {
+        // Normalize lyricist name from the known list for comparison
+        const cleanedKnownLyricist = cleanDisplayString(lyricist);
+
+        // Check if any existing song has this lyricist (comparing cleaned versions)
+        const found = mockSongs.some(song => cleanDisplayString(song.lyricist) === cleanedKnownLyricist);
+
+        if (!found && cleanedKnownLyricist) { // Only add if cleaned name is valid and not found
+            const placeholderSong: Song = {
+                title: `${cleanedKnownLyricist} এর গান (placeholder)`,
+                artist: 'বিভিন্ন শিল্পী',
+                lyricist: lyricist, // Store the original name format
+                genre: 'Placeholder',
+                lyrics: `এই গানটি গীতিকার ${cleanedKnownLyricist} এর জন্য একটি স্থানধারক।`,
+                slug: createSlug(`${cleanedKnownLyricist} এর গান placeholder`, 'বিভিন্ন শিল্পী', lyricist, placeholderIndex++), // Use original name for slug part
+            };
+            mockSongs.push(placeholderSong);
+            // console.log(`Added placeholder for: ${lyricist} (Cleaned: ${cleanedKnownLyricist})`);
+        }
+    });
 }
 
-// Helper to add slug to a song object
-function addSlugToSong<T extends Omit<Song, 'slug'>>(song: T): T & { slug: string } {
-    return { ...song, slug: generateSongSlug(song) };
-}
+// Run the function to add placeholders after initial data load
+addPlaceholderSongsForMissingLyricists();
 
 
 // --- Mock Data Access Functions ---
@@ -1192,20 +1264,23 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
   let decodedSlug: string;
   try {
     decodedSlug = decodeURIComponent(slug);
+    // console.log(`Mock: Decoded slug in getSongBySlug: "${decodedSlug}"`);
   } catch (e) {
     console.warn(`Mock: Error decoding slug "${slug}", using as is. Error:`, e);
     decodedSlug = slug; // Use raw slug if decoding fails
   }
 
   try {
-    // Find song by comparing the *dynamically generated* slug
-    const song = mockSongs.find(s => generateSongSlug(s) === decodedSlug);
+    // Find song by comparing the pre-computed slug
+    const song = mockSongs.find(s => s.slug === decodedSlug);
 
     if (song) {
-      // Return the song with the matching slug added
-      return addSlugToSong(song);
+      // console.log(`Mock: Song found for slug "${decodedSlug}":`, song.title);
+      return song; // Return the found song directly
     } else {
-      console.warn(`Mock: No song found for slug: "${decodedSlug}"`);
+      console.warn(`Mock: No song found for slug: "${decodedSlug}" in mockSongs array.`);
+      // Optional: Log a few slugs from the mock data for comparison
+      // console.log("First few slugs in mockSongs:", mockSongs.slice(0, 5).map(s => s.slug));
       return undefined;
     }
   } catch (error: any) {
@@ -1214,90 +1289,99 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
   }
 }
 
-// Search function needs to generate slugs for results
+// Search function
 export async function searchSongs(searchQuery: string): Promise<Song[]> {
   if (!searchQuery || searchQuery.trim() === '') {
     return [];
   }
-  const cleanedQuery = cleanString(searchQuery)?.toLowerCase() || "";
-  const queryTokens = cleanedQuery.split(/\s+/).filter(token => token.length > 0)
-                                 .map(token => token.replace(/[^\p{L}\p{M}\p{N}0-9\s-]/gu, '').trim())
-                                 .filter(Boolean);
+
+  // Clean the search query: convert to lowercase, remove problematic chars, replace multiple spaces/hyphens with single space
+  // IMPORTANT: Use cleanString here for consistency with slug generation and internal matching logic
+  const cleanedQueryForMatch = cleanString(searchQuery)?.toLowerCase() || "";
+  const queryTokens = cleanedQueryForMatch.split('-').filter(token => token.length > 0); // Split by hyphen now
 
   if (queryTokens.length === 0) return [];
 
-  const filteredSongs = mockSongs.filter(song => {
-    const songTitleLower = song.title?.toLowerCase() || "";
-    const songArtistLower = song.artist?.toLowerCase() || "";
-    const songLyricistLower = song.lyricist?.toLowerCase() || "";
+  // console.log(`Mock Search: Cleaned Query (for matching): "${cleanedQueryForMatch}", Tokens: ${queryTokens.join(', ')}`);
 
+  const filteredSongs = mockSongs.filter(song => {
+    // Clean and lowercase the song fields for matching using cleanString (hyphenated)
+    const songTitleMatch = cleanString(song.title)?.toLowerCase() || "";
+    const songArtistMatch = cleanString(song.artist)?.toLowerCase() || "";
+    const songLyricistMatch = cleanString(song.lyricist)?.toLowerCase() || "";
+    const songGenreMatch = cleanString(song.genre)?.toLowerCase() || "";
+    const songAlbumMatch = cleanString(song.album)?.toLowerCase() || "";
+
+    // Check if *every* token in the query is present in *any* of the relevant fields
     return queryTokens.every(token => (
-      songTitleLower.includes(token) ||
-      songArtistLower.includes(token) ||
-      songLyricistLower.includes(token) ||
-      song.genre?.toLowerCase().includes(token) ||
-      song.album?.toLowerCase().includes(token)
+      songTitleMatch.includes(token) ||
+      songArtistMatch.includes(token) ||
+      songLyricistMatch.includes(token) ||
+      songGenreMatch.includes(token) ||
+      songAlbumMatch.includes(token)
     ));
   });
 
+  // console.log(`Mock Search: Found ${filteredSongs.length} potential matches before ranking.`);
+
   const rankedSongs = filteredSongs.map(song => {
     let matchCount = 0;
-    const songTitleLower = song.title?.toLowerCase() || "";
-    const songArtistLower = song.artist?.toLowerCase() || "";
-    const songLyricistLower = song.lyricist?.toLowerCase() || "";
+    const songTitleMatch = cleanString(song.title)?.toLowerCase() || "";
+    const songArtistMatch = cleanString(song.artist)?.toLowerCase() || "";
+    const songLyricistMatch = cleanString(song.lyricist)?.toLowerCase() || "";
 
+    // Increase score for each token match
     queryTokens.forEach(token => {
-      if (songTitleLower.includes(token)) matchCount += 3;
-      if (songArtistLower.includes(token)) matchCount += 2;
-      if (songLyricistLower.includes(token)) matchCount += 1;
+      if (songTitleMatch.includes(token)) matchCount += 3; // Higher weight for title match
+      if (songArtistMatch.includes(token)) matchCount += 2; // Medium weight for artist
+      if (songLyricistMatch.includes(token)) matchCount += 1; // Lower weight for lyricist
     });
 
-    if (songTitleLower.includes(cleanedQuery)) matchCount += 5;
+    // Boost score significantly if the *entire* cleaned query (hyphenated) is found in the title (hyphenated)
+    if (songTitleMatch.includes(cleanedQueryForMatch)) matchCount += 5;
 
-    // Add slug and matchCount to the ranked song
-    return { ...addSlugToSong(song), matchCount };
-  }).sort((a, b) => b.matchCount - a.matchCount);
+    return { ...song, matchCount }; // Return the song object with its calculated score
+  }).sort((a, b) => b.matchCount - a.matchCount); // Sort by descending score
 
+  // console.log(`Mock Search: Returning ${rankedSongs.length} ranked songs.`);
   return rankedSongs;
 }
 
 
-// Get popular songs based on predefined titles/artists
+// Get popular songs based on predefined identifiers
 export async function getPopularSongs(): Promise<Song[]> {
   const popularSongIdentifiers = [
-    { title: 'আমার সোনার বাংলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর' },
-    { title: 'যদি তোর ডাক শুনে কেউ না আসে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর' },
-    { title: 'একতারা তুই দেশের কথা', artist: 'শাহনাজ রহমতউল্লাহ', lyricist: 'গাজী মাজহারুল আনোয়ার' },
-    { title: 'কফি হাউসের সেই আড্ডাটা', artist: 'মান্না দে', lyricist: 'গৌরীপ্রসন্ন মজুমদার' },
-    { title: 'মানুষ মানুষের জন্যে', artist: 'ভূপেন হাজারিকা', lyricist: 'ভূপেন হাজারিকা' }
+    // Using slugs generated from the data itself for reliability (ensure these match initial data slugs)
+    { slug: createSlug('আমার সোনার বাংলা', 'বিভিন্ন শিল্পী', 'রবীন্দ্রনাথ ঠাকুর', 0) }, // Index 0
+    { slug: createSlug('যদি তোর ডাক শুনে কেউ না আসে', 'বিভিন্ন শিল্পী', 'রবীন্দ্রনাথ ঠাকুর', 2) }, // Index 2
+    { slug: createSlug('একতারা তুই দেশের কথা', 'শাহনাজ রহমতউল্লাহ', 'গাজী মাজহারুল আনোয়ার', 216) }, // Index 216
+    { slug: createSlug('কফি হাউসের সেই আড্ডাটা', 'মান্না দে', 'গৌরীপ্রসন্ন মজুমদার', 218) }, // Index 218
+    { slug: createSlug('মানুষ মানুষের জন্যে', 'ভূপেন হাজারিকা', 'ভূপেন হাজারিকা', 416) } // Index 416
   ];
+
 
   let popular: Song[] = [];
 
   try {
-    popular = popularSongIdentifiers.map(id => {
-        // Find the song in the mock data
-        const foundSong = mockSongs.find(s =>
-            s.title === id.title && s.artist === id.artist && s.lyricist === id.lyricist
-        );
-        // Add slug if found
-        return foundSong ? addSlugToSong(foundSong) : undefined;
-    }).filter((song): song is Song => song !== undefined); // Type guard to filter out undefined
+    popular = popularSongIdentifiers
+      .map(id => mockSongs.find(s => s.slug === id.slug)) // Find by pre-computed slug
+      .filter((song): song is Song => song !== undefined); // Type guard to filter out undefined
 
-    // If fewer than 5 specific popular songs were found, fill with recent ones
+    // Fallback: If specific popular songs weren't found (e.g., slug mismatch), fill with recent songs
     if (popular.length < 5) {
+      console.warn("Mock: Could not find all predefined popular songs by slug. Filling with recent songs.");
       const additionalNeeded = 5 - popular.length;
       const sortedByDate = [...mockSongs]
-        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0))
-        .map(addSlugToSong); // Add slug to sorted songs
+        .filter(s => s.releaseYear) // Consider only songs with a release year
+        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0));
 
       const popularSlugs = new Set(popular.map(p => p.slug)); // Keep track of slugs already added
 
       for (const song of sortedByDate) {
         if (popular.length >= 5) break;
-        if (!popularSlugs.has(song.slug)) {
+        if (song.slug && !popularSlugs.has(song.slug)) {
           popular.push(song);
-          popularSlugs.add(song.slug); // Add the new slug to the set
+          popularSlugs.add(song.slug);
         }
       }
     }
@@ -1306,16 +1390,16 @@ export async function getPopularSongs(): Promise<Song[]> {
     return [];
   }
 
-  return popular.slice(0, 8); // Return up to 8 songs (as per original home page layout)
+  return popular.slice(0, 8); // Return up to 8 songs
 }
 
 export async function getNewSongs(): Promise<Song[]> {
     try {
-      // Clone, sort by release year, add slug, and take the top 8
+      // Clone, sort by release year, take the top 8
       const sortedSongs = [...mockSongs]
+        .filter(s => s.releaseYear) // Ensure songs have a release year
         .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0))
-        .slice(0, 8)
-        .map(addSlugToSong); // Add slug to each song
+        .slice(0, 8);
 
       return sortedSongs;
     } catch (error: any) {
@@ -1325,13 +1409,19 @@ export async function getNewSongs(): Promise<Song[]> {
 }
 
 
-async function getUniqueFieldValues(fieldName: keyof Song): Promise<string[]> {
+// Helper to get unique, cleaned, and sorted field values
+async function getUniqueFieldValues(
+  fieldName: keyof Song,
+  cleanForDisplayMode: boolean = true // Default to cleaning for display
+): Promise<string[]> {
   try {
     const valuesSet = new Set<string>();
     mockSongs.forEach(song => {
       const rawValue = song[fieldName] as string | undefined;
       if (rawValue) {
-        const cleanedValue = cleanString(rawValue); // Use cleanString for consistency
+        // Use cleanDisplayString for links that will be displayed
+        // Use cleanString (hyphenates spaces) for values used internally or for search queries
+        const cleanedValue = cleanForDisplayMode ? cleanDisplayString(rawValue) : cleanString(rawValue);
         if (cleanedValue) {
           valuesSet.add(cleanedValue);
         }
@@ -1346,39 +1436,56 @@ async function getUniqueFieldValues(fieldName: keyof Song): Promise<string[]> {
   }
 }
 
+// Corrected getAllArtists to return display-ready names for links
 export async function getAllArtists(): Promise<string[]> {
-    const artists = await getUniqueFieldValues('artist');
-    // Clean the priority order names using cleanString for accurate comparison
-    const cleanedPriorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'ভূপেন হাজারিকা', 'বিভিন্ন শিল্পী']
-        .map(name => cleanString(name) || '');
+    const artists = await getUniqueFieldValues('artist', true); // Clean for display
+
+    // Priority order names should be the display version (with spaces)
+    const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'ভূপেন হাজারিকা', 'বিভিন্ন শিল্পী'];
 
     return artists.sort((a, b) => {
-      // Clean the artist names being compared
-      const aCleaned = cleanString(a) || '';
-      const bCleaned = cleanString(b) || '';
-      const aPriority = cleanedPriorityOrder.indexOf(aCleaned);
-      const bPriority = cleanedPriorityOrder.indexOf(bCleaned);
+        const aPriority = priorityOrder.indexOf(a); // Direct comparison with display names
+        const bPriority = priorityOrder.indexOf(b);
 
-      if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority; // Both have priority
-      if (aPriority !== -1) return -1; // Only 'a' has priority
-      if (bPriority !== -1) return 1;  // Only 'b' has priority
-      return aCleaned.localeCompare(bCleaned, 'bn'); // Neither has priority, sort alphabetically
+        if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority;
+        if (aPriority !== -1) return -1;
+        if (bPriority !== -1) return 1;
+        return a.localeCompare(b, 'bn'); // Alphabetical sort for others
     });
 }
 
+
+// Corrected getAllGenres to return cleaned display strings
 export async function getAllGenres(): Promise<string[]> {
-  return getUniqueFieldValues('genre');
+  return getUniqueFieldValues('genre', true); // Clean for display
 }
 
+// Corrected getAllLyricists to return cleaned display strings for the links
 export async function getAllLyricists(): Promise<string[]> {
-  return getUniqueFieldValues('lyricist');
+  // Get lyricists cleaned for display (spaces, no weird chars)
+  const lyricists = await getUniqueFieldValues('lyricist', true);
+
+  // Priority order (display names)
+  const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন', 'সংগৃহীত'];
+
+  return lyricists.sort((a, b) => {
+    const aPriority = priorityOrder.indexOf(a); // Direct comparison
+    const bPriority = priorityOrder.indexOf(b);
+
+    if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority;
+    if (aPriority !== -1) return -1;
+    if (bPriority !== -1) return 1;
+    // Fallback to localeCompare if priorities are equal or not found
+    return a.localeCompare(b, 'bn');
+  });
 }
 
 
 export async function getPaginatedSongs(page: number, limitPerPage: number): Promise<{songs: Song[], nextPageCursor: null }> {
     const start = (page - 1) * limitPerPage;
     const end = start + limitPerPage;
-    const songs = mockSongs.slice(start, end).map(addSlugToSong); // Add slug to paginated songs
+    // Slice the already processed mockSongs array
+    const songs = mockSongs.slice(start, end);
     return { songs, nextPageCursor: null }; // No cursor needed for mock pagination
 }
 
@@ -1387,12 +1494,14 @@ export async function getTotalSongCount(): Promise<number> {
   return mockSongs.length;
 }
 
-// No need for seeding function in mock mode
-// export async function seedDatabase() { console.log("Mock DB - Seeding not applicable."); }
 
 console.log("Using MOCK bangla-song-database.ts loaded.");
-console.log(`Mock songs loaded: ${mockSongs.length}`);
+console.log(`Mock songs processed: ${mockSongs.length}`);
+// Final check to ensure mockSongs is correctly populated
+// console.log(`Final mockSongs count after placeholder check: ${mockSongs.length}`);
 // Example: Log the slug of the first song to verify generation
-if (mockSongs.length > 0) {
-    console.log(`Example slug for first song (${mockSongs[0].title}): ${generateSongSlug(mockSongs[0])}`);
+if (mockSongs.length > 0 && mockSongs[0].slug) {
+    // console.log(`Example slug for first song (${mockSongs[0].title}): ${mockSongs[0].slug}`);
+} else if (mockSongs.length > 0) {
+    // console.log(`First song (${mockSongs[0].title}) has no slug property.`);
 }

@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { toBengaliNumerals } from '@/lib/utils'; // Import the utility function
 
 interface PaginationControlsProps {
   currentPage: number;
@@ -45,7 +46,7 @@ export default function PaginationControls({
         <span>পূর্ববর্তী</span>
       </Button>
       <span className="text-sm text-muted-foreground">
-        পৃষ্ঠা {currentPage} এর {totalPages}
+        পৃষ্ঠা {toBengaliNumerals(currentPage)} এর {toBengaliNumerals(totalPages)}
       </span>
       <Button
         variant="outline"
@@ -60,3 +61,4 @@ export default function PaginationControls({
     </div>
   );
 }
+

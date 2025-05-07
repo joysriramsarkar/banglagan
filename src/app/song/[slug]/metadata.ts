@@ -1,6 +1,6 @@
 import type { Metadata, ResolvingMetadata } from 'next';
-import { getSongBySlug } from '@/services/bangla-song-database'; // Use the correct service
-import { cleanString } from '@/lib/utils'; // Use cleanString for display consistency
+import { getSongBySlug } from '@/services/bangla-song-database';
+import { cleanDisplayString } from '@/lib/utils';
 
 interface SongPageProps {
   params: {
@@ -11,7 +11,7 @@ interface SongPageProps {
 
 export async function generateMetadata(
   { params }: SongPageProps,
-  parent: ResolvingMetadata // Keep parent parameter for potential future use
+  parent: ResolvingMetadata
 ): Promise<Metadata> {
   let decodedSlug = '';
   try {
@@ -19,11 +19,10 @@ export async function generateMetadata(
     console.log(`generateMetadata: Attempting to fetch song with decoded slug: ${decodedSlug}`);
   } catch (e) {
     console.warn(`generateMetadata: Error decoding slug "${params.slug}", using as is. Error:`, e);
-    decodedSlug = params.slug; // Fallback if decoding fails
+    decodedSlug = params.slug;
   }
 
   try {
-    // Fetch the song using the decoded slug
     const song = await getSongBySlug(decodedSlug);
 
     if (!song) {
@@ -34,9 +33,9 @@ export async function generateMetadata(
        };
     }
 
-    // Use cleanString for display consistency in metadata
-    const metaTitle = cleanString(song.title) || 'শিরোনামহীন গান';
-    const metaArtist = cleanString(song.artist) || 'অজানা শিল্পী';
+    const rawMetaTitle = cleanDisplayString(song.title) || 'শিরোনামহীন গান';
+    const metaTitle = rawMetaTitle.replace(/-/g, ' ');
+    const metaArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
 
     return {
       title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
@@ -44,7 +43,6 @@ export async function generateMetadata(
       openGraph: {
         title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
         description: `গানের বিবরণ এবং লিরিক্স (যদি উপলব্ধ থাকে)।`,
-        // images: ['/some-specific-song-image.jpg', ...previousImages], // Example
       },
     };
   } catch (error) {

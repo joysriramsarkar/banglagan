@@ -1,3 +1,4 @@
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -8,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 /**
  * Cleans a string by removing specific problematic characters like soft hyphens,
- * multiple spaces, and leading/trailing hyphens.
+ * multiple spaces, and leading/trailing hyphens. Also standardizes apostrophes and some punctuation.
  * @param str The string to clean.
  * @returns The cleaned string.
  */
@@ -18,11 +19,12 @@ export function cleanString(str: string | undefined | null): string | undefined 
   }
   // Remove soft hyphens (U+00AD) and other problematic invisible characters
   // Also trim whitespace and replace multiple hyphens/spaces with a single hyphen
+  // Standardize apostrophes and remove some punctuation that might break slugs
   return str
     .replace(/\u00AD/g, '') // Remove soft hyphens
     .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces and similar
-    .replace(/[’']/g, '') // Remove apostrophes and single quotes
-    .replace(/[,\.]/g, '') // Remove commas and periods that might break slugs
+    .replace(/[’']/g, '') // Remove apostrophes and single quotes (problematic for slugs)
+    .replace(/[,\.:;"“”‘’«»()\[\]{}!?]/g, '') // Remove common punctuation marks
     .trim() // Trim leading/trailing whitespace
     .replace(/\s+/g, '-'); // Replace spaces with hyphens
 }
@@ -40,13 +42,18 @@ export function cleanString(str: string | undefined | null): string | undefined 
 export const createSlug = (title?: string, artist?: string, lyricist?: string): string => {
   const sanitize = (text: string | undefined): string => {
     if (!text) return '';
-    return cleanString(text)! // Use the enhanced cleanString
-      .toLowerCase()
-      // Keep Unicode letters (\p{L}), numbers (\p{N}), and hyphens. Remove others.
-      .replace(/[^\p{L}\p{N}-]/gu, '')
-      // Replace multiple hyphens with a single hyphen (already handled by cleanString, but good to have defense-in-depth)
+    // Apply initial cleaning
+    let cleanedText = cleanString(text);
+    if (!cleanedText) return '';
+
+    return cleanedText
+      .toLowerCase() // Convert to lowercase (mostly for non-Bengali parts if any)
+      // Keep Unicode letters (\p{L}), marks (\p{M} for diacritics/vowel signs), numbers (\p{N}), and hyphens. Remove others.
+      .replace(/[^\p{L}\p{M}\p{N}-]/gu, '')
+      // Replace multiple hyphens with a single hyphen
       .replace(/-+/g, '-')
-      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+      // Remove leading/trailing hyphens
+      .replace(/^-+|-+$/g, '');
     };
 
   const titleSlug = sanitize(title);
@@ -54,12 +61,12 @@ export const createSlug = (title?: string, artist?: string, lyricist?: string): 
   const lyricistSlug = sanitize(lyricist);
 
 
-  // Ensure slugs are not empty
+  // Ensure slugs are not empty, using placeholders if necessary
   const safeTitleSlug = titleSlug || 'untitled';
   const safeArtistSlug = artistSlug || 'unknown-artist';
 
   // Combine with separators, including lyricist if available and non-empty
-  if (lyricistSlug) {
+  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার') {
     return `${safeTitleSlug}-by-${safeArtistSlug}-lyricist-${lyricistSlug}`;
   } else {
     return `${safeTitleSlug}-by-${safeArtistSlug}`;
@@ -88,3 +95,4 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
+

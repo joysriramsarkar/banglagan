@@ -3,13 +3,13 @@
 
 import * as React from 'react';
 import { suggestSongsBasedOnHistory, type SuggestSongsOutput } from '@/ai/flows/suggest-songs';
+import { searchSongs } from '@/services/bangla-song-database'; // Import searchSongs from Firestore version
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import Link from 'next/link'; // Import Link
-import { createSlug, cleanDisplayString } from '@/lib/utils'; // Import from utils
-import type { Song } from '@/services/bangla-song-database'; // Import Song type
-import { mockSongs } from '@/services/bangla-song-database'; // Import mockSongs to find lyricist
+import Link from 'next/link';
+import { createSlug, cleanDisplayString } from '@/lib/utils';
+import type { Song } from '@/types/song';
 
 
 export default function SongSuggestions() {
@@ -17,19 +17,56 @@ export default function SongSuggestions() {
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [searchHistory, setSearchHistory] = React.useState<string[]>([]);
+  const [enrichedSuggestions, setEnrichedSuggestions] = React.useState<Song[]>([]);
 
   React.useEffect(() => {
-    // This effect runs only on the client after hydration
     const storedHistory = localStorage.getItem('searchHistory');
     const historyArray = storedHistory ? JSON.parse(storedHistory) : [];
-    setSearchHistory(historyArray); // Set the history state
+    setSearchHistory(historyArray);
 
     if (historyArray.length > 0) {
       setLoading(true);
       setError(null);
       suggestSongsBasedOnHistory({ searchHistory: historyArray.join(',') })
-        .then((output) => {
+        .then(async (output) => {
           setSuggestions(output.suggestions);
+          if (output.suggestions && output.suggestions.length > 0) {
+            const enriched = await Promise.all(
+              output.suggestions.map(async (suggestedSong) => {
+                const suggestedTitleCleaned = cleanDisplayString(suggestedSong.title);
+                const suggestedArtistCleaned = cleanDisplayString(suggestedSong.artist);
+
+                if (!suggestedTitleCleaned || !suggestedArtistCleaned) {
+                    // If LLM suggestion is incomplete, return a partial object for search link
+                    return {
+                        title: suggestedTitleCleaned || 'অজানা শিরোনাম',
+                        artist: suggestedArtistCleaned || 'অজানা শিল্পী',
+                        lyrics: '', // Placeholder
+                        slug: `/search?q=${encodeURIComponent((suggestedSong.title || '') + ' ' + (suggestedSong.artist || ''))}`
+                    } as Song;
+                }
+
+                // Attempt to find the song in DB by title and artist
+                const searchResults = await searchSongs(`${suggestedTitleCleaned} ${suggestedArtistCleaned}`);
+                const matchedSong = searchResults.find(
+                  (s) => cleanDisplayString(s.title) === suggestedTitleCleaned && cleanDisplayString(s.artist) === suggestedArtistCleaned
+                );
+
+                if (matchedSong && matchedSong.slug) {
+                  return { ...matchedSong, slug: `/song/${encodeURIComponent(matchedSong.slug)}` };
+                } else {
+                  // Fallback: if not found or slug is missing, create a search link
+                  return { 
+                    title: suggestedTitleCleaned, 
+                    artist: suggestedArtistCleaned, 
+                    lyrics: '', // Placeholder
+                    slug: `/search?q=${encodeURIComponent(suggestedTitleCleaned + ' ' + suggestedArtistCleaned)}` 
+                  } as Song;
+                }
+              })
+            );
+            setEnrichedSuggestions(enriched.filter(s => s) as Song[]);
+          }
         })
         .catch((err) => {
           console.error("Error fetching song suggestions:", err);
@@ -39,11 +76,11 @@ export default function SongSuggestions() {
           setLoading(false);
         });
     }
-  }, []); // Empty dependency array ensures this runs once on mount
+  }, []);
 
 
-  if (searchHistory.length === 0 && !loading) { // Also check loading state
-    return null; // Don't show the component if there's no search history and not loading
+  if (searchHistory.length === 0 && !loading) {
+    return null;
   }
 
   return (
@@ -67,64 +104,21 @@ export default function SongSuggestions() {
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
-        {!loading && !error && suggestions && suggestions.length > 0 && (
+        {!loading && !error && enrichedSuggestions && enrichedSuggestions.length > 0 && (
           <ul className="space-y-2">
-            {suggestions.map((suggestedSong, index) => {
-              // Clean suggested song title and artist from LLM for display and matching
-              const suggestedTitleForDisplay = cleanDisplayString(suggestedSong.title);
-              const suggestedArtistForDisplay = cleanDisplayString(suggestedSong.artist);
-
-              // Find the full song details from mockSongs database
-              // Match using cleaned display strings for consistency
-              const fullSongFromDb: Song | undefined = mockSongs.find(dbSong =>
-                cleanDisplayString(dbSong.title) === suggestedTitleForDisplay && // Ensure dbSong.title is also cleaned for comparison
-                cleanDisplayString(dbSong.artist) === suggestedArtistForDisplay // Ensure dbSong.artist is also cleaned for comparison
-              );
-
-              let linkHref: string;
-              let displayText = `${suggestedTitleForDisplay || 'শিরোনাম পাওয়া যায়নি'} - ${suggestedArtistForDisplay || 'শিল্পী পাওয়া যায়নি'}`;
-
-              if (fullSongFromDb) {
-                // If a direct match is found in our database, create a slug using canonical data from the DB
-                const slug = createSlug(
-                  fullSongFromDb.title,
-                  fullSongFromDb.artist,
-                  fullSongFromDb.lyricist
-                );
-                linkHref = `/song/${encodeURIComponent(slug)}`;
-              } else {
-                // Fallback: If no direct match, link to a search page with the LLM's suggested (raw) title and artist
-                // Use original, potentially uncleaned values for search query as LLM might have specific phrasing
-                const searchQuery = `${suggestedSong.title || ''} ${suggestedSong.artist || ''}`.trim();
-                if (searchQuery) {
-                    linkHref = `/search?q=${encodeURIComponent(searchQuery)}`;
-                    // Optionally, modify display text to indicate it's a search
-                    // displayText += " (অনুসন্ধান করুন)";
-                } else {
-                    // Cannot make a meaningful link if LLM provided no usable title/artist
-                    linkHref = '#'; // Or don't render the link at all
-                }
-              }
-
-              return (
-                <li key={`${linkHref}-${index}`} className="text-sm">
-                  {linkHref !== '#' ? (
-                    <Link href={linkHref} className="text-primary hover:text-accent hover:underline transition-colors">
-                       {displayText}
-                    </Link>
-                  ) : (
-                    // Render non-interactive text if no meaningful link can be formed
-                    <span className="text-muted-foreground">{displayText} (লিঙ্ক তৈরি করা যায়নি)</span>
-                  )}
-                </li>
-              );
-            })}
+            {enrichedSuggestions.map((song, index) => (
+              <li key={`${song.slug}-${index}`} className="text-sm">
+                <Link href={song.slug!} className="text-primary hover:text-accent hover:underline transition-colors">
+                  {`${cleanDisplayString(song.title)} - ${cleanDisplayString(song.artist)}`}
+                  {song.slug?.startsWith('/search') && " (অনুসন্ধান করুন)"}
+                </Link>
+              </li>
+            ))}
           </ul>
         )}
-         {!loading && !error && (!suggestions || suggestions.length === 0) && searchHistory.length > 0 && (
+         {!loading && !error && (!enrichedSuggestions || enrichedSuggestions.length === 0) && searchHistory.length > 0 && (
             <p className="text-muted-foreground text-sm">আপনার সাম্প্রতিক অনুসন্ধানের উপর ভিত্তি করে কোন পরামর্শ উপলব্ধ নেই।</p>
          )}
-         {/* Case for no history and not loading, but component still shown due to loading initially */}
          {!loading && !error && searchHistory.length === 0 && (
             <p className="text-muted-foreground text-sm">কোনো অনুসন্ধানের ইতিহাস পাওয়া যায়নি।</p>
          )}
@@ -132,4 +126,3 @@ export default function SongSuggestions() {
     </Card>
   );
 }
-

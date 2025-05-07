@@ -1,45 +1,12 @@
 
 // app/song/[slug]/page.tsx
-import { mockSongs, type Song } from '@/services/bangla-song-database';
+import { getSongBySlug } from '@/services/bangla-song-database';
+import type { Song } from '@/types/song';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather } from 'lucide-react';
-import { createSlug, toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
+import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
-
-
-async function getSongBySlug(slug: string): Promise<Song | undefined> {
-  const decodedSlug = decodeURIComponent(slug);
-  // console.log(`getSongBySlug: received slug "${slug}", decoded: "${decodedSlug}"`);
-
-  const matchedSong = mockSongs.find(song => {
-    // Try matching with the full slug including lyricist (if song.lyricist is present and meaningful)
-    const slugWithLyricist = createSlug(song.title, song.artist, song.lyricist);
-    if (slugWithLyricist === decodedSlug) {
-      return true;
-    }
-
-    // Fallback: try matching a slug generated without the lyricist from the song data.
-    // This handles cases where the incoming decodedSlug might not have the lyricist part,
-    // but the song in the database does, or if the song.lyricist was cleaned to an ignorable value.
-    const slugWithoutLyricist = createSlug(song.title, song.artist, undefined);
-    if (slugWithoutLyricist === decodedSlug) {
-      return true;
-    }
-    return false;
-  });
-
-  if (!matchedSong) {
-     console.warn(`No song found for decoded slug: "${decodedSlug}". Original slug: "${slug}"`);
-     // To aid debugging, log what slugs would have been generated for a few known songs
-     // const sampleSong = mockSongs.find(s => s.title === "তোরা সব জয়ধ্বনি কর");
-     // if (sampleSong) {
-     //     console.log(`Debug: For song "${sampleSong.title}", slug with lyricist: ${createSlug(sampleSong.title, sampleSong.artist, sampleSong.lyricist)}, slug without: ${createSlug(sampleSong.title, sampleSong.artist, undefined)}`);
-     // }
-  }
-  return matchedSong;
-}
-
 
 interface SongPageProps {
   params: {
@@ -55,7 +22,7 @@ export default async function SongPage({ params }: SongPageProps) {
     notFound(); // Show 404 if song not found
   }
 
-  // Use cleaned display strings for display (these are already cleaned in mockSongs, but good practice)
+  // Use cleaned display strings for display
   const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
   const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
   const displayLyricist = cleanDisplayString(song.lyricist);
@@ -159,3 +126,11 @@ export async function generateMetadata({ params }: SongPageProps) {
     },
   };
 }
+
+// Firestore does not easily support generating all slugs at build time for large datasets.
+// We will rely on dynamic rendering and on-demand fetching.
+// export async function generateStaticParams() {
+//   // This would be too slow for many songs with Firestore.
+//   // Consider a different approach if full SSG for all songs is a hard requirement.
+//   return [];
+// }

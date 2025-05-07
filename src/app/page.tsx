@@ -1,19 +1,34 @@
+
 import Link from 'next/link';
 import SongList from '@/components/song-list';
 import SongSuggestions from '@/components/song-suggestions';
-import { getPopularSongs, getNewSongs } from '@/services/bangla-song-database';
+import { getPopularSongs, getNewSongs, seedDatabase } from '@/services/bangla-song-database'; // Import seedDatabase
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button'; // Import Button
-import { Users, Library, Feather, ListMusic } from 'lucide-react'; // Import icons including ListMusic
+import { Button } from '@/components/ui/button';
+import { Users, Library, Feather, ListMusic, Database } from 'lucide-react'; 
+
+// Server Action to trigger seeding (for development only)
+async function handleSeedDatabase() {
+  'use server';
+  try {
+    console.log("Attempting to seed database from Server Action...");
+    await seedDatabase();
+    console.log("Database seeding initiated or completed.");
+    // Revalidate pages or redirect as needed after seeding
+    // For simplicity, just log success. In a real app, provide user feedback.
+  } catch (error) {
+    console.error("Error seeding database:", error);
+    // Handle error, provide user feedback
+  }
+}
+
 
 export default async function Home() {
-  // Fetch popular songs and new songs concurrently
   const [popularSongs, newSongs] = await Promise.all([
     getPopularSongs(),
     getNewSongs(),
-    // Removed fetching all artists, genres, lyricists here
   ]);
 
   return (
@@ -27,11 +42,34 @@ export default async function Home() {
 
       <Separator />
 
+      {/* Temporary Seed Database Button - REMOVE FOR PRODUCTION */}
+      {process.env.NODE_ENV === 'development' && (
+        <Card className="border-destructive">
+          <CardHeader>
+            <CardTitle className="text-destructive flex items-center gap-2">
+              <Database className="w-5 h-5" />
+              ডেভেলপমেন্ট টুলস
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form action={handleSeedDatabase}>
+              <Button type="submit" variant="destructive" className="w-full">
+                ডাটাবেস সীড করুন (শুধুমাত্র ডেভেলপমেন্ট)
+              </Button>
+            </form>
+            <p className="text-xs text-muted-foreground mt-2">
+              এই বোতামটি ফায়ারস্টোর ডাটাবেসে নমুনা গান যুক্ত করবে। এটি শুধুমাত্র একবার ডেভেলপমেন্টের জন্য ব্যবহার করুন।
+            </p>
+          </CardContent>
+        </Card>
+      )}
+      {/* End Temporary Seed Database Button */}
+
+
       <SongSuggestions />
 
       <Separator />
 
-       {/* Explore Section */}
        <section>
            <Card>
              <CardHeader>
@@ -69,7 +107,6 @@ export default async function Home() {
 
       <Separator />
 
-      {/* Popular and New Songs Section */}
       <section>
         <Tabs defaultValue="popular" className="w-full">
           <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
@@ -84,9 +121,6 @@ export default async function Home() {
           </TabsContent>
         </Tabs>
       </section>
-
-      {/* Removed detailed Artists, Genres, and Lyricists sections */}
-
     </div>
   );
 }

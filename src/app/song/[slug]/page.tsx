@@ -1,4 +1,3 @@
-
 // app/song/[slug]/page.tsx
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/types/song';
@@ -7,6 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Frown } from 'lucide-react';
+import * as React from 'react';
 
 interface SongPageProps {
   params: {
@@ -15,21 +17,58 @@ interface SongPageProps {
 }
 
 export default async function SongPage({ params }: SongPageProps) {
-  const song = await getSongBySlug(params.slug);
+  const [error, setError] = React.useState<string | null>(null);
+  const [song, setSong] = React.useState<Song | undefined>(undefined);
 
-  if (!song) {
-    console.error(`Song not found for slug: ${params.slug}. Decoded: ${decodeURIComponent(params.slug)}`);
-    notFound(); // Show 404 if song not found
-  }
+  React.useEffect(() => {
+    async function loadSong() {
+      try {
+        const fetchedSong = await getSongBySlug(params.slug);
+        if (!fetchedSong) {
+          console.error(`Song not found for slug: ${params.slug}. Decoded: ${decodeURIComponent(params.slug)}`);
+          notFound(); // Show 404 if song not found
+        }
+        setSong(fetchedSong);
+      } catch (e: any) {
+        console.error("Error fetching song:", e);
+        if (e.message.includes("offline")) {
+          setError("এই মুহূর্তে গানটি লোড করা যাচ্ছে না। অনুগ্রহ করে ইন্টারনেট সংযোগ পরীক্ষা করুন।");
+        } else {
+          setError("গানটি লোড করতে সমস্যা হচ্ছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।");
+        }
+      }
+    }
+
+    loadSong();
+  }, [params.slug]);
 
   // Use cleaned display strings for display
-  const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
-  const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
-  const displayLyricist = cleanDisplayString(song.lyricist);
-  const displayAlbum = cleanDisplayString(song.album);
-  const displayGenre = cleanDisplayString(song.genre);
-  const displayLyrics = cleanLyricsForDisplay(song.lyrics);
+  const displayTitle = song ? cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই' : 'শিরোনাম লোড হচ্ছে...';
+  const displayArtist = song ? cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই' : 'শিল্পী লোড হচ্ছে...';
+  const displayLyricist = song ? cleanDisplayString(song.lyricist) : undefined;
+  const displayAlbum = song ? cleanDisplayString(song.album) : undefined;
+  const displayGenre = song ? cleanDisplayString(song.genre) : undefined;
+  const displayLyrics = song ? cleanLyricsForDisplay(song.lyrics) : undefined;
 
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <Alert variant="destructive">
+          <Frown className="h-4 w-4" />
+          <AlertTitle>ত্রুটি</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!song) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <p> গান লোড হচ্ছে...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">

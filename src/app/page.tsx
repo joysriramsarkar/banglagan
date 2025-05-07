@@ -11,7 +11,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, Library, Feather, ListMusic, Database, WifiOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { handleSeedDatabase } from '@/lib/actions'; // Server action for seeding
+// import { handleSeedDatabase } from '@/lib/actions'; // Server action for seeding - not needed for mock
 import * as React from "react";
 
 export default function Home() {
@@ -62,28 +62,7 @@ export default function Home() {
 
       <Separator />
 
-      {process.env.NODE_ENV === 'development' && (
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
-              <Database className="w-5 h-5" />
-              ডেভেলপমেন্ট টুলস
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form action={handleSeedDatabase}>
-              <Button type="submit" variant="destructive" className="w-full">
-                ডাটাবেস সীড করুন (শুধুমাত্র ডেভেলপমেন্ট)
-              </Button>
-            </form>
-            <p className="text-xs text-muted-foreground mt-2">
-              এই বোতামটি ফায়ারস্টোর ডাটাবেসে (যদি কনফিগার করা থাকে) বা মক ডাটাবেসের জন্য একটি প্লেসহোল্ডার অ্যাকশন ট্রিগার করবে।
-            </p>
-          </CardContent>
-        </Card>
-      )}
-
-      <Separator />
+      {/* Development Tools Section Removed */}
 
       <section>
         <Card>
@@ -158,3 +137,4 @@ export default function Home() {
     </div>
   );
 }
+

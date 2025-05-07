@@ -1,35 +1,46 @@
-
 import Link from 'next/link';
 import SongList from '@/components/song-list';
 import SongSuggestions from '@/components/song-suggestions';
-import { getPopularSongs, getNewSongs, seedDatabase } from '@/services/bangla-song-database'; // Import seedDatabase
+import { getPopularSongs, getNewSongs, seedDatabase } from '@/services/bangla-song-database'; 
+import type { Song } from '@/types/song';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Library, Feather, ListMusic, Database } from 'lucide-react'; 
+import { Users, Library, Feather, ListMusic, Database, WifiOff } from 'lucide-react'; 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
-// Server Action to trigger seeding (for development only)
 async function handleSeedDatabase() {
   'use server';
   try {
     console.log("Attempting to seed database from Server Action...");
     await seedDatabase();
     console.log("Database seeding initiated or completed.");
-    // Revalidate pages or redirect as needed after seeding
-    // For simplicity, just log success. In a real app, provide user feedback.
   } catch (error) {
     console.error("Error seeding database:", error);
-    // Handle error, provide user feedback
   }
 }
 
 
 export default async function Home() {
-  const [popularSongs, newSongs] = await Promise.all([
-    getPopularSongs(),
-    getNewSongs(),
-  ]);
+  let popularSongs: Song[] = [];
+  let newSongs: Song[] = [];
+  let fetchError: string | null = null;
+
+  try {
+    [popularSongs, newSongs] = await Promise.all([
+      getPopularSongs(),
+      getNewSongs(),
+    ]);
+  } catch (error: any) {
+    console.error("Home page: Error fetching songs:", error);
+    if (error.message?.toLowerCase().includes('offline') || error.code === 'unavailable') {
+      fetchError = "গানগুলি লোড করা যায়নি কারণ আপনি অফলাইনে আছেন বা সার্ভারের সাথে সংযোগ করতে পারছেন না।";
+    } else {
+      fetchError = "গানগুলি লোড করার সময় একটি ত্রুটি ঘটেছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।";
+    }
+  }
+
 
   return (
     <div className="space-y-8">
@@ -42,7 +53,6 @@ export default async function Home() {
 
       <Separator />
 
-      {/* Temporary Seed Database Button - REMOVE FOR PRODUCTION */}
       {process.env.NODE_ENV === 'development' && (
         <Card className="border-destructive">
           <CardHeader>
@@ -63,9 +73,7 @@ export default async function Home() {
           </CardContent>
         </Card>
       )}
-      {/* End Temporary Seed Database Button */}
-
-
+      
       <SongSuggestions />
 
       <Separator />
@@ -104,23 +112,43 @@ export default async function Home() {
            </Card>
          </section>
 
-
       <Separator />
 
       <section>
-        <Tabs defaultValue="popular" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
-            <TabsTrigger value="popular">জনপ্রিয় গান</TabsTrigger>
-            <TabsTrigger value="new">নতুন রিলিজ</TabsTrigger>
-          </TabsList>
-          <TabsContent value="popular">
-            <SongList songs={popularSongs} title="জনপ্রিয় গান" />
-          </TabsContent>
-          <TabsContent value="new">
-             <SongList songs={newSongs} title="নতুন রিলিজ" />
-          </TabsContent>
-        </Tabs>
+        {fetchError && (
+          <Alert variant="destructive" className="mb-4">
+            <WifiOff className="h-4 w-4" />
+            <AlertTitle>তথ্য আনতে সমস্যা</AlertTitle>
+            <AlertDescription>{fetchError}</AlertDescription>
+          </Alert>
+        )}
+        {(popularSongs.length > 0 || newSongs.length > 0) && (
+          <Tabs defaultValue="popular" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 md:w-[400px]">
+              <TabsTrigger value="popular" disabled={popularSongs.length === 0}>জনপ্রিয় গান</TabsTrigger>
+              <TabsTrigger value="new" disabled={newSongs.length === 0}>নতুন রিলিজ</TabsTrigger>
+            </TabsList>
+            <TabsContent value="popular">
+              {popularSongs.length > 0 ? (
+                <SongList songs={popularSongs} title="জনপ্রিয় গান" />
+              ) : (
+                !fetchError && <p className="text-muted-foreground">কোনো জনপ্রিয় গান পাওয়া যায়নি।</p>
+              )}
+            </TabsContent>
+            <TabsContent value="new">
+               {newSongs.length > 0 ? (
+                <SongList songs={newSongs} title="নতুন রিলিজ" />
+               ) : (
+                !fetchError && <p className="text-muted-foreground">কোনো নতুন রিলিজ পাওয়া যায়নি।</p>
+               )}
+            </TabsContent>
+          </Tabs>
+        )}
+        {!fetchError && popularSongs.length === 0 && newSongs.length === 0 && (
+           <p className="text-muted-foreground text-center py-4">এখন কোনো গান উপলব্ধ নেই।</p>
+        )}
       </section>
     </div>
   );
 }
+

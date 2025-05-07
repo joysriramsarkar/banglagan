@@ -1,3 +1,4 @@
+
 import { db } from '@/lib/firebase';
 import {
   collection,
@@ -15,7 +16,7 @@ import {
   QueryDocumentSnapshot,
   DocumentData,
 } from 'firebase/firestore';
-import { createSlug, toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
+import { createSlug, toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString, cleanString } from '@/lib/utils';
 import type { Song as SongInterface } from '@/types/song'; 
 
 export interface Song extends SongInterface {
@@ -1180,61 +1181,71 @@ const mockSongs: Omit<Song, 'id' | 'slug' | 'keywords' | 'createdAt'>[] = [
 ];
 
 
-// Create a set of existing lyricists from the mockSongs array
-const existingLyricists = new Set(mockSongs.map(song => cleanDisplayString(song.lyricist)?.toLowerCase()).filter(Boolean));
-
 const allTargetLyricists = [
-  'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন', 
-  'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য', 'নিধুবাবু (রামনিধি গুপ্ত)', 
-  'কালী মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্থনি ফিরিঙ্গি', 
-  'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী', 
-  'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়', 
-  'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন', 
-  'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত', 
-  'আসাদুজ্জামান নূর', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত', 
-  'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন', 
-  'কুমার জ্ঞানেন্দ্র', 'লালন ফকির', 'মনোজ মুর্শিদ', 'মাইকেল মধুসূদন দত্ত', 'গৌতম চট্টোপাধ্যায়', 
-  'নচিকেতা চক্রবর্তী', 'নিরেন্দ্রনাথ চক্রবর্তী', 'নির্মলেন্দু গুণ', 'পবিত্র সরকার', 'প্রীতিভূষণ ভট্টাচার্য', 
-  'প্রবীর মজুমদার', 'প্রিয় চট্টোপাধ্যায়', 'ফকির আলমগীর', 'বুদ্ধদেব দাশগুপ্ত', 'বেলাল চৌধুরী', 
-  'মণীন্দ্র গুপ্ত', 'মন্টু মুখোপাধ্যায়', 'মলয় গাঙ্গুলি', 'রবি চট্টোপাধ্যায়', 'ঋতুপর্ণ ঘোষ', 
-  'শিবরাম চক্রবর্তী', 'শ্যামল মিত্র', 'শ্রীজাত', 'সুদীপ্ত মুখোপাধ্যায়', 'সুধীরলাল চক্রবর্তী', 
-  'সুনীল গঙ্গোপাধ্যায়', 'স্বপন চক্রবর্তী', 'তারাপদ রায়', 'তৃপ্তি মিত্র', 'তীর্থঙ্কর দাস', 
-  'উত্তম কুমার', 'উজ্জ্বল মুখোপাধ্যায়', 'ঊষা গাঙ্গুলি', 'বাঈজী প্রীতিলতা', 'বিশ্বজিৎ চট্টোপাধ্যায়', 
-  'বিভাস চক্রবর্তী', 'বিপ্লব চৌধুরী', 'মৌসুমী ভৌমিক', 'যশ চোপড়া', 'রূপম ইসলাম', 'অনুপম রায়', 
-  'অনিন্দ্য চট্টোপাধ্যায়', 'উপল সেনগুপ্ত', 'প্রসেনজিৎ মুখোপাধ্যায়', 'ঋদ্ধি বন্দ্যোপাধ্যায়', 'আনন্দ গুপ্ত', 
-  'অরিন্দম চট্টোপাধ্যায়', 'সপ্তর্ষি মুখোপাধ্যায়', 'শান্তনু মৈত্র', 'সৌম্য চট্টোপাধ্যায়', 'শান্তা দেবী', 
-  'সৌরভ চৌধুরী', 'তানভীর ফয়সাল', 'জাহিদ আকবর', 'শাহাবুদ্দিন নাগরী', 'গাজী মাজহারুল আনোয়ার', 
-  'কবির বকুল', 'মোহাম্মদ রফিকুজ্জামান', 'মাসুদ করিম', 'মনিরুজ্জামান মনির', 'সৈয়দ শামসুল হক', 
-  'আহমেদ ইমতিয়াজ বুলবুল', 'খন্দকার নুরুল আলম', 'আপেল মাহমুদ', 'খন্দকার ফারুক আহমেদ', 
-  'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু', 
-  'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ', 
-  'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থ বড়ুয়া', 'আনিসুল ইসলাম', 
-  'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ', 'প্রীতম হাসান', 'নওশাদ আলী', 'তপন চৌধুরী', 
-  'ফিরোজ শাই', 'রাশেদুল হাসান', 'শুমন সুধর', 'তৌফিক-ই-ইলাহী চৌধুরী', 'ইমতিয়াজ আহমেদ', 'নোলক বাবু', 
-  'ইমন চৌধুরী', 'জাহিদ নিপু', 'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম', 
-  'শাহীন আলম', 'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত', 'সমরেশ মজুমদার', 
-  'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার', 'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 
-  'উৎপল কুমার বসু', 'অরিজিৎ দাস', 'সন্দীপ চট্টোপাধ্যায়', 'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 
-  'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন', 'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 
-  'নাসিম আলী খান', 'রাজিব আহমেদ', 'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 
-  'বিকাশ রায়', 'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'দীনেন্দ্রকৃষ্ণ রায়', 
+  'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন',
+  'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য', 'নিধুবাবু (রামনিধি গুপ্ত)',
+  'কালী মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্থনি ফিরিঙ্গি',
+  'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী',
+  'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়',
+  'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
+  'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত',
+  'আসাদুজ্জামান নূর', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত',
+  'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন',
+  'কুমার জ্ঞানেন্দ্র', 'লালন ফকির', 'মনোজ মুর্শিদ', 'মাইকেল মধুসূদন দত্ত', 'গৌতম চট্টোপাধ্যায়',
+  'নচিকেতা চক্রবর্তী', 'নিরেন্দ্রনাথ চক্রবর্তী', 'নির্মলেন্দু গুণ', 'পবিত্র সরকার', 'প্রীতিভূষণ ভট্টাচার্য',
+  'প্রবীর মজুমদার', 'প্রিয় চট্টোপাধ্যায়', 'ফকির আলমগীর', 'বুদ্ধদেব দাশগুপ্ত', 'বেলাল চৌধুরী',
+  'মণীন্দ্র গুপ্ত', 'মন্টু মুখোপাধ্যায়', 'মলয় গাঙ্গুলি', 'রবি চট্টোপাধ্যায়', 'ঋতুপর্ণ ঘোষ',
+  'শিবরাম চক্রবর্তী', 'শ্যামল মিত্র', 'শ্রীজাত', 'সুদীপ্ত মুখোপাধ্যায়', 'সুধীরলাল চক্রবর্তী',
+  'সুনীল গঙ্গোপাধ্যায়', 'স্বপন চক্রবর্তী', 'তারাপদ রায়', 'তৃপ্তি মিত্র', 'তীর্থঙ্কর দাস',
+  'উত্তম কুমার', 'উজ্জ্বল মুখোপাধ্যায়', 'ঊষা গাঙ্গুলি', 'বাঈজী প্রীতিলতা', 'বিশ্বজিৎ চট্টোপাধ্যায়',
+  'বিভাস চক্রবর্তী', 'বিপ্লব চৌধুরী', 'মৌসুমী ভৌমিক', 'যশ চোপড়া', 'রূপম ইসলাম', 'অনুপম রায়',
+  'অনিন্দ্য চট্টোপাধ্যায়', 'উপল সেনগুপ্ত', 'প্রসেনজিৎ মুখোপাধ্যায়', 'ঋদ্ধি বন্দ্যোপাধ্যায়', 'আনন্দ গুপ্ত',
+  'অরিন্দম চট্টোপাধ্যায়', 'সপ্তর্ষি মুখোপাধ্যায়', 'শান্তনু মৈত্র', 'সৌম্য চট্টোপাধ্যায়', 'শান্তা দেবী',
+  'সৌরভ চৌধুরী', 'তানভীর ফয়সাল', 'জাহিদ আকবর', 'শাহাবুদ্দিন নাগরী',
+  'গাজী মাজহারুল আনোয়ার', 'কবির বকুল', 'মোহাম্মদ রফিকুজ্জামান', 'মাসুদ করিম', 'মনিরুজ্জামান মনির',
+  'সৈয়দ শামসুল হক', 'আহমেদ ইমতিয়াজ বুলবুল', 'খন্দকার নুরুল আলম', 'আপেল মাহমুদ', 'খন্দকার ফারুক আহমেদ',
+  'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু',
+  'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ',
+  'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থ বড়ুয়া',
+  'আনিসুল ইসলাম', 'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ', 'প্রীতম হাসান',
+  'নওশাদ আলী', 'তপন চৌধুরী', 'ফিরোজ শাই', 'রাশেদুল হাসান', 'শুমন সুধর',
+  'তৌফিক-ই-ইলাহী চৌধুরী', 'ইমতিয়াজ আহমেদ', 'নোলক বাবু', 'ইমন চৌধুরী', 'জাহিদ নিপু',
+  'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম', 'শাহীন আলম',
+  'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত',
+  'সমরেশ মজুমদার', 'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার',
+  'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 'উৎপল কুমার বসু', 'অরিজিৎ দাস', 'সন্দীপ চট্টোপাধ্যায়',
+  'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন',
+  'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
+  'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
+  'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'দীনেন্দ্রকৃষ্ণ রায়',
   'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী', 'ঐশানী সাহা', 'রুদ্র ঘোষ'
-].map(name => cleanDisplayString(name)?.toLowerCase()).filter(Boolean);
+].map(name => cleanString(name)?.toLowerCase()).filter(Boolean) as string[];
 
-// Add placeholder songs for lyricists who don't have any songs yet
-allTargetLyricists.forEach(lyricistName => {
-  if (lyricistName && !existingLyricists.has(lyricistName)) {
-    mockSongs.push({
-      title: `গীতিকার ${cleanDisplayString(lyricistName)} এর একটি গান`,
-      artist: 'বিভিন্ন শিল্পী',
-      lyricist: cleanDisplayString(lyricistName) || 'অজানা গীতিকার',
-      album: 'সংকলন',
-      genre: 'বিভিন্ন',
-      lyrics: `এই গানটি গীতিকার ${cleanDisplayString(lyricistName)} এর একটি নমুনা গান।`,
-      releaseYear: new Date().getFullYear() 
-    });
-  }
-});
+
+// Function to add placeholder songs for lyricists who don't have any songs yet
+function addPlaceholderSongsForMissingLyricists() {
+  const existingLyricists = new Set(mockSongs.map(song => cleanString(song.lyricist)?.toLowerCase()).filter(Boolean));
+  let addedPlaceholders = 0;
+  allTargetLyricists.forEach(lyricistName => {
+    if (lyricistName && !existingLyricists.has(lyricistName)) {
+      mockSongs.push({
+        title: `গীতিকার ${cleanDisplayString(lyricistName)} এর একটি গান`,
+        artist: 'বিভিন্ন শিল্পী',
+        lyricist: cleanDisplayString(lyricistName) || 'অজানা গীতিকার',
+        album: 'সংকলন',
+        genre: 'বিভিন্ন',
+        lyrics: `এই গানটি গীতিকার ${cleanDisplayString(lyricistName)} এর একটি নমুনা গান। গানের কথা এখানে যোগ করা হবে...`,
+        releaseYear: new Date().getFullYear()
+      });
+      addedPlaceholders++;
+    }
+  });
+  console.log(`Added ${addedPlaceholders} placeholder songs for missing lyricists.`);
+}
+
+// Initial population and placeholder addition
+addPlaceholderSongsForMissingLyricists();
+console.log(`Total mock songs after placeholder addition: ${mockSongs.length}`);
 
 
 // Data seeding function
@@ -1247,7 +1258,7 @@ export async function seedDatabase() {
   for (const mockSong of mockSongs) {
     const cleanedTitle = cleanDisplayString(mockSong.title) || 'শিরোনামহীন';
     const cleanedArtist = cleanDisplayString(mockSong.artist) || 'অজানা শিল্পী';
-    const cleanedLyricist = cleanDisplayString(mockSong.lyricist);
+    const cleanedLyricist = cleanDisplayString(mockSong.lyricist); // Can be undefined
 
     const songSlug = createSlug(cleanedTitle, cleanedArtist, cleanedLyricist);
     
@@ -1265,7 +1276,7 @@ export async function seedDatabase() {
         ...(cleanedLyricist?.toLowerCase().split(/\s+/).filter(k => k.length > 1) || []),
         ...(mockSong.genre?.toLowerCase().split(/\s+/).filter(k => k.length > 1) || []),
         ...(mockSong.album?.toLowerCase().split(/\s+/).filter(k => k.length > 1) || []),
-      ].map(k => k.replace(/[^\w\sà-üÀ-Ü]/gi, '').trim()).filter(Boolean))
+      ].map(k => k.replace(/[^\p{L}\p{M}\p{N}0-9\s-]/gu, '').trim()).filter(Boolean)) // Keep Bengali characters, numbers, spaces, hyphens
     ];
 
 
@@ -1273,7 +1284,7 @@ export async function seedDatabase() {
       ...mockSong,
       title: cleanedTitle,
       artist: cleanedArtist,
-      lyricist: cleanedLyricist,
+      lyricist: cleanedLyricist || 'অজানা গীতিকার', // Ensure lyricist has a fallback for DB
       lyrics: cleanLyricsForDisplay(mockSong.lyrics),
       slug: songSlug,
       keywords: keywords,
@@ -1291,6 +1302,7 @@ export async function seedDatabase() {
         console.log(`Committed ${counter} songs so far...`);
       } catch (e) {
         console.error("Error committing batch:", e);
+        // Potentially break or retry, depending on desired error handling
       }
       batch = writeBatch(db); 
     }
@@ -1347,11 +1359,11 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
     }
   } catch (error: any) {
      console.error(`Firebase: Error fetching song by slug "${decodedSlug}":`, error);
-     if (typeof window === 'undefined' && (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline'))) {
+     if (typeof window === 'undefined' && (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline') || error.message?.toLowerCase().includes('network error'))) {
         console.warn(`Firebase: Server offline or cannot connect to Firestore while fetching slug "${decodedSlug}". Returning undefined.`);
-        return undefined; // Graceful degradation for server-side calls
+        return undefined; 
      }
-     throw error; // Re-throw for client-side to handle
+     throw error; 
   }
 }
 
@@ -1361,8 +1373,8 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     return [];
   }
   const cleanedQuery = cleanDisplayString(searchQuery)?.toLowerCase() || "";
-  const queryTokens = cleanedQuery.split(/\s+/).filter(token => token.length > 0) // Keep single character tokens for Bengali
-                                 .map(token => token.replace(/[^\w\sà-üÀ-Ü]/gi, '').trim()) 
+  const queryTokens = cleanedQuery.split(/\s+/).filter(token => token.length > 0) 
+                                 .map(token => token.replace(/[^\p{L}\p{M}\p{N}0-9\s-]/gu, '').trim()) 
                                  .filter(Boolean);
 
   if (queryTokens.length === 0) return [];
@@ -1383,20 +1395,23 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
           if (song.keywords?.includes(token)) {
               matchCount++;
           }
-          if (songTitleLower.includes(token)) matchCount += 3; // Higher weight for title
-          if (songArtistLower.includes(token)) matchCount += 2; // Medium for artist
-          if (songLyricistLower.includes(token)) matchCount +=1; // Lower for lyricist
+          if (songTitleLower.includes(token)) matchCount += 3; 
+          if (songArtistLower.includes(token)) matchCount += 2; 
+          if (songLyricistLower.includes(token)) matchCount +=1; 
       });
-      // Bonus for exact phrase match in title
       if (songTitleLower.includes(cleanedQuery)) matchCount +=5;
 
       return { ...song, matchCount };
     }).sort((a, b) => b.matchCount - a.matchCount);
 
     return rankedSongs;
-  } catch (error) {
+  } catch (error:any) {
     console.error("Firebase: Error during song search:", error);
-    return []; // Return empty array on any error
+    if (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline')) {
+      console.warn("Firebase: Search failed due to offline client.");
+      // Potentially rethrow a custom error or notify user appropriately
+    }
+    return []; 
   }
 }
 
@@ -1411,26 +1426,25 @@ export async function getPopularSongs(): Promise<Song[]> {
 
   let popular: Song[] = [];
   try {
-    for (const slug of specificSlugs) {
-      if (slug) { // Ensure slug is not undefined
-        const song = await getSongBySlug(slug);
-        if (song) popular.push(song);
-      }
-    }
+    const songPromises = specificSlugs.map(slug => slug ? getSongBySlug(slug) : Promise.resolve(undefined));
+    const resolvedSongs = await Promise.all(songPromises);
+    popular = resolvedSongs.filter(song => song !== undefined) as Song[];
     
-    // If not enough specific songs found, fetch some recent ones
     if (popular.length < 5) {
       const additionalNeeded = 5 - popular.length;
-      const q = query(songsCollection, orderBy('createdAt', 'desc'), limit(additionalNeeded * 2)); // Fetch more to filter
+      const q = query(songsCollection, orderBy('createdAt', 'desc'), limit(additionalNeeded * 2)); 
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(doc => {
-          if (popular.length < 5 && !popular.find(p => p.id === doc.id)) { 
+          if (popular.length < 5 && !popular.find(p => p.slug === doc.data().slug)) { 
                popular.push({ id: doc.id, ...doc.data() } as Song);
           }
       });
     }
-  } catch (error) {
+  } catch (error:any) {
     console.error("Firebase: Error fetching popular songs:", error);
+     if (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline')) {
+      console.warn("Firebase: Popular songs fetch failed due to offline client.");
+    }
     return [];
   }
   
@@ -1442,8 +1456,11 @@ export async function getNewSongs(): Promise<Song[]> {
     const q = query(songsCollection, orderBy('createdAt', 'desc'), limit(8));
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Song));
-  } catch (error) {
+  } catch (error:any) {
     console.error("Firebase: Error fetching new songs:", error);
+     if (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline')) {
+      console.warn("Firebase: New songs fetch failed due to offline client.");
+    }
     return [];
   }
 }
@@ -1454,15 +1471,21 @@ async function getUniqueFieldValues(fieldName: string): Promise<string[]> {
     const valuesSet = new Set<string>();
     snapshot.forEach(doc => {
       const data = doc.data();
-      const value = data[fieldName] as string | undefined;
-      if (value && cleanDisplayString(value)) { 
-        valuesSet.add(cleanDisplayString(value) as string);
+      const rawValue = data[fieldName] as string | undefined;
+      if (rawValue) {
+        const cleanedValue = cleanDisplayString(rawValue);
+        if (cleanedValue) { // Ensure cleanedValue is not undefined/empty
+          valuesSet.add(cleanedValue);
+        }
       }
     });
     const uniqueValues = Array.from(valuesSet);
     return uniqueValues.sort((a, b) => a.localeCompare(b, 'bn'));
-  } catch (error) {
+  } catch (error:any) {
     console.error(`Firebase: Error fetching unique field values for ${fieldName}:`, error);
+    if (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline')) {
+      console.warn(`Firebase: Unique field values fetch for ${fieldName} failed due to offline client.`);
+    }
     return [];
   }
 }
@@ -1495,9 +1518,9 @@ export async function getPaginatedSongs(page: number, limitPerPage: number, star
   
   let q;
   if (page === 1 || !startAfterDoc) {
-    q = query(songsCollection, orderBy('title', 'asc'), limit(limitPerPage)); 
+    q = query(songsCollection, orderBy('slug', 'asc'), limit(limitPerPage)); 
   } else {
-    q = query(songsCollection, orderBy('title', 'asc'), startAfter(startAfterDoc), limit(limitPerPage));
+    q = query(songsCollection, orderBy('slug', 'asc'), startAfter(startAfterDoc), limit(limitPerPage));
   }
 
   try {
@@ -1507,8 +1530,11 @@ export async function getPaginatedSongs(page: number, limitPerPage: number, star
     const newLastVisibleDoc = documentSnapshots.docs[documentSnapshots.docs.length - 1] || null;
     
     return { songs, nextPageCursor: newLastVisibleDoc };
-  } catch (error) {
+  } catch (error:any) {
     console.error(`Firebase: Error fetching paginated songs (page ${page}):`, error);
+    if (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline')) {
+      console.warn(`Firebase: Paginated songs fetch (page ${page}) failed due to offline client.`);
+    }
     return { songs: [], nextPageCursor: null };
   }
 }
@@ -1516,13 +1542,27 @@ export async function getPaginatedSongs(page: number, limitPerPage: number, star
 
 export async function getTotalSongCount(): Promise<number> {
   try {
+    // First, try to get count from server
     const snapshot = await getCountFromServer(songsCollection);
     const totalCount = snapshot.data().count;
     return totalCount;
-  } catch (error) {
-    console.error("Firebase: Error fetching total song count:", error);
-    return 0; 
+  } catch (error: any) {
+    console.error("Firebase: Error fetching total song count from server:", error);
+    if (error.code === 'unavailable' || error.message?.toLowerCase().includes('offline')) {
+      console.warn("Firebase: Count from server failed due to offline client. Trying to count client-side (less accurate).");
+      // Fallback: If offline, try to get all docs (less efficient, might be incomplete if collection is large)
+      try {
+        const allDocsSnapshot = await getDocs(songsCollection);
+        return allDocsSnapshot.size;
+      } catch (fallbackError: any) {
+        console.error("Firebase: Error fetching all docs for count (fallback):", fallbackError);
+        return 0; // Return 0 if fallback also fails
+      }
+    }
+    return 0; // Return 0 for other errors
   }
 }
 
-console.log("Firestore bangla-song-database.ts loaded. Mock songs count:", mockSongs.length);
+console.log("Firestore bangla-song-database.ts loaded.");
+// Final check to ensure mockSongs is correctly populated
+console.log(`Final mockSongs count after placeholder check: ${mockSongs.length}`);

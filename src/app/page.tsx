@@ -1,5 +1,3 @@
-'use client';
-
 import Link from 'next/link';
 import SongList from '@/components/song-list';
 import SongSuggestions from '@/components/song-suggestions';
@@ -11,28 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Users, Library, Feather, ListMusic, Database, WifiOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import * as React from 'react';
 import { handleSeedDatabase } from '@/lib/actions';
 
 export default async function Home() {
   let popularSongs: Song[] = [];
   let newSongs: Song[] = [];
   let fetchError: string | null = null;
-  const [isOnline, setIsOnline] = React.useState(true);
-
-  React.useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
 
   try {
     [popularSongs, newSongs] = await Promise.all([
@@ -42,14 +24,8 @@ export default async function Home() {
   } catch (error: any) {
     console.error("Home page: Error fetching songs:", error);
     let message = "গানগুলি লোড করা যায়নি।";
-    if (!isOnline || error.message?.toLowerCase().includes('offline') || error.code === 'unavailable') {
-      message = "গানগুলি লোড করা যায়নি কারণ আপনি অফলাইনে আছেন বা সার্ভারের সাথে সংযোগ করতে পারছেন না।";
-    } else {
-      message = "গানগুলি লোড করার সময় একটি ত্রুটি ঘটেছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।";
-    }
     fetchError = message;
   }
-
 
   return (
     <div className="space-y-8">

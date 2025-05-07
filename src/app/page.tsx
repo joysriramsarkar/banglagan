@@ -1,6 +1,7 @@
+'use client';
+
 import Link from 'next/link';
 import SongList from '@/components/song-list';
-import SongSuggestions from '@/components/song-suggestions';
 import { getPopularSongs, getNewSongs } from '@/services/bangla-song-database';
 import type { Song } from '@/types/song';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -10,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Users, Library, Feather, ListMusic, Database, WifiOff } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { handleSeedDatabase } from '@/lib/actions';
+import * as React from "react";
 
 export default async function Home() {
   let popularSongs: Song[] = [];
@@ -62,7 +64,7 @@ export default async function Home() {
         </Card>
       )}
       
-      <SongSuggestions />
+      
 
       <Separator />
 
@@ -139,3 +141,4 @@ export default async function Home() {
     </div>
   );
 }
+

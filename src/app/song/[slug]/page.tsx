@@ -1,10 +1,25 @@
+
 // app/song/[slug]/page.tsx
 import { mockSongs, type Song } from '@/services/bangla-song-database';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather } from 'lucide-react';
-import { createSlug, toBengaliNumerals, cleanString } from '@/lib/utils';
+import { createSlug, toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils'; // Import cleanLyricsForDisplay
 import { Separator } from '@/components/ui/separator';
+
+// Helper function to clean strings for display (less aggressive than for slugs)
+// Keeps spaces, removes only problematic chars, trims.
+function cleanDisplayString(str: string | undefined | null): string | undefined {
+    if (!str || typeof str !== 'string' || !str.trim()) {
+        return undefined;
+    }
+    return str
+        .replace(/\u00AD/g, '') // Remove soft hyphens
+        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+        .trim()
+        .replace(/\s+/g, ' '); // Normalize multiple spaces to one
+}
+
 
 async function getSongBySlug(slug: string): Promise<Song | undefined> {
   const decodedSlug = decodeURIComponent(slug);
@@ -14,12 +29,9 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
   // and comparing with the decodedSlug.
   const matchedSong = mockSongs.find(song => {
     // IMPORTANT: Use the exact same cleaning and slug generation logic as used for link creation
-    const songTitleForSlug = cleanString(song.title);
-    const songArtistForSlug = cleanString(song.artist);
-    const songLyricistForSlug = cleanString(song.lyricist); // Can be undefined
-
-    // Generate slug using the same method as in SongCard/SongList
-    const currentSongSlug = createSlug(songTitleForSlug, songArtistForSlug, songLyricistForSlug);
+    // For slug generation, we use the `cleanString` from utils which converts spaces to hyphens etc.
+    // For display, we use `cleanDisplayString` or `cleanLyricsForDisplay`.
+    const currentSongSlug = createSlug(song.title, song.artist, song.lyricist);
     
     // console.log(`Comparing decodedSlug "${decodedSlug}" with generated slug "${currentSongSlug}" for song "${song.title}"`);
 
@@ -29,20 +41,23 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
     
     // Fallback for cases where lyricist might be part of the slug but not consistently in the data
     // or vice-versa. This attempts to match the most common patterns.
-    const slugWithoutLyricistPart = createSlug(songTitleForSlug, songArtistForSlug, undefined);
+    // Regenerate slug without lyricist part for this fallback check
+    const slugWithoutLyricistPart = createSlug(song.title, song.artist, undefined);
      if (slugWithoutLyricistPart === decodedSlug) {
        console.log(`Fallback match (no lyricist) for "${decodedSlug}" with song "${song.title}"`);
        return true;
      }
-
+     
     // A more direct comparison for simple cases, if the above fails
     // This is less robust but can catch simple title-artist matches
-    const simpleExpectedSlug = `${cleanString(song.title)?.toLowerCase()}-by-${cleanString(song.artist)?.toLowerCase()}`;
+    // Ensure to use the same cleaning logic for slug generation as in createSlug
+    const simpleExpectedSlug = createSlug(song.title, song.artist); // This already handles cleaning and lowercasing internally
     if (decodedSlug.startsWith(simpleExpectedSlug)) {
         // Check if lyricist part is also consistent if present
         if (song.lyricist) {
-            const lyricistPart = `-lyricist-${cleanString(song.lyricist)?.toLowerCase()}`;
-            if (decodedSlug === `${simpleExpectedSlug}${lyricistPart}`) {
+            // Generate the full slug with lyricist using createSlug
+            const fullSlugWithLyricist = createSlug(song.title, song.artist, song.lyricist);
+            if (decodedSlug === fullSlugWithLyricist) {
                  console.log(`Fallback simple match (with lyricist) for "${decodedSlug}" with song "${song.title}"`);
                 return true;
             }
@@ -61,7 +76,7 @@ async function getSongBySlug(slug: string): Promise<Song | undefined> {
      // Optional: Log a few generated slugs from mockSongs to help debug
      // For example, log the first 5 generated slugs:
      // mockSongs.slice(0, 5).forEach(s => {
-     //   console.log(`Sample generated slug: ${createSlug(cleanString(s.title), cleanString(s.artist), cleanString(s.lyricist))}`);
+     //   console.log(`Sample generated slug: ${createSlug(s.title, s.artist, s.lyricist)}`);
      // });
   }
   return matchedSong;
@@ -82,13 +97,14 @@ export default async function SongPage({ params }: SongPageProps) {
     notFound(); // Show 404 if song not found
   }
 
-  // Clean song properties before display, ensuring undefined is handled gracefully
-  const displayTitle = song.title || 'শিরোনাম উপলব্ধ নেই';
-  const displayArtist = song.artist || 'শিল্পী উপলব্ধ নেই';
-  const displayLyricist = song.lyricist; // cleanString handles undefined
-  const displayAlbum = song.album;
-  const displayGenre = song.genre;
-  const displayLyrics = song.lyrics;
+  // Clean song properties for display
+  const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
+  const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
+  const displayLyricist = cleanDisplayString(song.lyricist);
+  const displayAlbum = cleanDisplayString(song.album);
+  const displayGenre = cleanDisplayString(song.genre);
+  // Use cleanLyricsForDisplay for lyrics to preserve spaces correctly
+  const displayLyrics = cleanLyricsForDisplay(song.lyrics);
 
 
   return (
@@ -183,8 +199,8 @@ export async function generateMetadata({ params }: SongPageProps) {
     };
   }
 
-  const metaTitle = song.title || 'শিরোনামহীন গান';
-  const metaArtist = song.artist || 'অজানা শিল্পী';
+  const metaTitle = cleanDisplayString(song.title) || 'শিরোনামহীন গান';
+  const metaArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
 
   return {
     title: `${metaTitle} - ${metaArtist} | বাংলা গান`,

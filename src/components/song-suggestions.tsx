@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -6,8 +7,22 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Lightbulb, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link'; // Import Link
-import { createSlug, cleanString } from '@/lib/utils'; // Import from utils
+import { createSlug } from '@/lib/utils'; // Import from utils
 import { mockSongs } from '@/services/bangla-song-database'; // Import mockSongs to find lyricist
+
+// Helper function to clean strings for display (less aggressive than for slugs)
+// Keeps spaces, removes only problematic chars, trims.
+function cleanDisplayString(str: string | undefined | null): string | undefined {
+    if (!str || typeof str !== 'string' || !str.trim()) {
+        return undefined;
+    }
+    return str
+        .replace(/\u00AD/g, '') // Remove soft hyphens
+        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+        .trim()
+        .replace(/\s+/g, ' '); // Normalize multiple spaces to one
+}
+
 
 export default function SongSuggestions() {
   const [suggestions, setSuggestions] = React.useState<SuggestSongsOutput['suggestions'] | null>(null);
@@ -67,27 +82,29 @@ export default function SongSuggestions() {
         {!loading && !error && suggestions && suggestions.length > 0 && (
           <ul className="space-y-2">
             {suggestions.map((song, index) => {
-              // Clean suggested song title and artist
-              const suggestedTitleClean = cleanString(song.title);
-              const suggestedArtistClean = cleanString(song.artist);
+              // Clean suggested song title and artist for display
+              const suggestedTitleForDisplay = cleanDisplayString(song.title);
+              const suggestedArtistForDisplay = cleanDisplayString(song.artist);
 
               // Find the full song details from mock data to get the lyricist
+              // Match using cleaned display strings for consistency with how they are stored
               const fullSong = mockSongs.find(s => 
-                cleanString(s.title) === suggestedTitleClean && 
-                cleanString(s.artist) === suggestedArtistClean
+                cleanDisplayString(s.title) === suggestedTitleForDisplay && 
+                cleanDisplayString(s.artist) === suggestedArtistForDisplay
               );
               
-              // Use the createSlug function with title, artist, and lyricist (if found)
+              // Use the createSlug function with original/uncleaned title, artist, and lyricist (if found)
+              // createSlug will handle its own cleaning for URL safety
               const slug = createSlug(
-                suggestedTitleClean || 'শিরোনামহীন', 
-                suggestedArtistClean || 'অজানা শিল্পী', 
-                cleanString(fullSong?.lyricist)
+                song.title, // Original title for slug
+                song.artist, // Original artist for slug
+                fullSong?.lyricist // Original lyricist for slug (if found)
               );
               return (
                 <li key={index} className="text-sm">
                   {/* Ensure the slug is properly encoded for the URL */}
                   <Link href={`/song/${encodeURIComponent(slug)}`} className="text-primary hover:text-accent hover:underline transition-colors">
-                     <span className="font-medium">{suggestedTitleClean || 'শিরোনাম পাওয়া যায়নি'}</span> - {suggestedArtistClean || 'শিল্পী পাওয়া যায়নি'}
+                     <span className="font-medium">{suggestedTitleForDisplay || 'শিরোনাম পাওয়া যায়নি'}</span> - {suggestedArtistForDisplay || 'শিল্পী পাওয়া যায়নি'}
                   </Link>
                 </li>
               );
@@ -105,4 +122,3 @@ export default function SongSuggestions() {
     </Card>
   );
 }
-

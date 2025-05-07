@@ -1,23 +1,38 @@
+
 import type { Song } from '@/services/bangla-song-database';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Feather } from 'lucide-react'; // Added Feather icon
-import { createSlug, cleanString } from '@/lib/utils'; // Import from utils
+import { createSlug } from '@/lib/utils'; // Import from utils
 
 interface SongCardProps {
   // Update to use the full Song type
   song: Song;
 }
 
+// Helper function to clean strings for display (less aggressive than for slugs)
+// Keeps spaces, removes only problematic chars, trims.
+function cleanDisplayString(str: string | undefined | null): string | undefined {
+    if (!str || typeof str !== 'string' || !str.trim()) {
+        return undefined;
+    }
+    return str
+        .replace(/\u00AD/g, '') // Remove soft hyphens
+        .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+        .trim()
+        .replace(/\s+/g, ' '); // Normalize multiple spaces to one
+}
+
 
 export default function SongCard({ song }: SongCardProps) {
-  // Clean properties before use for display and slug generation
-  const displayTitle = cleanString(song.title) || 'শিরোনামহীন';
-  const displayArtist = cleanString(song.artist) || 'অজানা শিল্পী';
-  const displayLyricist = cleanString(song.lyricist); // cleanString handles undefined
+  // Clean properties for display using cleanDisplayString
+  const displayTitle = cleanDisplayString(song.title) || 'শিরোনামহীন';
+  const displayArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
+  const displayLyricist = cleanDisplayString(song.lyricist);
 
-  // Generate slug using cleaned properties
-  const slug = createSlug(displayTitle, displayArtist, displayLyricist);
+  // Slug generation still uses the original song properties,
+  // as createSlug handles its own internal cleaning for URL safety.
+  const slug = createSlug(song.title, song.artist, song.lyricist);
 
 
   return (

@@ -1,11 +1,10 @@
-// app/song/[slug]/page.tsx
-// Removed 'use client' to make this a Server Component again.
+'use client';
 
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/types/song';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff } from 'lucide-react';
+import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2 } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import * as React from 'react'; // Keep React for JSX
@@ -16,34 +15,74 @@ interface SongPageProps {
   };
 }
 
-// Now this is a Server Component
-export default async function SongPage({ params }: SongPageProps) {
-  let song: Song | undefined;
-  let fetchError: string | null = null;
+export default function SongPage({ params }: SongPageProps) {
+  const [song, setSong] = React.useState<Song | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [fetchError, setFetchError] = React.useState<string | null>(null);
+  const [decodedSlug, setDecodedSlug] = React.useState<string>('');
 
-  if (!params.slug || typeof params.slug !== 'string' || params.slug.trim() === '') {
-    console.error("SongPage (Server): No valid slug provided.");
-    notFound();
-  }
+  React.useEffect(() => {
+     let slugToDecode = '';
+     if (params.slug && typeof params.slug === 'string' && params.slug.trim() !== '') {
+         try {
+             slugToDecode = decodeURIComponent(params.slug);
+             setDecodedSlug(slugToDecode);
+         } catch (e) {
+             console.warn(`Client-side: Error decoding slug "${params.slug}", using as is. Error:`, e);
+             slugToDecode = params.slug; // Fallback to using the raw slug
+             setDecodedSlug(slugToDecode);
+         }
+     } else {
+        console.error("Client-side: No valid slug provided in params.");
+        setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
+        setLoading(false);
+        // Consider redirecting or showing a specific error state if no slug
+        // notFound(); // notFound can only be called from Server Components
+        return;
+     }
 
-  const decodedSlug = decodeURIComponent(params.slug);
 
-  try {
-    console.log(`Server-side: Attempting to fetch song with slug: ${decodedSlug}`);
-    // Fetch data directly in the Server Component
-    song = await getSongBySlug(decodedSlug);
+    async function loadSong() {
+      if (!slugToDecode) return; // Don't fetch if slug is invalid
 
-    if (!song) {
-      console.error(`Server-side: Song not found for slug: ${decodedSlug}`);
-      notFound();
+      setLoading(true);
+      setFetchError(null);
+      try {
+        console.log(`Client-side: Attempting to fetch song with decoded slug: ${slugToDecode}`);
+        // Fetch data on the client-side
+        const fetchedSong = await getSongBySlug(slugToDecode);
+
+        if (!fetchedSong) {
+          console.error(`Client-side: Song not found for decoded slug: ${slugToDecode}`);
+          setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
+          // notFound(); // Cannot call notFound in Client Component
+        } else {
+          setSong(fetchedSong);
+        }
+      } catch (e: any) {
+        console.error(`Client-side: Error fetching song for decoded slug "${slugToDecode}":`, e);
+        setFetchError(`গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।`);
+      } finally {
+        setLoading(false);
+      }
     }
-  } catch (e: any) {
-    console.error(`Server-side: Error fetching song for slug "${decodedSlug}":`, e);
-    fetchError = `গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন। বিস্তারিত: ${e.message}`;
+
+    loadSong();
+
+  }, [params.slug]); // Re-run effect if slug changes
+
+
+   if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[calc(100vh-10rem)]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="ml-4 text-lg text-muted-foreground">গান লোড হচ্ছে...</p>
+      </div>
+    );
   }
 
   // Handle fetch error display
-  if (fetchError) {
+  if (fetchError && !song) { // Show error only if song is not loaded
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <Alert variant="destructive" className="max-w-md">
@@ -55,12 +94,24 @@ export default async function SongPage({ params }: SongPageProps) {
     );
   }
 
-  // At this point, `song` must be defined due to the notFound() calls above.
-  if (!song) {
-    // This should theoretically not be reached if notFound works, but as a safeguard:
-    console.error(`Server-side: Song became undefined unexpectedly for slug: ${decodedSlug}`);
-    notFound();
+  // Handle case where song is definitively not found (after loading and no error)
+  if (!loading && !fetchError && !song) {
+     // This case might be hit if getSongBySlug returns undefined but doesn't throw an error
+     return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+            <Alert variant="destructive" className="max-w-md">
+                <WifiOff className="h-5 w-5" />
+                <AlertTitle>গান পাওয়া যায়নি</AlertTitle>
+                <AlertDescription>
+                    দুঃখিত, "{decodedSlug}" লিঙ্কটির জন্য কোনো গান খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে আবার চেষ্টা করুন।
+                </AlertDescription>
+            </Alert>
+        </div>
+     );
   }
+
+  // Song must be loaded at this point
+  if (!song) return null; // Should not happen if logic above is correct, but prevents TS errors
 
 
   const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
@@ -117,7 +168,7 @@ export default async function SongPage({ params }: SongPageProps) {
                 <span>{toBengaliNumerals(song.releaseYear.toString())}</span>
               </div>
             )}
-             {/* Firestore timestamp handling can remain, though mock data won't have it */}
+             {/* Firestore timestamp handling - might not be present in mock data */}
              {song.createdAt && typeof (song.createdAt as any)?.toDate === 'function' && (
                 <div className="flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-primary/80 flex-shrink-0" />
@@ -149,38 +200,9 @@ export default async function SongPage({ params }: SongPageProps) {
   );
 }
 
-export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered
+// This ensures the page attempts to re-render on each request,
+// but since it's a client component, data fetching relies on useEffect.
+export const dynamic = 'force-dynamic';
 
-// generateMetadata can now be correctly exported from this Server Component
-export async function generateMetadata({ params }: SongPageProps) {
-  try {
-    const decodedSlug = decodeURIComponent(params.slug);
-    // Fetch data again for metadata, or potentially cache/reuse if needed
-    const song = await getSongBySlug(decodedSlug);
-
-    if (!song) {
-      return {
-        title: 'গান পাওয়া যায়নি - বাংলা গান',
-        description: 'আপনি যে গানটি খুঁজছেন তা পাওয়া যায়নি।',
-      };
-    }
-
-    const metaTitle = cleanDisplayString(song.title) || 'শিরোনামহীন গান';
-    const metaArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
-
-    return {
-      title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
-      description: `${metaTitle} গানের তথ্য ও লিরিক্স (যদি থাকে) ব্রাউজ করুন। শিল্পী: ${metaArtist}।`,
-      openGraph: {
-        title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
-        description: `গানের বিবরণ এবং লিরিক্স (যদি উপলব্ধ থাকে)।`,
-      },
-    };
-  } catch (error) {
-    console.error(`generateMetadata: Error for slug ${params.slug}:`, error);
-    return {
-      title: 'তথ্য লোড করতে সমস্যা - বাংলা গান',
-      description: 'গানটির তথ্য এই মুহূর্তে আনা সম্ভব হচ্ছে না।',
-    };
-  }
-}
+// Removed generateMetadata function as it cannot be exported from a Client Component.
+// Metadata generation should be handled in a separate `metadata.ts` or `layout.tsx`.

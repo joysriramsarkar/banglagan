@@ -1,8 +1,10 @@
+
 import Link from 'next/link';
 import { getAllArtists } from '@/services/bangla-song-database';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Users } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { cleanDisplayString } from '@/lib/utils'; // Import cleanDisplayString
 
 export default async function ArtistsPage() {
   const artists = await getAllArtists();
@@ -15,7 +17,7 @@ export default async function ArtistsPage() {
       </h1>
       <Separator />
       <Card>
-        <CardContent className="pt-6"> {/* Added padding top */}
+        <CardContent className="pt-6">
           {artists.length > 0 ? (
             <div className="flex flex-wrap gap-3">
               {artists.map((artist) => (
@@ -25,7 +27,7 @@ export default async function ArtistsPage() {
                   passHref
                   className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline shadow-sm border border-transparent hover:border-primary/20"
                 >
-                  {artist}
+                  {cleanDisplayString(artist) || artist} {/* Display cleaned name */}
                 </Link>
               ))}
             </div>
@@ -38,7 +40,6 @@ export default async function ArtistsPage() {
   );
 }
 
-// Optional: Add metadata
 export const metadata = {
   title: 'সকল শিল্পী - বাংলা গান',
   description: 'সকল বাংলা গানের শিল্পীদের তালিকা ব্রাউজ করুন।',

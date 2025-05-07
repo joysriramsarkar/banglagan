@@ -1,8 +1,10 @@
+
 import Link from 'next/link';
 import { getAllGenres } from '@/services/bangla-song-database';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Library } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
+import { cleanDisplayString } from '@/lib/utils'; // Import cleanDisplayString
 
 export default async function GenresPage() {
   const genres = await getAllGenres();
@@ -15,7 +17,7 @@ export default async function GenresPage() {
       </h1>
       <Separator />
       <Card>
-         <CardContent className="pt-6"> {/* Added padding top */}
+         <CardContent className="pt-6">
            {genres.length > 0 ? (
              <div className="flex flex-wrap gap-3">
                {genres.map((genre) => (
@@ -25,7 +27,7 @@ export default async function GenresPage() {
                    passHref
                    className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline shadow-sm border border-transparent hover:border-primary/20"
                  >
-                   {genre}
+                   {cleanDisplayString(genre) || genre} {/* Display cleaned name */}
                  </Link>
                ))}
              </div>
@@ -38,7 +40,6 @@ export default async function GenresPage() {
   );
 }
 
-// Optional: Add metadata
 export const metadata = {
   title: 'সকল গানের ধরণ - বাংলা গান',
   description: 'বাংলা গানের বিভিন্ন ধরণ ব্রাউজ করুন।',

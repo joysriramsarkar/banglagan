@@ -31,9 +31,8 @@ export function cleanString(str: string | undefined | null): string | undefined 
 }
 
 /**
- * Cleans lyrics text for display. Removes problematic characters, normalizes spaces,
- * but preserves single spaces between words (does not convert them to hyphens).
- * Keeps essential punctuation.
+ * Cleans lyrics text for display. Removes problematic characters, normalizes horizontal spaces,
+ * and preserves newlines.
  * @param text The lyrics string to clean.
  * @returns The cleaned lyrics string. Returns a default message if input is invalid/empty.
  */
@@ -43,18 +42,20 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   }
   let cleanedText = text
     .replace(/\u00AD/g, '') // Remove soft hyphens
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces and similar
-    .trim(); // Trim leading/trailing whitespace
+    .replace(/[\u200B-\u200D\uFEFF]/g, ''); // Remove zero-width spaces
 
-  // Normalize multiple spaces to a single space, but preserve single spaces.
-  cleanedText = cleanedText.replace(/\s+/g, ' ');
+  // Normalize horizontal whitespace (spaces, tabs) on each line, preserve newlines
+  cleanedText = cleanedText
+    .split('\n')
+    .map(line => line.replace(/[ \t]+/g, ' ').trim()) // Replace multiple horizontal spaces with one, then trim line
+    .join('\n');
 
-  return cleanedText;
+  return cleanedText.trim(); // Final trim for the whole block
 }
 
 /**
  * Cleans a string for display purposes.
- * Removes soft hyphens, zero-width spaces, trims, and normalizes multiple spaces to one.
+ * Removes soft hyphens, zero-width spaces, replaces hyphens with spaces, trims, and normalizes multiple spaces to one.
  * @param str The string to clean.
  * @returns The cleaned string, or undefined if input is invalid/empty.
  */
@@ -65,6 +66,7 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     return str
         .replace(/\u00AD/g, '') // Remove soft hyphens
         .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces
+        .replace(/-/g, ' ') // Replace hyphens with spaces
         .trim()
         .replace(/\s+/g, ' '); // Normalize multiple spaces to one
 }
@@ -87,6 +89,11 @@ export const createSlug = (title?: string, artist?: string, lyricist?: string): 
     let cleanedText = cleanString(text); // cleanString will convert spaces to hyphens here
     if (!cleanedText) return '';
 
+    // Ensure that known "unknown" or "collected" type lyricists are consistently slugified
+    if (cleanedText === "অজানা-গীতিকার" || cleanedText === "অজানা গীতিকার") return "অজানা-গীতিকার";
+    if (cleanedText === "সংগৃহীত") return "সংগৃহীত";
+
+
     return cleanedText
       .toLowerCase() // Convert to lowercase (mostly for non-Bengali parts if any)
       // Keep Unicode letters (\p{L}), marks (\p{M} for diacritics/vowel signs), numbers (\p{N}), and hyphens. Remove others.
@@ -104,7 +111,7 @@ export const createSlug = (title?: string, artist?: string, lyricist?: string): 
   const safeTitleSlug = titleSlug || 'untitled';
   const safeArtistSlug = artistSlug || 'unknown-artist';
 
-  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার' && lyricistSlug !== 'অজানা-শলপ') {
+  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার') {
     return `${safeTitleSlug}-by-${safeArtistSlug}-lyricist-${lyricistSlug}`;
   } else {
     return `${safeTitleSlug}-by-${safeArtistSlug}`;

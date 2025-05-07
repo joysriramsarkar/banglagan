@@ -16,13 +16,14 @@ export async function generateMetadata(
   let decodedSlug = '';
   try {
     decodedSlug = decodeURIComponent(params.slug);
-    console.log(`generateMetadata: Attempting to fetch song with decoded slug: ${decodedSlug}`);
+    // console.log(`generateMetadata: Attempting to fetch song with decoded slug: ${decodedSlug}`);
   } catch (e) {
     console.warn(`generateMetadata: Error decoding slug "${params.slug}", using as is. Error:`, e);
-    decodedSlug = params.slug;
+    decodedSlug = params.slug; // Use raw slug if decoding fails
   }
 
   try {
+    // Use the decoded slug to fetch the song
     const song = await getSongBySlug(decodedSlug);
 
     if (!song) {
@@ -33,6 +34,7 @@ export async function generateMetadata(
        };
     }
 
+    // Clean display strings for metadata
     const rawMetaTitle = cleanDisplayString(song.title) || 'শিরোনামহীন গান';
     const metaTitle = rawMetaTitle.replace(/-/g, ' ');
     const metaArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';

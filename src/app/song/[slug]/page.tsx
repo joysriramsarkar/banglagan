@@ -11,20 +11,22 @@ import * as React from 'react';
 
 
 interface SongPageProps {
-    // Params are derived client-side using useParams hook
+    // Props are passed from the parent component that renders this client component
 }
 
 export default function SongPage({ }: SongPageProps) {
-  const params = useParams<{ slug: string }>();
+  const params = useParams<{ slug?: string }>(); // Make slug optional in type
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
-  const [decodedSlug, setDecodedSlug] = React.useState<string>('');
+  const [decodedSlugState, setDecodedSlugState] = React.useState<string>(''); // Renamed state variable
 
 
   React.useEffect(() => {
      let slugToDecode = '';
-     const rawSlug = params?.slug;
+     const rawSlug = params?.slug; // Access slug from params
+
+     // console.log("Client-side useEffect: rawSlug from params:", rawSlug);
 
      if (!rawSlug || typeof rawSlug !== 'string' || rawSlug.trim() === '') {
          console.error("Client-side: No valid slug provided in params.");
@@ -35,34 +37,42 @@ export default function SongPage({ }: SongPageProps) {
 
      try {
          slugToDecode = decodeURIComponent(rawSlug);
-         setDecodedSlug(slugToDecode);
+         setDecodedSlugState(slugToDecode); // Update state with decoded slug
+         // console.log("Client-side useEffect: Decoded slug:", slugToDecode);
      } catch (e) {
          console.warn(`Client-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
          slugToDecode = rawSlug; // Use raw slug if decoding fails
-         setDecodedSlug(slugToDecode);
+         setDecodedSlugState(slugToDecode); // Update state even if decoding failed
      }
 
 
     async function loadSong() {
-      if (!slugToDecode) {
+      // Use the state variable which holds the (potentially failed) decoded slug
+      const slugForFetch = slugToDecode;
+
+      if (!slugForFetch) {
+        console.log("Client-side loadSong: No slug available for fetching.");
         setLoading(false);
         return;
       }
 
+      // console.log("Client-side loadSong: Attempting to fetch song with slug:", slugForFetch);
       setLoading(true);
       setFetchError(null);
       try {
-        const fetchedSong = await getSongBySlug(slugToDecode);
+        // Pass the correctly decoded slug to the service
+        const fetchedSong = await getSongBySlug(slugForFetch);
 
         if (!fetchedSong) {
-          console.error(`Client-side: Song not found for decoded slug: ${slugToDecode}`);
+          console.error(`Client-side: Song not found for decoded slug: ${slugForFetch}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
           setSong(null);
         } else {
-          setSong(fetchedSong);
+           // console.log("Client-side loadSong: Song found:", fetchedSong.title);
+           setSong(fetchedSong);
         }
       } catch (e: any) {
-        console.error(`Client-side: Error fetching song for decoded slug "${slugToDecode}":`, e);
+        console.error(`Client-side: Error fetching song for decoded slug "${slugForFetch}":`, e);
         setFetchError(`গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।`);
         setSong(null);
       } finally {
@@ -72,7 +82,7 @@ export default function SongPage({ }: SongPageProps) {
 
     loadSong();
 
-  }, [params]);
+  }, [params]); // Dependency is params
 
 
    if (loading) {
@@ -96,11 +106,22 @@ export default function SongPage({ }: SongPageProps) {
     );
   }
 
-  if (!song) {
-    console.warn(`SongPage: Song is null after loading and no explicit fetch error for slug: ${decodedSlug}. Rendering notFound.`);
+  // If loading is complete, no fetch error occurred, but song is still null, show not found.
+  if (!loading && !fetchError && !song) {
+    console.warn(`SongPage: Rendering notFound because song is null after loading for decoded slug state: ${decodedSlugState}.`);
     notFound();
     return null;
   }
+
+  // Ensure song is not null before accessing properties
+  if (!song) {
+      // This case should theoretically be covered by the checks above,
+      // but adding it for extra safety.
+      console.warn("SongPage: Song is unexpectedly null before rendering content.");
+      notFound();
+      return null;
+  }
+
 
   const displayTitle = cleanDisplayString(song.title)?.replace(/-/g, ' ') || 'শিরোনাম উপলব্ধ নেই';
   const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
@@ -185,4 +206,5 @@ export default function SongPage({ }: SongPageProps) {
   );
 }
 
-export const dynamic = 'force-dynamic';
+// Remove dynamic export if generateMetadata is moved or handled differently
+// export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered

@@ -1,9 +1,8 @@
-
 import type { Song } from '@/services/bangla-song-database';
 import Link from 'next/link';
 import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Feather } from 'lucide-react';
-import { createSlug, cleanDisplayString } from '@/lib/utils';
+import { cleanDisplayString } from '@/lib/utils';
 
 interface SongCardProps {
   song: Song;
@@ -15,13 +14,15 @@ export default function SongCard({ song }: SongCardProps) {
   const displayArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
   const displayLyricist = cleanDisplayString(song.lyricist);
 
-  // Use song.id as the unique identifier for slug creation
-  // This ensures the slug matches the one generated when mockSongs were initialized
-  const slug = createSlug(song.title, song.artist, song.lyricist, song.id);
+  // Use the pre-computed slug directly from the song object
+  // Ensure the slug is properly encoded for the URL
+  const encodedSlug = encodeURIComponent(song.slug);
+
+  // console.log(`SongCard: Title: ${song.title}, Artist: ${song.artist}, ID: ${song.id}, Slug: ${song.slug}, Encoded Slug: ${encodedSlug}`);
 
 
   return (
-    <Link href={`/song/${encodeURIComponent(slug)}`} passHref legacyBehavior>
+    <Link href={`/song/${encodedSlug}`} passHref legacyBehavior>
       <a className="block hover:shadow-lg transition-shadow duration-200 rounded-lg">
         <Card className="h-full bg-card hover:bg-secondary/80 cursor-pointer transition-colors duration-200">
           <CardHeader className="pb-3 pt-4 px-4"> {/* Adjusted padding */}
@@ -48,4 +49,3 @@ export default function SongCard({ song }: SongCardProps) {
     </Link>
   );
 }
-

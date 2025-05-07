@@ -1,11 +1,13 @@
-
 import type { Timestamp } from 'firebase/firestore';
 
 /**
  * Represents a song with title, artist, album, genre, release year, lyricist, and lyrics.
  */
 export interface Song {
-  id?: string; // Firestore document ID
+  /**
+   * Unique identifier for the song (e.g., original array index or Firestore document ID).
+   */
+  id: string;
   /**
    * The title of the song in Bengali.
    * গানের শিরোনাম (বাংলায়)।
@@ -42,19 +44,19 @@ export interface Song {
    */
   lyrics: string;
   /**
-   * URL-friendly slug for the song.
+   * URL-friendly slug for the song, guaranteed to be present.
    */
-  slug?: string;
+  slug: string;
   /**
-   * Keywords for searching.
+   * Keywords for searching (optional).
    */
   keywords?: string[];
   /**
-   * Timestamp of when the song was added/created in Firestore.
+   * Timestamp of when the song was added/created (optional, relevant for Firestore).
    */
   createdAt?: Timestamp;
   /**
-   * For client-side ranking during search.
+   * For client-side ranking during search (optional).
    */
   matchCount?: number;
 }

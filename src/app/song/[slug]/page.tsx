@@ -2,42 +2,42 @@
 
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/types/song';
-import { notFound } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation'; // Import useParams
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2 } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import * as React from 'react'; // Keep React for JSX
+import * as React from 'react'; 
 
-interface SongPageProps {
-  params: {
-    slug: string;
-  };
-}
-
-export default function SongPage({ params }: SongPageProps) {
+// Remove params from props as we'll use the hook
+export default function SongPage() { 
+  const params = useParams<{ slug: string }>(); // Use useParams hook
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
   const [decodedSlug, setDecodedSlug] = React.useState<string>('');
 
+  // Get the raw slug from params
+  const rawSlug = params.slug; 
+
   React.useEffect(() => {
      let slugToDecode = '';
-     if (params.slug && typeof params.slug === 'string' && params.slug.trim() !== '') {
+     // Use rawSlug obtained from useParams
+     if (rawSlug && typeof rawSlug === 'string' && rawSlug.trim() !== '') { 
          try {
-             slugToDecode = decodeURIComponent(params.slug);
+             // Decode the raw slug
+             slugToDecode = decodeURIComponent(rawSlug); 
              setDecodedSlug(slugToDecode);
          } catch (e) {
-             console.warn(`Client-side: Error decoding slug "${params.slug}", using as is. Error:`, e);
-             slugToDecode = params.slug; // Fallback to using the raw slug
+             console.warn(`Client-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
+             slugToDecode = rawSlug; // Fallback to using the raw slug
              setDecodedSlug(slugToDecode);
          }
      } else {
         console.error("Client-side: No valid slug provided in params.");
         setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
         setLoading(false);
-        // Consider redirecting or showing a specific error state if no slug
-        // notFound(); // notFound can only be called from Server Components
+        // notFound(); // Cannot call notFound in Client Component
         return;
      }
 
@@ -49,13 +49,11 @@ export default function SongPage({ params }: SongPageProps) {
       setFetchError(null);
       try {
         console.log(`Client-side: Attempting to fetch song with decoded slug: ${slugToDecode}`);
-        // Fetch data on the client-side
         const fetchedSong = await getSongBySlug(slugToDecode);
 
         if (!fetchedSong) {
           console.error(`Client-side: Song not found for decoded slug: ${slugToDecode}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
-          // notFound(); // Cannot call notFound in Client Component
         } else {
           setSong(fetchedSong);
         }
@@ -69,7 +67,7 @@ export default function SongPage({ params }: SongPageProps) {
 
     loadSong();
 
-  }, [params.slug]); // Re-run effect if slug changes
+  }, [rawSlug]); // Depend on rawSlug from useParams
 
 
    if (loading) {
@@ -81,8 +79,7 @@ export default function SongPage({ params }: SongPageProps) {
     );
   }
 
-  // Handle fetch error display
-  if (fetchError && !song) { // Show error only if song is not loaded
+  if (fetchError && !song) { 
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <Alert variant="destructive" className="max-w-md">
@@ -94,9 +91,7 @@ export default function SongPage({ params }: SongPageProps) {
     );
   }
 
-  // Handle case where song is definitively not found (after loading and no error)
   if (!loading && !fetchError && !song) {
-     // This case might be hit if getSongBySlug returns undefined but doesn't throw an error
      return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
             <Alert variant="destructive" className="max-w-md">
@@ -110,8 +105,7 @@ export default function SongPage({ params }: SongPageProps) {
      );
   }
 
-  // Song must be loaded at this point
-  if (!song) return null; // Should not happen if logic above is correct, but prevents TS errors
+  if (!song) return null; // Should not happen, but satisfies TypeScript
 
 
   const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
@@ -168,19 +162,11 @@ export default function SongPage({ params }: SongPageProps) {
                 <span>{toBengaliNumerals(song.releaseYear.toString())}</span>
               </div>
             )}
-             {/* Firestore timestamp handling - might not be present in mock data */}
-             {song.createdAt && typeof (song.createdAt as any)?.toDate === 'function' && (
-                <div className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-primary/80 flex-shrink-0" />
-                    <span className="font-medium">যুক্ত হয়েছে:</span>
-                    <span>{(song.createdAt as any).toDate().toLocaleDateString('bn-BD')}</span>
-                </div>
-            )}
           </div>
         </CardContent>
       </Card>
 
-      {displayLyrics && displayLyrics !== 'গানের কথা এখানে যোগ করা হবে...' && displayLyrics.trim() !== '' && displayLyrics !== 'গানের কথা পাওয়া যায়নি' && (
+      {displayLyrics && displayLyrics !== 'গানের কথা পাওয়া যায়নি' && displayLyrics.trim() !== '' && (
         <Card className="overflow-hidden shadow-lg bg-card mt-6">
           <CardHeader className="bg-secondary/10 p-6">
             <CardTitle className="text-2xl font-semibold text-primary/90 flex items-center gap-2">
@@ -189,7 +175,6 @@ export default function SongPage({ params }: SongPageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-            {/* Use pre-wrap for lyrics formatting */}
             <pre className="whitespace-pre-wrap text-base leading-relaxed font-sans text-foreground/90">
               {displayLyrics}
             </pre>
@@ -200,9 +185,4 @@ export default function SongPage({ params }: SongPageProps) {
   );
 }
 
-// This ensures the page attempts to re-render on each request,
-// but since it's a client component, data fetching relies on useEffect.
-export const dynamic = 'force-dynamic';
-
-// Removed generateMetadata function as it cannot be exported from a Client Component.
-// Metadata generation should be handled in a separate `metadata.ts` or `layout.tsx`.
+export const dynamic = 'force-dynamic'; // Keep dynamic rendering for client component fetching

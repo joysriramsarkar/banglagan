@@ -1,46 +1,45 @@
 'use client';
 
 import { getSongBySlug } from '@/services/bangla-song-database';
-import type { Song } from '@/types/song';
+import type { Song } from '@/services/bangla-song-database'; // Use the interface from the service
 import { notFound, useParams } from 'next/navigation'; // Import useParams
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2 } from 'lucide-react';
-import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
+import { toBengaliNumerals, cleanLyricsForDisplay, cleanString } from '@/lib/utils'; // Use cleanString for general cleaning
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import * as React from 'react'; 
+import * as React from 'react';
 
-// Remove params from props as we'll use the hook
-export default function SongPage() { 
-  const params = useParams<{ slug: string }>(); // Use useParams hook
+// Removed params from props definition as we'll use the hook
+interface SongPageProps {} // No props needed now
+
+export default function SongPage() {
+  const params = useParams<{ slug: string }>(); // Use useParams hook to get params
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
-  const [decodedSlug, setDecodedSlug] = React.useState<string>('');
+  const [decodedSlugState, setDecodedSlugState] = React.useState<string>('');
 
   // Get the raw slug from params
-  const rawSlug = params.slug; 
+  const rawSlug = params?.slug; // Access slug safely
 
   React.useEffect(() => {
      let slugToDecode = '';
-     // Use rawSlug obtained from useParams
-     if (rawSlug && typeof rawSlug === 'string' && rawSlug.trim() !== '') { 
+     if (rawSlug && typeof rawSlug === 'string' && rawSlug.trim() !== '') {
          try {
-             // Decode the raw slug
-             slugToDecode = decodeURIComponent(rawSlug); 
-             setDecodedSlug(slugToDecode);
+             slugToDecode = decodeURIComponent(rawSlug);
+             setDecodedSlugState(slugToDecode); // Store decoded slug in state
          } catch (e) {
              console.warn(`Client-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
              slugToDecode = rawSlug; // Fallback to using the raw slug
-             setDecodedSlug(slugToDecode);
+             setDecodedSlugState(slugToDecode);
          }
      } else {
         console.error("Client-side: No valid slug provided in params.");
         setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
         setLoading(false);
-        // notFound(); // Cannot call notFound in Client Component
+        // notFound(); // Cannot call notFound directly in Client Component, handle with error state
         return;
      }
-
 
     async function loadSong() {
       if (!slugToDecode) return; // Don't fetch if slug is invalid
@@ -49,17 +48,20 @@ export default function SongPage() {
       setFetchError(null);
       try {
         console.log(`Client-side: Attempting to fetch song with decoded slug: ${slugToDecode}`);
+        // Pass the decoded slug to the service function
         const fetchedSong = await getSongBySlug(slugToDecode);
 
         if (!fetchedSong) {
           console.error(`Client-side: Song not found for decoded slug: ${slugToDecode}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
+          setSong(null); // Ensure song is null if not found
         } else {
           setSong(fetchedSong);
         }
       } catch (e: any) {
         console.error(`Client-side: Error fetching song for decoded slug "${slugToDecode}":`, e);
         setFetchError(`গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।`);
+         setSong(null); // Ensure song is null on error
       } finally {
         setLoading(false);
       }
@@ -79,41 +81,46 @@ export default function SongPage() {
     );
   }
 
-  if (fetchError && !song) { 
+  // Show specific error message if fetchError exists
+  if (fetchError) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <Alert variant="destructive" className="max-w-md">
           <WifiOff className="h-5 w-5" />
-          <AlertTitle>তথ্য আনতে সমস্যা</AlertTitle>
+          <AlertTitle>ত্রুটি</AlertTitle>
           <AlertDescription>{fetchError}</AlertDescription>
         </Alert>
       </div>
     );
   }
 
+  // Show "not found" message if not loading, no error, but song is still null
   if (!loading && !fetchError && !song) {
+     // Use the decoded slug from state for the message
+     const messageSlug = decodedSlugState || rawSlug || "এই লিঙ্ক";
      return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
             <Alert variant="destructive" className="max-w-md">
                 <WifiOff className="h-5 w-5" />
                 <AlertTitle>গান পাওয়া যায়নি</AlertTitle>
                 <AlertDescription>
-                    দুঃখিত, "{decodedSlug}" লিঙ্কটির জন্য কোনো গান খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে আবার চেষ্টা করুন।
+                   দুঃখিত, "{messageSlug}" লিঙ্কটির জন্য কোনো গান খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে আবার চেষ্টা করুন।
                 </AlertDescription>
             </Alert>
         </div>
      );
   }
 
-  if (!song) return null; // Should not happen, but satisfies TypeScript
+  // If song exists (and loading is false, no error), render the song details
+  if (!song) return null; // Should not happen if logic above is correct, but satisfies TypeScript
 
 
-  const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
-  const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
-  const displayLyricist = cleanDisplayString(song.lyricist);
-  const displayAlbum = cleanDisplayString(song.album);
-  const displayGenre = cleanDisplayString(song.genre);
-  const displayLyrics = cleanLyricsForDisplay(song.lyrics);
+  const displayTitle = cleanString(song.title) || 'শিরোনাম উপলব্ধ নেই';
+  const displayArtist = cleanString(song.artist) || 'শিল্পী উপলব্ধ নেই';
+  const displayLyricist = cleanString(song.lyricist);
+  const displayAlbum = cleanString(song.album);
+  const displayGenre = cleanString(song.genre);
+  const displayLyrics = cleanLyricsForDisplay(song.lyrics); // Specific cleaning for lyrics
 
   return (
     <div className="space-y-8">
@@ -128,7 +135,8 @@ export default function SongPage() {
                   <User className="w-4 h-4 flex-shrink-0" />
                   <span>{displayArtist}</span>
                 </div>
-                {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা গীতিকার' && (
+                {/* Display lyricist only if available and not generic */}
+                {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা-গীতিকার' && (
                   <div className="flex items-center gap-2 text-sm">
                     <Feather className="w-4 h-4 flex-shrink-0" />
                     <span>গীতিকার: {displayLyricist}</span>
@@ -166,6 +174,7 @@ export default function SongPage() {
         </CardContent>
       </Card>
 
+      {/* Conditionally render lyrics card */}
       {displayLyrics && displayLyrics !== 'গানের কথা পাওয়া যায়নি' && displayLyrics.trim() !== '' && (
         <Card className="overflow-hidden shadow-lg bg-card mt-6">
           <CardHeader className="bg-secondary/10 p-6">
@@ -175,6 +184,7 @@ export default function SongPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
+            {/* Use <pre> for preserving whitespace and line breaks in lyrics */}
             <pre className="whitespace-pre-wrap text-base leading-relaxed font-sans text-foreground/90">
               {displayLyrics}
             </pre>
@@ -185,4 +195,5 @@ export default function SongPage() {
   );
 }
 
-export const dynamic = 'force-dynamic'; // Keep dynamic rendering for client component fetching
+// Keep dynamic rendering strategy if needed, but metadata generation is moved
+export const dynamic = 'force-dynamic';

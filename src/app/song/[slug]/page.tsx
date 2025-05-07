@@ -24,9 +24,9 @@ export default function SongPage({ }: SongPageProps) {
 
   React.useEffect(() => {
      let slugToDecode = '';
-     const rawSlug = params?.slug; // Access slug directly from params
+     const rawSlug = params?.slug;
 
-     if (!rawSlug || typeof rawSlug === 'string' || rawSlug.trim() === '') {
+     if (!rawSlug || typeof rawSlug !== 'string' || rawSlug.trim() === '') {
          console.error("Client-side: No valid slug provided in params.");
          setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
          setLoading(false);
@@ -36,35 +36,35 @@ export default function SongPage({ }: SongPageProps) {
      try {
          slugToDecode = decodeURIComponent(rawSlug);
          setDecodedSlug(slugToDecode);
-         // console.log(`Client-side: Decoded slug: ${slugToDecode}`);
      } catch (e) {
          console.warn(`Client-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
-         slugToDecode = rawSlug;
+         slugToDecode = rawSlug; // Use raw slug if decoding fails
          setDecodedSlug(slugToDecode);
      }
 
 
     async function loadSong() {
-      if (!slugToDecode) return;
+      if (!slugToDecode) {
+        setLoading(false);
+        return;
+      }
 
       setLoading(true);
       setFetchError(null);
       try {
-        // console.log(`Client-side: Attempting to fetch song with decoded slug: ${slugToDecode}`);
         const fetchedSong = await getSongBySlug(slugToDecode);
 
         if (!fetchedSong) {
           console.error(`Client-side: Song not found for decoded slug: ${slugToDecode}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
-          setSong(null); // Ensure song state is cleared
+          setSong(null);
         } else {
-          // console.log("Client-side: Song fetched successfully:", fetchedSong.title);
           setSong(fetchedSong);
         }
       } catch (e: any) {
         console.error(`Client-side: Error fetching song for decoded slug "${slugToDecode}":`, e);
         setFetchError(`গানটি লোড করতে একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।`);
-        setSong(null); // Ensure song state is cleared
+        setSong(null);
       } finally {
         setLoading(false);
       }
@@ -72,7 +72,7 @@ export default function SongPage({ }: SongPageProps) {
 
     loadSong();
 
-  }, [params?.slug]); // Depend on params.slug
+  }, [params]);
 
 
    if (loading) {
@@ -84,7 +84,7 @@ export default function SongPage({ }: SongPageProps) {
     );
   }
 
-  if (fetchError && !song) { // Prioritize fetch error if song is not loaded
+  if (fetchError && !song) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
         <Alert variant="destructive" className="max-w-md">
@@ -97,20 +97,16 @@ export default function SongPage({ }: SongPageProps) {
   }
 
   if (!song) {
-    // This case handles when loading is false, no fetchError, but song is null (not found)
     console.warn(`SongPage: Song is null after loading and no explicit fetch error for slug: ${decodedSlug}. Rendering notFound.`);
-    notFound(); // Trigger the not-found UI
-    return null; // Should be unreachable due to notFound()
+    notFound();
+    return null;
   }
 
-  // If song exists (and loading is false, no error), render the song details
-  const displayTitle = cleanDisplayString(song.title) || 'শিরোনাম উপলব্ধ নেই';
+  const displayTitle = cleanDisplayString(song.title)?.replace(/-/g, ' ') || 'শিরোনাম উপলব্ধ নেই';
   const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
   const displayLyricist = cleanDisplayString(song.lyricist);
   const displayAlbum = cleanDisplayString(song.album);
   const displayGenre = cleanDisplayString(song.genre);
-
-  // Clean lyrics while preserving intentional multiple newlines
   const displayLyrics = cleanLyricsForDisplay(song.lyrics);
 
   return (
@@ -176,10 +172,9 @@ export default function SongPage({ }: SongPageProps) {
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6">
-             {/* Use whitespace-pre-wrap to preserve line breaks and wrap long lines */}
              <div
                 className="whitespace-pre-wrap text-base leading-relaxed font-sans text-foreground/90"
-                style={{ fontFamily: "'Hind Siliguri', sans-serif" }} // Ensure Bengali font
+                style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
              >
                 {displayLyrics}
              </div>
@@ -190,7 +185,4 @@ export default function SongPage({ }: SongPageProps) {
   );
 }
 
-// Keep dynamic rendering strategy.
-export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered
-
-// generateMetadata is now correctly placed in the separate metadata.ts file
+export const dynamic = 'force-dynamic';

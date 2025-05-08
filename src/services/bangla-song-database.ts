@@ -678,7 +678,7 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
   },
   {
     title: 'এই পথ যদি না শেষ হয়',
-    artist: 'হেমন্ত মুখোপাধ্যায় ও সন্ধ্যা মুখোপাধ্যায়',
+    artist: 'হেমন্ত মুখোপাধ্যায়, সন্ধ্যা মুখোপাধ্যায়',
     lyricist: 'গৌরীপ্রসন্ন মজুমদার',
     album: 'সপ্তপদী (চলচ্চিত্র)',
     genre: 'চলচ্চিত্রের গান',
@@ -692,7 +692,7 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
   { title: 'মোদের গরব মোদের আশা', artist: 'বিভিন্ন শিল্পী', lyricist: 'অতুলপ্রসাদ সেন', releaseYear: 1907, lyrics: 'মোদের গরব, মোদের আশা, আ মরি বাংলা ভাষা!', genre: 'দেশাত্মবোধক' },
   { title: 'চাঁদের সাথে আমি দেবো না তোমার তুলনা', artist: 'বিভিন্ন শিল্পী', lyricist: 'হিমাংশু দত্ত', releaseYear: 1940, lyrics: 'চাঁদের সাথে আমি দেবো না তোমার তুলনা।', genre: 'আধুনিক' },
   { title: 'ভয় কি মরণে রাখিতে সন্তানে', artist: 'বিভিন্ন শিল্পী', lyricist: 'মুকুন্দ দাস', releaseYear: 1906, lyrics: 'ভয় কি মরণে রাখিতে সন্তানে!', genre: 'স্বদেশী' },
-  { title: 'আমি কোথায় পাব তারে', artist: 'বিভিন্ন শিল্পী', lyricist: 'গগন হরকরা', releaseYear: 1890, lyrics: 'আমি কোথায় পাব তারে, আমার মনের মানুষ যে রে!', genre: 'বাউল' },
+  { title: 'আমি কোথায় পাব তারে', artist: 'বিভিন্ন বাউল', lyricist: 'গগন হরকরা', releaseYear: 1890, lyrics: 'আমি কোথায় পাব তারে, আমার মনের মানুষ যে রে!', genre: 'বাউল' },
   { title: 'শ্যামা মা কি আমার কালো', artist: 'বিভিন্ন শিল্পী', lyricist: 'কমলাকান্ত ভট্টাচার্য', releaseYear: 1770, lyrics: 'শ্যামা মা কি আমার কালো রে।', genre: 'শ্যামা সঙ্গীত' },
   { title: 'নানান দেশের নানান ভাষা', artist: 'বিভিন্ন শিল্পী', lyricist: 'নিধুবাবু (রামনিধি গুপ্ত)', releaseYear: 1800, lyrics: 'নানান দেশের নানান ভাষা।', genre: 'টপ্পা' },
   { title: 'কে তুমি বসি নদীকূলে একেলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কালী মির্জা (কাজী জলিল)', releaseYear: 1850, lyrics: 'কে তুমি বসি নদীকূলে একেলা।', genre: 'গজল' },
@@ -709,7 +709,7 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
   { title: 'ফুলেশ্বরী নদীটির তীরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রণব রায়', releaseYear: 1955, lyrics: 'ফুলেশ্বরী নদীটির তীরে।', genre: 'আধুনিক' },
   { title: 'আজ মন চেয়েছে আমি হারিয়ে যাব', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুধীন দাশগুপ্ত', releaseYear: 1960, lyrics: 'আজ মন চেয়েছে আমি হারিয়ে যাব।', genre: 'আধুনিক' },
   { title: 'মুছে যাওয়া দিনগুলো আমায় যে পিছু ডাকে', artist: 'বিভিন্ন শিল্পী', lyricist: 'পুলক বন্দ্যোপাধ্যায়', releaseYear: 1970, lyrics: 'মুছে যাওয়া দিনগুলো আমায় যে পিছু ডাকে।', genre: 'আধুনিক' },
-  { title: 'আজ দুজনার দুটি পথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'শৈলেন্দ্র (শৈলেন রায়)', releaseYear: 1962, lyrics: 'আজ দুজনার দুটি পথ।', genre: 'আধুনিক' },
+  { title: 'আজ দুজনার দুটি পথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'শৈলেন রায়', releaseYear: 1962, lyrics: 'আজ দুজনার দুটি পথ।', genre: 'আধুনিক' },
   { title: 'বিচারপতি তোমার বিচার করবে যারা', artist: 'বিভিন্ন শিল্পী', lyricist: 'সলিল চৌধুরী', releaseYear: 1975, lyrics: 'বিচারপতি তোমার বিচার করবে যারা।', genre: 'গণসঙ্গীত' },
   { title: 'তেলেনাপোতা আবিষ্কার', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রেমেন্দ্র মিত্র', releaseYear: 1945, lyrics: 'তেলেনাপোতা আবিষ্কার।', genre: 'আধুনিক' },
   { title: 'বাবুরাম সাপুড়ে', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুকুমার রায়', releaseYear: 1923, lyrics: 'বাবুরাম সাপুড়ে।', genre: 'শিশুতোষ' },
@@ -782,7 +782,9 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
   { title: 'এই মন তোমাকে দিলাম', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানভীর ফয়সাল', releaseYear: 2009, lyrics: 'এই মন তোমাকে দিলাম।', genre: 'আধুনিক' },
   { title: 'তুমি আমার প্রথম সকাল', artist: 'বিভিন্ন শিল্পী', lyricist: 'জাহিদ আকবর', releaseYear: 2012, lyrics: 'তুমি আমার প্রথম সকাল।', genre: 'আধুনিক' },
   { title: 'নদীর জলে ছায়া', artist: 'বিভিন্ন শিল্পী', lyricist: 'শাহাবুদ্দিন নাগরী', releaseYear: 2000, lyrics: 'নদীর জলে ছায়া।', genre: 'আধুনিক' },
-
+  { title: 'আমার দুঃখ গুলো', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাহমুদুজ্জামান বাবু', releaseYear: 2015, lyrics: 'আমার দুঃখ গুলো ,,,,,', genre: 'আধুনিক' },
+  { title: 'হৃদয়ের কথা', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাহমুদুজ্জামান বাবু', releaseYear: 2016, lyrics: 'হৃদয়ের কথা ,,,,,', genre: 'আধুনিক' },
+  { title: 'জানালার পাশে', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাহমুদুজ্জামান বাবু', releaseYear: 2017, lyrics: 'জানালার পাশে ,,,,,', genre: 'আধুনিক' },
   { title: 'একতারা তুই দেশের কথা (গাজী মাজহারুল আনোয়ার)', artist: 'বিভিন্ন শিল্পী', lyricist: 'গাজী মাজহারুল আনোয়ার', releaseYear: 1970, lyrics: 'একতারা তুই দেশের কথা (সুরকার)।', genre: 'দেশাত্মবোধক' },
   { title: 'এক মুঠো ভালোবাসা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবির বকুল', releaseYear: 2010, lyrics: 'এক মুঠো ভালোবাসা।', genre: 'আধুনিক' },
   { title: 'যদি সুন্দর একখান মুখ পাইতাম', artist: 'বিভিন্ন শিল্পী', lyricist: 'মোহাম্মদ রফিকুজ্জামান', releaseYear: 1980, lyrics: 'যদি সুন্দর একখান মুখ পাইতাম।', genre: 'আধুনিক' },
@@ -1097,7 +1099,7 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
   },
   {
     title: 'তুমি যাকে ভালোবাসো',
-    artist: 'অনুপম রায় ও ইমন চক্রবর্তী', // Updated artist
+    artist: 'অনুপম রায়, ইমন চক্রবর্তী', // Updated artist
     lyricist: 'অনুপম রায়',
     album: 'প্রাক্তন (চলচ্চিত্র)',
     genre: 'আধুনিক',
@@ -1109,7 +1111,7 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
   },
   {
     title: 'বসন্ত এসে গেছে',
-    artist: 'অনুপম রায় ও শ্রেয়া ঘোষাল', // Updated artist
+    artist: 'অনুপম রায়, শ্রেয়া ঘোষাল', // Updated artist
     lyricist: 'অনুপম রায়',
     album: 'চতুষ্কোণ (চলচ্চিত্র)',
     genre: 'আধুনিক',
@@ -1167,9 +1169,7 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
 এই তো জীবন, এই তো খেলা, হাসি কান্না সুখে দুখে ভরা
 সবকিছু মেনে নিয়ে, চল এগিয়ে যাই মোরা।`
   },
-
-  // Mahmuduzzaman Babu Songs
-   {
+  {
     title: 'ভোর হয়নি',
     artist: 'মাহমুদুজ্জামান বাবু',
     lyricist: 'মাহমুদুজ্জামান বাবু',
@@ -1177,7 +1177,9 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
     genre: 'আধুনিক',
     releaseYear: 2019,
     lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই',
+
   },
+    // মাহমুদুজ্জামান বাবু Songs
     { title: 'এক জীবন', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2005, lyrics: 'এক জীবন হেঁটে গেছি, দু’জীবন বসে আছি, তিন জীবন ঘুমিয়ে রব কবরে বন্ধু। তুমি কি আমার হবে?' },
     { title: 'গঙ্গার জলে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2008, lyrics: 'গঙ্গার জলে গঙ্গাজল থাকে না, মানুষের মনে কি মানুষ থাকে? প্রেম তো আগুনে পোড়ে না, পানি তো মেঘেতে ওড়ে না, কেন এ জীবন ভরে এত ফাঁকি?' },
     { title: 'আমার পরাণ যাহা চায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'রবীন্দ্রনাথ ঠাকুর', genre: 'রবীন্দ্রসঙ্গীত', releaseYear: 2010, lyrics: 'আমার পরাণ যাহা চায়, তুমি তাই, তুমি তাই গো। তোমা ছাড়া আর এ জগতে মোর কেহ নাই, কিছু নাই গো।' },
@@ -1299,16 +1301,40 @@ const mockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'cre
    { title: 'রাজপথ', artist: 'নচিকেতা চক্রবর্তী', lyricist: 'নচিকেতা চক্রবর্তী', genre: 'জীবনমুখী', releaseYear: 2004, lyrics: 'রাজপথ' },
    { title: 'রাত জাগা তারা', artist: 'নচিকেতা চক্রবর্তী', lyricist: 'নচিকেতা চক্রবর্তী', genre: 'জীবনমুখী', releaseYear: 2005, lyrics: 'রাত জাগা তারা' },
 
+   // Lalon Fokir Songs
+    { title: 'খাঁচার ভিতর অচিন পাখি', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'খাঁচার ভিতর অচিন পাখি কেমনে আসে যায়। তারে ধরতে পারলে মন বেড়ি দিতাম পাখির পায়।' },
+    { title: 'মানুষ ভজলে সোনার মানুষ হবি', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'মানুষ ভজলে সোনার মানুষ হবি। মানুষ ছাড়া ক্ষ্যাপা রে তুই মূল হারাবি।' },
+    { title: 'সময় গেলে সাধন হবে না', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'সময় গেলে সাধন হবে না। দিন থাকতে দিনের সাধন কেন করলে না।' },
+    { title: 'সব লোকে কয় লালন কি জাত সংসারে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'সব লোকে কয় লালন কি জাত সংসারে। লালন বলে জাতের কি রূপ দেখলাম না এই নজরে।' },
+    { title: 'আমার ঘরের চাবি পরের হাতে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার ঘরের চাবি পরের হাতে। কেমনে খুলিয়া সে ধন দেখব চক্ষে।' },
+    { title: 'আমার আপন খবর আপনার হয় না', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার আপন খবর আপনার হয় না। একবার আপনারে চিনতে পারলে রে যাবে অচেনারে চেনা।' },
+    { title: 'মিলন হবে কত দিনে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'মিলন হবে কত দিনে, আমার মনের মানুষের সনে। চাতক প্রায় অহর্নিশি চেয়ে আছি কালো শশী, আমি হব বলে চরণদাসী, ও তা হয় না কপালগুণে।' },
+    { title: 'মনের মানুষ', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'মনের মানুষ মনে আমি পাব কোথা? তার লাগিয়া আমি আতি পাগল পারা।' },
+    { title: 'আমি অপার হয়ে বসে আছি', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমি অপার হয়ে বসে আছি, ওগো দয়াময়। পারে লয়ে যাও আমায়।' },
+    { title: 'জাত গেল জাত গেল বলে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'জাত গেল জাত গেল বলে একি আজব কারখান। সত্য কাজে কেউ নয় রাজি, সবি দেখি তেনাফানা।' },
+    { title: 'পারে লয়ে যাও আমায়', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'পারে লয়ে যাও আমায়, আমি অপার হয়ে বসে আছি। ওগো দয়াময়, পারে লয়ে যাও আমায়।' },
+    { title: 'সত্য বল সুপথে চল', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'সত্য বল সুপথে চল ওরে আমার মন। সত্য সুপথ না চিনিলে পাবিনে মানুষের দরশন।' },
+    { title: 'বাড়ির কাছে আরশিনগর', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'বাড়ির কাছে আরশিনগর সেথায় এক পড়শি বসত করে। আমি একদিনও না দেখিলাম তারে।' },
+    { title: 'ভবে মানুষ গুরু নিষ্ঠা যার', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'ভবে মানুষ গুরু নিষ্ঠা যার। সর্ব সাধন সিদ্ধি হয় তার।' },
+    { title: 'মনের মানুষ যেখানে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'মনের মানুষ যেখানে, আমি যাব সেখানে। তার লাগিয়া দেশান্তরী হব আপন জেনে।' },
+    { title: 'এমন মানব জনম আর কি হবে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'এমন মানব জনম আর কি হবে। মন যা কর ত্বরায় কর এই ভবে।' },
+    { title: 'করিস নে দেহের বড়াই', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'করিস নে দেহের বড়াই, এই দেহ তো রবে না ভাই। কাঁচা মাটির ভাণ্ড গড়া, সামান্য আঘাতেই ভাঙা।' },
+    { title: 'দয়াল তোমার নামে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'দয়াল তোমার নামে লাগল রে আগুন। নিভাইব কেমনে বলো সেই ফাগুন।' },
+    { title: 'দিলের খবর', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'দিলের খবর দিলের ভিতর থাকে যে জন। তারে খুঁজে বেড়ায় কেন বন জঙ্গল কোন কারণ?' },
+    { title: 'ধন্য ধন্য বলি তারে', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'ধন্য ধন্য বলি তারে, বেঁধেছে এমন ঘর। শূন্যের উপর পত্তন করে, রয়েছে ভরপুর।' },
+
+
+
   // Placeholder Songs for Missing Lyricists are handled by the addPlaceholderSongs function
 ];
 
 // Generate slugs and IDs for all songs
 const mockSongs: Song[] = mockSongsData.map((song, index) => {
-    const id = index.toString(); // Use index as string for ID
+    const id = (index + 1).toString(); // Use index+1 as string for ID (1-based)
     // Handle combined artists like "হেমন্ত মুখোপাধ্যায়, সন্ধ্যা মুখোপাধ্যায়"
     // Clean and split artists, then rejoin with a standard separator for the slug key
     const cleanedArtistString = cleanDisplayString(song.artist) || 'বিভিন্ন শিল্পী';
-    const artistParts = cleanedArtistString.split(/[,;ওএবং&]/).map(part => cleanString(part.trim()) || '').filter(Boolean);
+    const artistParts = cleanedArtistString.split(/[,;ওএবং&]+|\s+(?:ও|এবং)\s+/).map(part => cleanString(part.trim()) || '').filter(Boolean);
     const artistKeyForSlug = artistParts.join('-') || 'অজানা-শিল্পী';
 
     // Ensure lyricist is cleaned for the slug creation
@@ -1337,7 +1363,7 @@ function addPlaceholderSongsForMissingLyricists() {
         'কালী মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্থনি ফিরিঙ্গি',
         'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী',
         'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়',
-        'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
+        'শৈলেন রায়', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
         'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত',
         'আসাদুজ্জামান নূর', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত',
         'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন',
@@ -1368,12 +1394,12 @@ function addPlaceholderSongsForMissingLyricists() {
         'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
         'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
         'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
-        'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মাহমুদুজ্জামান বাবু', 'প্রতুল মুখোপাধ্যায়', 'মান্না দে', 'হেমন্ত মুখোপাধ্যায়'
+        'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মাহমুদুজ্জামান বাবু', 'প্রতুল মুখোপাধ্যায়', 'মান্না দে', 'হেমন্ত মুখোপাধ্যায়', 'সন্ধ্যা মুখোপাধ্যায়'
     ];
 
 
     const existingLyricistSlugs = new Set(mockSongs.map(song => cleanString(song.lyricist)).filter(Boolean));
-    let placeholderIndex = mockSongs.length;
+    let placeholderIndex = mockSongs.length + 1; // Start placeholder IDs after existing songs
 
     allKnownLyricists.forEach(lyricist => {
         const cleanedKnownLyricistSlug = cleanString(lyricist);
@@ -1381,16 +1407,16 @@ function addPlaceholderSongsForMissingLyricists() {
 
         if (!cleanedKnownLyricistSlug) return;
 
-        // Special check for combined artists listed as lyricists (like 'অনুপম রায় ও ইমন চক্রবর্তী')
+        // Special check for combined artists listed as lyricists (like 'অনুপম রায়, ইমন চক্রবর্তী')
         // We want to ensure the individual names are checked if they exist separately
-        if (cleanedKnownLyricistSlug.includes('-ও-')) {
-             const individualNames = cleanedKnownLyricistSlug.split('-ও-');
+        const individualNames = cleanedKnownLyricistSlug.split(/[,;-ও-]/).map(s => s.trim()).filter(Boolean);
+        if (individualNames.length > 1) {
              if (individualNames.every(name => existingLyricistSlugs.has(name))) {
                  return; // Skip adding placeholder if all individual names exist
              }
         }
 
-
+        // If the single or combined slug doesn't exist, add a placeholder
         if (!existingLyricistSlugs.has(cleanedKnownLyricistSlug)) {
             const placeholderId = `placeholder-${placeholderIndex++}`;
             const placeholderTitle = `${displayLyricist} এর গান (placeholder)`;
@@ -1410,7 +1436,10 @@ function addPlaceholderSongsForMissingLyricists() {
                 slug: placeholderSlug,
             };
             mockSongs.push(placeholderSong);
+            // Add the potentially combined slug AND individual parts to the set to avoid duplicates
             existingLyricistSlugs.add(cleanedKnownLyricistSlug);
+            individualNames.forEach(name => existingLyricistSlugs.add(name));
+
         }
     });
 }
@@ -1466,14 +1495,13 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
            // const lyricistPart = artistAndLyricistParts[1]; // Not strictly needed for lookup here
 
            const potentialMatch = mockSongs.find(s => {
-               const songTitleSlug = cleanString(s.title)?.toLowerCase();
-               const songArtistKey = (cleanDisplayString(s.artist) || 'বিভিন্ন শিল্পী')
-                                      .split(/[,;ওএবং&]/)
-                                      .map(part => cleanString(part.trim()) || '')
-                                      .filter(Boolean)
-                                      .join('-') || 'অজানা-শিল্পী';
+                // Recreate the slug generation logic for comparison
+                const songTitleSlug = cleanString(s.title)?.toLowerCase() || 'শিরোনামহীন';
+                const cleanedArtistString = cleanDisplayString(s.artist) || 'বিভিন্ন শিল্পী';
+                const songArtistParts = cleanedArtistString.split(/[,;ওএবং&]+|\s+(?:ও|এবং)\s+/).map(part => cleanString(part.trim()) || '').filter(Boolean);
+                const songArtistKey = songArtistParts.join('-') || 'অজানা-শিল্পী';
 
-               return songTitleSlug === titlePart && songArtistKey === artistPart;
+                return songTitleSlug === titlePart && songArtistKey === artistPart;
            });
 
            if (potentialMatch) {
@@ -1525,7 +1553,7 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     // Clean fields for matching using display cleaning
     const songTitleMatch = cleanDisplayString(song.title)?.toLowerCase() || "";
     // Split combined artists for matching individual names
-    const songArtists = (cleanDisplayString(song.artist)?.toLowerCase() || "").split(/[,;ওএবং&]/).map(a => a.trim()).filter(Boolean);
+    const songArtists = (cleanDisplayString(song.artist)?.toLowerCase() || "").split(/[,;ওএবং&]+|\s+(?:ও|এবং)\s+/).map(a => a.trim()).filter(Boolean);
     const songLyricistMatch = cleanDisplayString(song.lyricist)?.toLowerCase() || "";
     const songGenreMatch = cleanDisplayString(song.genre)?.toLowerCase() || "";
     const songAlbumMatch = cleanDisplayString(song.album)?.toLowerCase() || "";
@@ -1551,7 +1579,7 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
   const rankedSongs = filteredSongs.map(song => {
     let matchCount = 0;
     const songTitleMatch = cleanDisplayString(song.title)?.toLowerCase() || "";
-    const songArtists = (cleanDisplayString(song.artist)?.toLowerCase() || "").split(/[,;ওএবং&]/).map(a => a.trim()).filter(Boolean);
+    const songArtists = (cleanDisplayString(song.artist)?.toLowerCase() || "").split(/[,;ওএবং&]+|\s+(?:ও|এবং)\s+/).map(a => a.trim()).filter(Boolean);
     const songLyricistMatch = cleanDisplayString(song.lyricist)?.toLowerCase() || "";
 
     // Basic scoring based on space-separated words
@@ -1582,8 +1610,8 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
 export async function getPopularSongs(): Promise<Song[]> {
   // Use generated unique slugs for consistency
    const popularSongSlugs = [
-        createSlug('আমার সোনার বাংলা', 'বিভিন্ন শিল্পী', 'রবীন্দ্রনাথ ঠাকুর', '0'),
-        createSlug('যদি তোর ডাক শুনে কেউ না আসে', 'বিভিন্ন শিল্পী', 'রবীন্দ্রনাথ ঠাকুর', '2'),
+        createSlug('আমার সোনার বাংলা', 'বিভিন্ন শিল্পী', 'রবীন্দ্রনাথ ঠাকুর', '1'), // ID 1
+        createSlug('যদি তোর ডাক শুনে কেউ না আসে', 'বিভিন্ন শিল্পী', 'রবীন্দ্রনাথ ঠাকুর', '3'), // ID 3
         createSlug('একতারা তুই দেশের কথা', 'শাহনাজ রহমতউল্লাহ', 'গাজী মাজহারুল আনোয়ার', mockSongs.find(s => s.title === 'একতারা তুই দেশের কথা' && s.lyricist === 'গাজী মাজহারুল আনোয়ার')?.id || 'placeholder-ektara'),
         createSlug('কফি হাউসের সেই আড্ডাটা', 'মান্না দে', 'গৌরীপ্রসন্ন মজুমদার', mockSongs.find(s => s.title === 'কফি হাউসের সেই আড্ডাটা')?.id || 'placeholder-coffeehouse'),
         createSlug('মানুষ মানুষের জন্যে', 'ভূপেন হাজারিকা', 'ভূপেন হাজারিকা', mockSongs.find(s => s.title === 'মানুষ মানুষের জন্যে')?.id || 'placeholder-manush'),

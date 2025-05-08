@@ -1,59 +1,133 @@
-'use server'; // Keep 'use server' if server-side logic like direct DB access is intended, or remove if it's a standard Server Component
+'use client';
 
+import * as React from 'react';
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
-import { notFound } from 'next/navigation';
+import { useParams, notFound as navigateToNotFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, Info, WifiOff } from 'lucide-react';
+import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2, Info } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import * as React from 'react'; // React import might not be strictly necessary for Server Components unless using JSX
+import Link from 'next/link';
 
-interface SongPageServerProps {
-  params: { slug: string };
+
+interface SongPageProps {
+  // params are usually for Server Components. In Client Components, we use useParams.
+  // params: { slug: string }; // No longer directly used if fetching client-side via useParams
 }
 
-export default async function SongPage({ params }: SongPageServerProps) {
-  let decodedSlug: string;
-  const rawSlug = params?.slug;
+export default function SongPage({}: SongPageProps) {
+  const params = useParams();
+  const rawSlug = params?.slug as string | undefined;
 
-  if (!rawSlug || typeof rawSlug !== 'string' || rawSlug.trim() === '') {
-    console.error("Server-side: No valid slug provided in params.");
-    // Or handle as a specific error, for now, we'll let it flow to notFound if getSongBySlug fails
-    notFound(); // Or throw new Error("Invalid slug");
-  }
+  const [song, setSong] = React.useState<Song | null | undefined>(undefined); // undefined for initial, null if not found
+  const [loading, setLoading] = React.useState(true);
+  const [fetchError, setFetchError] = React.useState<string | null>(null);
+  const [decodedSlug, setDecodedSlug] = React.useState<string | null>(null);
 
-  try {
-    decodedSlug = decodeURIComponent(rawSlug);
-  } catch (e) {
-    console.warn(`Server-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
-    decodedSlug = rawSlug;
-  }
 
-  let song: Song | undefined;
-  let fetchError: string | null = null;
+  React.useEffect(() => {
+     let slugToDecode = '';
+     if (rawSlug && typeof rawSlug === 'string' && rawSlug.trim() !== '') {
+         try {
+             slugToDecode = decodeURIComponent(rawSlug);
+             setDecodedSlug(slugToDecode);
+         } catch (e) {
+             console.warn(`Client-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
+             slugToDecode = rawSlug; // Use raw slug if decoding fails
+             setDecodedSlug(slugToDecode);
+         }
+     } else {
+         console.error("Client-side: No valid slug provided in params.");
+         setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
+         setLoading(false);
+         return;
+     }
 
-  try {
-    song = await getSongBySlug(decodedSlug);
-  } catch (e: any) {
-    console.error(`Server-side: Error fetching song for decoded slug "${decodedSlug}":`, e);
-    // This type of error should ideally be handled by an error.js boundary
-    // For now, we can display a generic error message
+    async function loadSong(slugToFetch: string) {
+      if (!slugToFetch) {
+        setFetchError('অবৈধ গানের লিঙ্ক।');
+        setLoading(false);
+        setSong(null); // Explicitly set to null for "not found" state
+        return;
+      }
+      setLoading(true);
+      setFetchError(null);
+      try {
+        const fetchedSong = await getSongBySlug(slugToFetch);
+        if (!fetchedSong) {
+          console.error(`Client-side: Song not found for decoded slug: ${slugToFetch}`);
+          setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
+          setSong(null);
+        } else {
+          setSong(fetchedSong);
+        }
+      } catch (e: any) {
+        console.error(`Client-side: Error fetching song for slug "${slugToFetch}":`, e);
+        setFetchError('গানটি লোড করার সময় একটি সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।');
+        setSong(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (slugToDecode) {
+        loadSong(slugToDecode);
+    }
+
+  }, [rawSlug]); // Depend on rawSlug from params
+
+  if (loading) {
     return (
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-10rem)]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="ml-4 text-lg text-muted-foreground">গান লোড হচ্ছে...</p>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+        <Alert variant="destructive" className="max-w-md">
+          <WifiOff className="h-5 w-5" />
+          <AlertTitle>ত্রুটি</AlertTitle>
+          <AlertDescription>{fetchError}</AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  if (song === null) { // Check for explicitly null (not found)
+    // This will trigger the nearest not-found.tsx or a default Next.js 404 page
+    // For client-side, it's often better to render a "Not Found" component directly
+    // rather than relying on navigateToNotFound() which is more for server actions/components.
+     return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
-            <Alert variant="destructive" className="max-w-md">
-                <WifiOff className="h-5 w-5" />
-                <AlertTitle>ত্রুটি</AlertTitle>
-                <AlertDescription>গানটি লোড করার সময় একটি সমস্যা হয়েছে। অনুগ্রহ করে কিছুক্ষণ পর আবার চেষ্টা করুন।</AlertDescription>
-            </Alert>
+           <Alert variant="destructive" className="max-w-md">
+             <WifiOff className="h-5 w-5" />
+             <AlertTitle>গান পাওয়া যায়নি</AlertTitle>
+             <AlertDescription>আপনি যে গানটি খুঁজছেন সেটি এই মুহূর্তে উপলব্ধ নেই অথবা লিঙ্কটি ভুল।</AlertDescription>
+           </Alert>
         </div>
     );
   }
 
+
   if (!song) {
-    console.warn(`Server-side: Song not found for decoded slug: ${decodedSlug}. Raw slug: ${rawSlug}`);
-    notFound(); // Triggers the not-found.tsx component
+     // This case should ideally be handled by the loading or error states above.
+     // If it reaches here, it means song is 'undefined' after loading.
+     return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
+             <Alert variant="destructive" className="max-w-md">
+                <WifiOff className="h-5 w-5" />
+                <AlertTitle>একটি অপ্রত্যাশিত সমস্যা</AlertTitle>
+                <AlertDescription>গানটি লোড করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।</AlertDescription>
+             </Alert>
+        </div>
+    );
   }
+
 
   // Song data is available here
   const displayTitle = cleanDisplayString(song.title)?.replace(/-/g, ' ') || 'শিরোনাম উপলব্ধ নেই';
@@ -75,12 +149,14 @@ export default async function SongPage({ params }: SongPageServerProps) {
               <CardDescription className="text-lg text-foreground/80 pt-1 space-y-1">
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4 flex-shrink-0" />
-                  <span>{displayArtist}</span>
+                  <Link href={`/search?q=${encodeURIComponent(displayArtist)}`} className="hover:underline hover:text-accent transition-colors">
+                    {displayArtist}
+                  </Link>
                 </div>
                 {displayLyricist && displayLyricist !== 'সংগৃহীত' && displayLyricist !== 'অজানা গীতিকার' && displayLyricist !== 'অজানা-গীতিকার' && (
                   <div className="flex items-center gap-2 text-sm">
                     <Feather className="w-4 h-4 flex-shrink-0" />
-                    <span>গীতিকার: {displayLyricist}</span>
+                    <span>গীতিকার: <Link href={`/search?q=${encodeURIComponent(displayLyricist)}`} className="hover:underline hover:text-accent transition-colors">{displayLyricist}</Link></span>
                   </div>
                 )}
               </CardDescription>
@@ -104,7 +180,9 @@ export default async function SongPage({ params }: SongPageServerProps) {
               <div className="flex items-center gap-2">
                 <Tag className="w-5 h-5 text-primary/80 flex-shrink-0" />
                 <span className="font-medium">ধরণ:</span>
-                <span>{displayGenre}</span>
+                 <Link href={`/search?q=${encodeURIComponent(displayGenre)}`} className="hover:underline hover:text-accent transition-colors">
+                    {displayGenre}
+                 </Link>
               </div>
             )}
             {song.releaseYear && (
@@ -140,4 +218,5 @@ export default async function SongPage({ params }: SongPageServerProps) {
   );
 }
 
-// export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered, might not be needed if data fetching itself is dynamic.
+// Moved generateMetadata to its own file: src/app/song/[slug]/metadata.ts
+// export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered

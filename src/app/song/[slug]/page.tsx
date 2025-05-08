@@ -5,7 +5,7 @@ import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
 import { useParams, notFound as navigateToNotFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2, Info } from 'lucide-react'; // Removed Disc3 icon
+import { Music, User, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2, Info } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
@@ -19,7 +19,8 @@ interface SongPageProps {
 export default function SongPage({}: SongPageProps) {
   const params = useParams();
   // Ensure params and params.slug are correctly typed for client-side usage
-  const rawSlug = typeof params?.slug === 'string' ? params.slug : undefined;
+  const rawSlugFromParams = typeof params?.slug === 'string' ? params.slug : Array.isArray(params?.slug) ? params.slug[0] : undefined;
+
 
   const [song, setSong] = React.useState<Song | null | undefined>(undefined); // undefined for initial, null if not found
   const [loading, setLoading] = React.useState(true);
@@ -29,19 +30,20 @@ export default function SongPage({}: SongPageProps) {
 
   React.useEffect(() => {
      let slugToDecode = '';
-     if (rawSlug && typeof rawSlug === 'string' && rawSlug.trim() !== '') {
+     if (rawSlugFromParams && typeof rawSlugFromParams === 'string' && rawSlugFromParams.trim() !== '') {
          try {
-             slugToDecode = decodeURIComponent(rawSlug);
+             slugToDecode = decodeURIComponent(rawSlugFromParams);
              setDecodedSlug(slugToDecode);
          } catch (e) {
-             console.warn(`Client-side: Error decoding slug "${rawSlug}", using as is. Error:`, e);
-             slugToDecode = rawSlug; // Use raw slug if decoding fails
+             console.warn(`Client-side: Error decoding slug "${rawSlugFromParams}", using as is. Error:`, e);
+             slugToDecode = rawSlugFromParams; // Use raw slug if decoding fails
              setDecodedSlug(slugToDecode);
          }
      } else {
          console.error("Client-side: No valid slug provided in params.");
          setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
          setLoading(false);
+         setSong(null); // Explicitly set to null for not found state
          return;
      }
 
@@ -76,7 +78,7 @@ export default function SongPage({}: SongPageProps) {
         loadSong(slugToDecode);
     }
 
-  }, [rawSlug, decodedSlug]); // Depend on rawSlug and decodedSlug
+  }, [rawSlugFromParams]);
 
   if (loading) {
     return (
@@ -99,14 +101,11 @@ export default function SongPage({}: SongPageProps) {
     );
   }
 
-  if (song === null) { // Check for explicitly null (not found)
-    // This will trigger the nearest not-found.tsx or a default Next.js 404 page
-    // For client-side, it's often better to render a "Not Found" component directly
-    // rather than relying on navigateToNotFound() which is more for server actions/components.
+  if (song === null) {
      return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
            <Alert variant="destructive" className="max-w-md">
-             <WifiOff className="h-5 w-5" />
+             <WifiOff className="h-5 w-5" /> {/* Changed Frown to WifiOff for consistency */}
              <AlertTitle>গান পাওয়া যায়নি</AlertTitle>
              <AlertDescription>আপনি যে গানটি খুঁজছেন সেটি এই মুহূর্তে উপলব্ধ নেই অথবা লিঙ্কটি ভুল।</AlertDescription>
            </Alert>
@@ -116,8 +115,6 @@ export default function SongPage({}: SongPageProps) {
 
 
   if (!song) {
-     // This case should ideally be handled by the loading or error states above.
-     // If it reaches here, it means song is 'undefined' after loading.
      return (
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center px-4">
              <Alert variant="destructive" className="max-w-md">
@@ -130,11 +127,9 @@ export default function SongPage({}: SongPageProps) {
   }
 
 
-  // Song data is available here
   const displayTitle = cleanDisplayString(song.title)?.replace(/-/g, ' ') || 'শিরোনাম উপলব্ধ নেই';
   const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
   const displayLyricist = cleanDisplayString(song.lyricist);
-  // const displayAlbum = cleanDisplayString(song.album); // Removed album display
   const displayGenre = cleanDisplayString(song.genre);
   const displayLyrics = cleanLyricsForDisplay(song.lyrics);
 
@@ -164,13 +159,12 @@ export default function SongPage({}: SongPageProps) {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="p-6 space-y-4">
-          <h2 className="text-2xl font-semibold text-primary/90 border-b pb-2 mb-4 flex items-center">
+        <CardContent className="p-6 space-y-2"> {/* Reduced space-y from 4 to 2 */}
+          <h2 className="text-2xl font-semibold text-primary/90 border-b pb-2 mb-2 flex items-center"> {/* Reduced mb from 4 to 2 */}
             <Info className="w-5 h-5 mr-2 text-primary/80" />
             গানের তথ্য
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-base text-foreground/90">
-            {/* Removed Album display section */}
             {displayGenre && (
               <div className="flex items-center gap-2">
                 <Tag className="w-5 h-5 text-primary/80 flex-shrink-0" />
@@ -212,6 +206,3 @@ export default function SongPage({}: SongPageProps) {
     </div>
   );
 }
-
-// Moved generateMetadata to its own file: src/app/song/[slug]/metadata.ts
-// export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered

@@ -6,7 +6,8 @@ import { searchSongs, type Song } from '@/services/bangla-song-database';
 import SongList from '@/components/song-list';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Frown, WifiOff } from 'lucide-react'; // Added WifiOff for generic error
+import { Frown, WifiOff, SearchIcon } from 'lucide-react'; 
+import { toBengaliNumerals } from '@/lib/utils';
 
 // Helper component for loading state
 function LoadingSkeleton() {
@@ -48,9 +49,9 @@ export default function SearchPage() {
 
     setLoading(true);
     setError(null);
-    searchSongs(query) // This now calls the mock service
+    searchSongs(query) 
       .then((results) => {
-        setSongs(results || []); // Ensure results is an array
+        setSongs(results || []); 
       })
       .catch((err) => {
         console.error('Error searching songs (mock):', err);
@@ -63,15 +64,25 @@ export default function SearchPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-primary">
-        অনুসন্ধান ফলাফল {query && `"${query}" এর জন্য`}
-      </h1>
+      <div className="flex items-center gap-2 text-3xl font-bold text-primary">
+        <SearchIcon className="w-7 h-7" />
+        <h1>
+          {query 
+            ? `অনুসন্ধান ফলাফল "${query}" এর জন্য`
+            : 'অনুসন্ধান'}
+          {!loading && !error && query && songs.length > 0 && (
+            <span className="text-xl text-muted-foreground ml-2">
+              (মোট: {toBengaliNumerals(songs.length)} টি)
+            </span>
+          )}
+        </h1>
+      </div>
 
       {loading && <LoadingSkeleton />}
 
       {error && (
          <Alert variant="destructive">
-            <WifiOff className="h-4 w-4" /> {/* Using a more generic error icon */}
+            <WifiOff className="h-4 w-4" /> 
            <AlertTitle>ত্রুটি</AlertTitle>
            <AlertDescription>{error}</AlertDescription>
          </Alert>

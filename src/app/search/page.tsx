@@ -1,4 +1,5 @@
-'use client'; 
+
+'use client';
 
 import * as React from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -6,7 +7,7 @@ import { searchSongs, type Song } from '@/services/bangla-song-database';
 import SongList from '@/components/song-list';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Frown, WifiOff, SearchIcon } from 'lucide-react'; 
+import { Frown, WifiOff, SearchIcon } from 'lucide-react';
 import { toBengaliNumerals } from '@/lib/utils';
 
 // Helper component for loading state
@@ -49,9 +50,9 @@ export default function SearchPage() {
 
     setLoading(true);
     setError(null);
-    searchSongs(query) 
+    searchSongs(query)
       .then((results) => {
-        setSongs(results || []); 
+        setSongs(results || []);
       })
       .catch((err) => {
         console.error('Error searching songs (mock):', err);
@@ -60,14 +61,14 @@ export default function SearchPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, [query]); 
+  }, [query]);
 
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-2 text-3xl font-bold text-primary">
         <SearchIcon className="w-7 h-7" />
         <h1>
-          {query 
+          {query
             ? `অনুসন্ধান ফলাফল "${query}" এর জন্য`
             : 'অনুসন্ধান'}
           {!loading && !error && query && songs.length > 0 && (
@@ -82,7 +83,7 @@ export default function SearchPage() {
 
       {error && (
          <Alert variant="destructive">
-            <WifiOff className="h-4 w-4" /> 
+            <WifiOff className="h-4 w-4" />
            <AlertTitle>ত্রুটি</AlertTitle>
            <AlertDescription>{error}</AlertDescription>
          </Alert>
@@ -106,3 +107,4 @@ export default function SearchPage() {
     </div>
   );
 }
+

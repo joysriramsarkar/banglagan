@@ -5,11 +5,11 @@ import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
 import { useParams, notFound as navigateToNotFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2, Info } from 'lucide-react';
+import { Music, User, Tag, Calendar, ListMusic, Feather, WifiOff, Loader2, Info } from 'lucide-react'; // Removed Disc3 icon
 import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import Link from 'next/link';
-
+import { notFound } from 'next/navigation'; // Import directly from next/navigation
 
 interface SongPageProps {
   // params are usually for Server Components. In Client Components, we use useParams.
@@ -18,7 +18,8 @@ interface SongPageProps {
 
 export default function SongPage({}: SongPageProps) {
   const params = useParams();
-  const rawSlug = params?.slug as string | undefined;
+  // Ensure params and params.slug are correctly typed for client-side usage
+  const rawSlug = typeof params?.slug === 'string' ? params.slug : undefined;
 
   const [song, setSong] = React.useState<Song | null | undefined>(undefined); // undefined for initial, null if not found
   const [loading, setLoading] = React.useState(true);
@@ -56,7 +57,7 @@ export default function SongPage({}: SongPageProps) {
       try {
         const fetchedSong = await getSongBySlug(slugToFetch);
         if (!fetchedSong) {
-          console.error(`Client-side: Song not found for decoded slug: ${slugToFetch}`);
+          console.error(`Client-side: Song not found for decoded slug: ${slugToDecode}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
           setSong(null);
         } else {
@@ -75,7 +76,7 @@ export default function SongPage({}: SongPageProps) {
         loadSong(slugToDecode);
     }
 
-  }, [rawSlug]); // Depend on rawSlug from params
+  }, [rawSlug, decodedSlug]); // Depend on rawSlug and decodedSlug
 
   if (loading) {
     return (
@@ -133,7 +134,7 @@ export default function SongPage({}: SongPageProps) {
   const displayTitle = cleanDisplayString(song.title)?.replace(/-/g, ' ') || 'শিরোনাম উপলব্ধ নেই';
   const displayArtist = cleanDisplayString(song.artist) || 'শিল্পী উপলব্ধ নেই';
   const displayLyricist = cleanDisplayString(song.lyricist);
-  const displayAlbum = cleanDisplayString(song.album);
+  // const displayAlbum = cleanDisplayString(song.album); // Removed album display
   const displayGenre = cleanDisplayString(song.genre);
   const displayLyrics = cleanLyricsForDisplay(song.lyrics);
 
@@ -169,13 +170,7 @@ export default function SongPage({}: SongPageProps) {
             গানের তথ্য
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-base text-foreground/90">
-            {displayAlbum && (
-              <div className="flex items-center gap-2">
-                <Disc3 className="w-5 h-5 text-primary/80 flex-shrink-0" />
-                <span className="font-medium">অ্যালবাম:</span>
-                <span>{displayAlbum}</span>
-              </div>
-            )}
+            {/* Removed Album display section */}
             {displayGenre && (
               <div className="flex items-center gap-2">
                 <Tag className="w-5 h-5 text-primary/80 flex-shrink-0" />

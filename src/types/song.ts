@@ -1,7 +1,7 @@
 import type { Timestamp } from 'firebase/firestore';
 
 /**
- * Represents a song with title, artist, album, genre, release year, lyricist, and lyrics.
+ * Represents a song with title, artist, genre, release year, lyricist, and lyrics.
  */
 export interface Song {
   /**
@@ -23,11 +23,6 @@ export interface Song {
    * গীতিকারের নাম (বাংলায়, যদি থাকে)।
    */
   lyricist?: string;
-  /**
-   * The album the song belongs to (optional).
-   * অ্যালবামের নাম (যদি থাকে)।
-   */
-  album?: string;
   /**
    * The genre of the song (optional).
    * গানের ধরণ (যদি থাকে)।

@@ -1,30 +1,38 @@
+
 import Link from 'next/link';
-import { getAllLyricists } from '@/services/bangla-song-database';
+import { getAllLyricists, getTotalSongCount } from '@/services/bangla-song-database'; // Import getTotalSongCount
 import { Card, CardContent } from '@/components/ui/card';
-import { Feather } from 'lucide-react';
+import { Feather, ListMusic } from 'lucide-react'; // Import ListMusic icon
 import { Separator } from '@/components/ui/separator';
-import { cleanDisplayString } from '@/lib/utils'; // Import cleanDisplayString for display
+import { cleanDisplayString, toBengaliNumerals } from '@/lib/utils'; // Import utilities
 
 export default async function LyricistsPage() {
   // getAllLyricists returns display-ready names (spaces instead of hyphens, cleaned)
   const lyricists = await getAllLyricists();
+  const totalSongs = await getTotalSongCount(); // Fetch total song count
 
   return (
     <div className="space-y-6">
-       <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
-          <Feather className="w-7 h-7" />
-          <span>সকল গীতিকার</span>
-       </h1>
+       <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-primary flex items-center gap-2">
+             <Feather className="w-7 h-7" />
+             <span>সকল গীতিকার</span>
+          </h1>
+           {/* Display total song count */}
+           <div className="flex items-center gap-2 text-muted-foreground">
+             <ListMusic className="w-5 h-5" />
+             <span>মোট গান: {toBengaliNumerals(totalSongs)}</span>
+           </div>
+       </div>
        <Separator />
        <Card>
           <CardContent className="pt-6">
             {lyricists.length > 0 ? (
               <div className="flex flex-wrap gap-3">
                 {lyricists.map((lyricist) => {
-                  // Use the display-cleaned name for display text
-                  const displayLyricist = cleanDisplayString(lyricist) || lyricist;
-                  // Use the original name from getAllLyricists (which is already display-cleaned) for the query parameter
-                  const queryParam = lyricist; // Use the name as returned by getAllLyricists
+                  // Use the display-cleaned name for display text and query parameter
+                  const displayLyricist = lyricist; // Name is already cleaned by getAllLyricists
+                  const queryParam = lyricist;
 
                   return (
                     <Link
@@ -50,3 +58,5 @@ export const metadata = {
   title: 'সকল গীতিকার - বাংলা গান',
   description: 'সকল বাংলা গানের গীতিকারদের তালিকা ব্রাউজ করুন।',
 };
+
+export const revalidate = 3600; // Revalidate every hour

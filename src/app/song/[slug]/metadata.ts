@@ -13,28 +13,35 @@ export async function generateMetadata(
   { params }: SongPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
+  const rawSlug = params.slug;
   let decodedSlug = '';
-  try {
-    decodedSlug = decodeURIComponent(params.slug);
-    // console.log(`generateMetadata: Attempting to fetch song with decoded slug: ${decodedSlug}`);
-  } catch (e) {
-    console.warn(`generateMetadata: Error decoding slug "${params.slug}", using as is. Error:`, e);
-    decodedSlug = params.slug; // Use raw slug if decoding fails
+
+  if (!rawSlug || typeof rawSlug !== 'string' || rawSlug.trim() === '') {
+     console.warn(`generateMetadata: Invalid or empty slug provided: "${rawSlug}"`);
+     return {
+       title: 'অবৈধ লিঙ্ক - বাংলা গান',
+       description: 'গানটির লিঙ্কটি সঠিক নয়।',
+     };
   }
 
   try {
-    // Use the decoded slug to fetch the song
+    decodedSlug = decodeURIComponent(rawSlug);
+  } catch (e) {
+    console.warn(`generateMetadata: Error decoding slug "${rawSlug}", using as is. Error:`, e);
+    decodedSlug = rawSlug; // Use raw slug if decoding fails
+  }
+
+  try {
     const song = await getSongBySlug(decodedSlug);
 
     if (!song) {
-       console.error(`generateMetadata: Song not found for decoded slug: ${decodedSlug}`);
+       console.error(`generateMetadata: Song not found for decoded slug: ${decodedSlug} (raw: ${rawSlug})`);
        return {
          title: 'গান পাওয়া যায়নি - বাংলা গান',
          description: 'আপনি যে গানটি খুঁজছেন তা পাওয়া যায়নি।',
        };
     }
 
-    // Clean display strings for metadata
     const rawMetaTitle = cleanDisplayString(song.title) || 'শিরোনামহীন গান';
     const metaTitle = rawMetaTitle.replace(/-/g, ' ');
     const metaArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
@@ -48,7 +55,7 @@ export async function generateMetadata(
       },
     };
   } catch (error) {
-    console.error(`generateMetadata: Error fetching metadata for slug ${decodedSlug}:`, error);
+    console.error(`generateMetadata: Error fetching metadata for decoded slug ${decodedSlug} (raw: ${rawSlug}):`, error);
     return {
       title: 'তথ্য লোড করতে সমস্যা - বাংলা গান',
       description: 'গানটির তথ্য এই মুহূর্তে আনা সম্ভব হচ্ছে না।',

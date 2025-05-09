@@ -90,28 +90,28 @@ export default function Home() {
             </CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="flex flex-col items-center p-4 bg-secondary/30 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-border/50">
               <ListMusic className="w-8 h-8 text-primary mb-2" />
               <p className="text-2xl font-bold text-primary">
                 {totalSongs !== null ? toBengaliNumerals(totalSongs) : '০'}
               </p>
               <p className="text-sm text-muted-foreground mt-1">মোট গান</p>
             </div>
-            <div className="flex flex-col items-center p-4 bg-secondary/30 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-border/50">
               <Users className="w-8 h-8 text-primary mb-2" />
               <p className="text-2xl font-bold text-primary">
                 {totalArtists !== null ? toBengaliNumerals(totalArtists) : '০'}
               </p>
               <p className="text-sm text-muted-foreground mt-1">মোট শিল্পী</p>
             </div>
-            <div className="flex flex-col items-center p-4 bg-secondary/30 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-border/50">
               <Feather className="w-8 h-8 text-primary mb-2" />
               <p className="text-2xl font-bold text-primary">
                 {totalLyricists !== null ? toBengaliNumerals(totalLyricists) : '০'}
               </p>
               <p className="text-sm text-muted-foreground mt-1">মোট গীতিকার</p>
             </div>
-            <div className="flex flex-col items-center p-4 bg-secondary/30 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+            <div className="flex flex-col items-center p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-border/50">
               <Library className="w-8 h-8 text-primary mb-2" />
               <p className="text-2xl font-bold text-primary">
                 {totalGenres !== null ? toBengaliNumerals(totalGenres) : '০'}

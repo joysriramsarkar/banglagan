@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Sitemap: https://studio--banglagan.us-central1.hosted.app/sitemap.xml

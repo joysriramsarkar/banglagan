@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google'; // Changed from Geist to Inter for cleaner look
 import './globals.css';
@@ -24,6 +25,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bn">
+      <head>
+        <meta name="google-site-verification" content="jWk5AWz3oakP75t1oZDXp1nv4E1z3mfP149_sqV5Gh4" />
+      </head>
       <body
         className={cn(
           'min-h-screen bg-background font-sans antialiased',

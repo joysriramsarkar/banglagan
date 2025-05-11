@@ -6,3 +6,4 @@ To get started, take a look at src/app/page.tsx.
 # bangla_gan
 # bangla_gan
 # bangla_gan
+# banglagan

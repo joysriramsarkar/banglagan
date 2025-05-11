@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Users, Library, Feather, ListMusic, Database, WifiOff, BarChart3 } from 'lucide-react';
+import { Users, Library, Feather, ListMusic, Database, WifiOff, BarChart3, Music2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { toBengaliNumerals } from '@/lib/utils';
 import * as React from "react";
@@ -72,11 +72,18 @@ export default function Home() {
 
   return (
     <div className="space-y-8">
-      <section>
-        <h1 className="text-3xl font-bold text-primary mb-4">বাংলা সঙ্গীত আবিষ্কার করুন</h1>
-        <p className="text-lg text-muted-foreground">
-          জনপ্রিয় হিট, নতুন রিলিজ অন্বেষণ করুন এবং আপনার প্রিয় বাংলা গানের তথ্য খুঁজুন।
-        </p>
+      <section className="text-center py-8 bg-gradient-to-r from-primary/10 via-secondary/5 to-primary/10 rounded-lg shadow-inner">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center items-center mb-4">
+            <Music2 className="w-12 h-12 text-primary mr-3" />
+            <h1 className="text-4xl md:text-5xl font-bold text-primary">
+              বাংলা সংগীত সংকলন: বাংলা গানের অভিধান
+            </h1>
+          </div>
+          <p className="text-lg md:text-xl text-muted-foreground mt-2 max-w-3xl mx-auto">
+            চর্যাপদ থেকে আধুনিক বাংলা গান – খুঁজুন, জানুন, আবিষ্কার করুন।
+          </p>
+        </div>
       </section>
 
       <Separator />

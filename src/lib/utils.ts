@@ -52,8 +52,9 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
     return 'গানের কথা পাওয়া যায়নি';
   }
 
-  // 1. Remove specific invisible characters
+  // 1. Remove specific invisible characters and normalize
   let cleanedText = text
+    .normalize('NFC')
     .replace(/\u00AD/g, '') // Remove soft hyphens
     .replace(/[\u200B-\u200D\uFEFF]/g, ''); // Remove zero-width spaces
 
@@ -65,8 +66,8 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   cleanedText = cleanedText
     .split('\n')
     .map(line => line
-        .replace(/\s+-\s+/g, ' ') 
-        .replace(/^-+\s*|\s*-+$/g, '') 
+        .replace(/\s+-\s+/g, ' ')
+        .replace(/^-+\s*|\s*-+$/g, '')
         .replace(/([,.!?;:])-/g, '$1')
         .replace(/-([,.!?;:])/g, '$1')
         .replace(/[ \t]+/g, ' ')
@@ -76,9 +77,9 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
 
   // 4. Restore multiple newlines and clean up resulting space issues
   cleanedText = cleanedText
-      .replace(new RegExp(newlinePlaceholder, 'g'), '\n') 
-      .replace(/\n +/g, '\n') 
-      .replace(/ +\n/g, '\n'); 
+      .replace(new RegExp(newlinePlaceholder, 'g'), '\n')
+      .replace(/\n +/g, '\n')
+      .replace(/ +\n/g, '\n');
 
   // 5. Final trim and space normalization
   cleanedText = cleanedText.replace(/ +/g, ' ').trim();
@@ -89,30 +90,48 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
 
 /**
  * Cleans a string for display purposes.
- * Removes soft hyphens, zero-width spaces, replaces hyphens that appear to be word separators with spaces,
- * trims, and normalizes multiple spaces to one. Aims to preserve hyphens within names like 'তৌফিক-ই-ইলাহী'.
+ * Removes soft hyphens, zero-width spaces. Replaces hyphens surrounded by spaces with a single space.
+ * Removes trailing parenthetical notes (e.g., " (Live)"). Trims and normalizes multiple spaces to one.
+ * Aims to preserve hyphens within names like 'তৌফিক-ই-ইলাহী'.
  * @param str The string to clean.
- * @returns The cleaned string, or undefined if input is invalid/empty.
+ * @returns The cleaned string, or undefined if input is invalid/empty or results in junk.
  */
 export function cleanDisplayString(str: string | undefined | null): string | undefined {
     if (!str || typeof str !== 'string' || !str.trim()) {
         return undefined;
     }
-    let cleaned = str
-        .replace(/\u00AD/g, '') 
-        .replace(/[\u200B-\u200D\uFEFF]/g, '');
+    let cleaned = str.normalize('NFC');
 
+    // Remove specific invisible characters
+    cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF\u00AD]/g, '');
+
+    // Replace hyphens used as separators (surrounded by space) with a single space
     cleaned = cleaned.replace(/\s+-\s+/g, ' ');
+
+    // Remove trailing parenthetical notes, e.g., " (Album Version)" or " (বাংলাদেশি)"
+    // This regex targets parentheses at the very end of the string.
+    cleaned = cleaned.replace(/\s*\([^)]*\)\s*$/, '');
+
+    // Trim whitespace and consolidate multiple spaces into one
     cleaned = cleaned.trim().replace(/\s+/g, ' ');
-    cleaned = cleaned.replace(/\(([^)]+)\)/g, '$1').trim();
-    cleaned = cleaned.replace(/\s+/g, ' '); 
-    // Specific fix for "কাজী নজরুল ইসলাম" where "ইসলাম" might become "ইসলম" if "া" is mishandled
-    // This is a targeted fix; a more general Unicode normalization might be better if widespread.
-    cleaned = cleaned.replace(/কাজী নজরুল ইসলম/g, 'কাজী নজরুল ইসলাম');
-    cleaned = cleaned.replace(/দ্বিজেন্দ্রলাল রয়/g, 'দ্বিজেন্দ্রলাল রায়');
 
+    // If, after cleaning, the string becomes one of these problematic single characters, reject it.
+    // Also filter out if it becomes a single isolated diacritic.
+    // Bengali Vowel Signs: \u09BE (া) to \u09C4 (ৗ), also \u0981 (ঁ) Chandrabindu, \u0982 (ং) Anusvara, \u0983 (ঃ) Visarga
+    if (cleaned === "ঃ" || cleaned === ":" || cleaned === "-") {
+        return undefined;
+    }
+    if (cleaned.length === 1 && /^[\u0981-\u0983\u09BE-\u09C4\u09C7-\u09C8\u09CB-\u09CC\u09D7]$/.test(cleaned)) { // Added more diacritics
+        return undefined;
+    }
 
-    return cleaned;
+    // Specific known corrections (use sparingly, prefer fixing source data or general logic)
+    if (cleaned === 'কাজী নজরুল ইসলম') cleaned = 'কাজী নজরুল ইসলাম';
+    if (cleaned === 'দ্বিজেন্দ্রলাল রয়') cleaned = 'দ্বিজেন্দ্রলাল রায়';
+    // Example: if "ভূপেন হাজারকা" was a persistent issue, one might add:
+    // if (cleaned === 'ভূপেন হাজারকা') cleaned = 'ভূপেন হাজারিকা';
+
+    return cleaned === "" ? undefined : cleaned;
 }
 
 
@@ -128,22 +147,20 @@ export function cleanDisplayString(str: string | undefined | null): string | und
  * @returns A string suitable for use in a URL path segment.
  */
 export const createSlug = (title?: string, artist?: string, lyricist?: string, uniqueId?: string | number): string => {
-  // `cleanString` already converts to lowercase and handles hyphenation.
   const titleSlug = cleanString(title) || 'শিরোনামহীন';
   const artistSlug = cleanString(artist) || 'অজানা-শিল্পী';
-  const lyricistSlug = cleanString(lyricist); // Can be undefined
+  const lyricistSlug = cleanString(lyricist);
 
   let baseSlug: string;
 
-  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার') {
+  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার' && lyricistSlug !== 'অজানা গীতিকার') {
     baseSlug = `${titleSlug}-by-${artistSlug}-lyricist-${lyricistSlug}`;
   } else {
     baseSlug = `${titleSlug}-by-${artistSlug}`;
   }
 
-  // Append uniqueId if provided to ensure uniqueness
   if (uniqueId !== undefined && uniqueId !== null && String(uniqueId).trim() !== '') {
-     return `${baseSlug}-${uniqueId}`;
+     return `${baseSlug}-${String(uniqueId).replace(/\s+/g, '-')}`; // Ensure uniqueId is also cleaned for URL
   }
 
   return baseSlug;
@@ -172,4 +189,3 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
-

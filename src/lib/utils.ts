@@ -66,20 +66,20 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   cleanedText = cleanedText
     .split('\n')
     .map(line => line
-        .replace(/\s+-\s+/g, ' ')
-        .replace(/^-+\s*|\s*-+$/g, '')
-        .replace(/([,.!?;:])-/g, '$1')
-        .replace(/-([,.!?;:])/g, '$1')
-        .replace(/[ \t]+/g, ' ')
+        .replace(/\s+-\s+/g, ' ') // Replace space-hyphen-space with space
+        .replace(/^-+\s*|\s*-+$/g, '') // Remove leading/trailing hyphens on a line
+        .replace(/([,.!?;:])-/g, '$1') // Remove hyphen after punctuation
+        .replace(/-([,.!?;:])/g, '$1') // Remove hyphen before punctuation
+        .replace(/[ \t]+/g, ' ') // Normalize horizontal spaces to single space
         .trim()
     )
     .join('\n');
 
   // 4. Restore multiple newlines and clean up resulting space issues
   cleanedText = cleanedText
-      .replace(new RegExp(newlinePlaceholder, 'g'), '\n')
-      .replace(/\n +/g, '\n')
-      .replace(/ +\n/g, '\n');
+      .replace(new RegExp(newlinePlaceholder, 'g'), '\n') // Restore paragraph breaks
+      .replace(/\n +/g, '\n') // Remove spaces at the beginning of a line after newline
+      .replace(/ +\n/g, '\n'); // Remove spaces at the end of a line before newline
 
   // 5. Final trim and space normalization
   cleanedText = cleanedText.replace(/ +/g, ' ').trim();
@@ -109,29 +109,49 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     cleaned = cleaned.replace(/\s+-\s+/g, ' ');
 
     // Remove trailing parenthetical notes, e.g., " (Album Version)" or " (বাংলাদেশি)"
-    // This regex targets parentheses at the very end of the string.
     cleaned = cleaned.replace(/\s*\([^)]*\)\s*$/, '');
 
     // Trim whitespace and consolidate multiple spaces into one
     cleaned = cleaned.trim().replace(/\s+/g, ' ');
 
-    // If, after cleaning, the string becomes one of these problematic single characters, reject it.
-    // Also filter out if it becomes a single isolated diacritic.
-    // Bengali Vowel Signs: \u09BE (া) to \u09C4 (ৗ), also \u0981 (ঁ) Chandrabindu, \u0982 (ং) Anusvara, \u0983 (ঃ) Visarga
-    if (cleaned === "ঃ" || cleaned === ":" || cleaned === "-") {
+    // If empty after basic cleaning, or specific junk characters, return undefined
+    if (cleaned === "" || cleaned === "ঃ" || cleaned === ":" || cleaned === "-") {
         return undefined;
     }
-    if (cleaned.length === 1 && /^[\u0981-\u0983\u09BE-\u09C4\u09C7-\u09C8\u09CB-\u09CC\u09D7]$/.test(cleaned)) { // Added more diacritics
+
+    // Filter out if it's a single isolated diacritic.
+    // Bengali Vowel Signs: \u09BE (া) to \u09C4 (ৗ), also \u0981 (ঁ) Chandrabindu, \u0982 (ং) Anusvara, \u0983 (ঃ) Visarga
+    // Also \u09C7 (ে) \u09C8 (ৈ) \u09CB (ো) \u09CC (ৌ) \u09D7 (ৗ) - these are vowel signs
+    if (cleaned.length === 1 && /^[\u0981-\u0983\u09BE-\u09C4\u09C7-\u09C8\u09CB-\u09CC\u09D7]$/.test(cleaned)) {
         return undefined;
+    }
+
+    // Filter out strings that are likely fragments or erroneous after initial cleaning
+    // e.g., starts/ends with a halant, or specific known problematic fragments.
+    if (cleaned.startsWith('\u09CD')) return undefined; // Starts with halant
+
+    const problematicFragments = ["িন্দু", "ঁভূল", "িভিয়"];
+    if (problematicFragments.includes(cleaned)) return undefined;
+
+    // Filter out very short strings (length 1 or 2) that are just a consonant with a simple vowel sign
+    // (like "ভী", "সু") if they are not common single/double-letter words/names.
+    // This is subjective and might need adjustment if valid short names are filtered.
+    const allowedShortNames = ["ও", "এ", "বা", "মা", "বিভিন্ন শিল্পী"]; // "বিভিন্ন শিল্পী" is longer but crucial to keep
+    if (cleaned.length <= 2 && !allowedShortNames.includes(cleaned)) {
+        // Check if it's a single consonant + vowel sign, or just a single consonant
+        // Example: "ক", "কা", "কি"
+        // Filter if it looks like "ভী" or "সু" and is not in allowedShortNames
+        if (cleaned === "ভী" || cleaned === "সু") {
+            return undefined;
+        }
     }
 
     // Specific known corrections (use sparingly, prefer fixing source data or general logic)
     if (cleaned === 'কাজী নজরুল ইসলম') cleaned = 'কাজী নজরুল ইসলাম';
     if (cleaned === 'দ্বিজেন্দ্রলাল রয়') cleaned = 'দ্বিজেন্দ্রলাল রায়';
-    // Example: if "ভূপেন হাজারকা" was a persistent issue, one might add:
-    // if (cleaned === 'ভূপেন হাজারকা') cleaned = 'ভূপেন হাজারিকা';
 
-    return cleaned === "" ? undefined : cleaned;
+
+    return cleaned === "" ? undefined : cleaned; // Final check for empty string
 }
 
 
@@ -189,3 +209,4 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
+

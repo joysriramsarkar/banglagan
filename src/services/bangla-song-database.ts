@@ -176,7 +176,7 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'যাবে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু',  genre: 'আধুনিক', releaseYear: 2012, lyrics: 'যাবে? যাও, যাত্রা শুভ হোক' },
   { title: 'সোনার অঙ্গ', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু',  genre: 'আধুনিক', releaseYear: 2017, lyrics: 'সোনার অঙ্গ' },
   { title: 'মেঘবালিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু',  genre: 'আধুনিক', releaseYear: 2016, lyrics: 'মেঘবালিকা ও মেঘবালিকা, কত স্বপ্নকথা ছিল তোমার সাথে' },
-  { title: 'ভোর হয়নি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই'},
+  { title: 'ভোর হয়নি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই' },
   { title: 'রাজা যায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'রাজা যায় রাজা আসে'},
   { title: 'আস্থা হারোনোর দিন', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'আস্থা হারোনোর দিন' },
   { title: 'রাত্রি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'রাত্রি ঘনঘোর, জানি বহুদূর প্রিয় সেই ভোর' },
@@ -286,6 +286,8 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'আমার মন মানে না', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার মন মানে না' },
   { title: 'মনের মানুষ পাইলাম না', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'মনের মানুষ পাইলাম না' },
   { title: 'আমার সোনার বাংলা (লালন)', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার সোনার বাংলা (লালন সংস্করণ)' },
+  { title: 'খাঁচার ভেতর অচিন পাখি', artist: 'বিভিন্ন বাউল', lyricist: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'খাঁচার ভেতর অচিন পাখি কেমনে আসে যায়। তাঁরে ধরতে পারলে মন বেড়ি, দিতাম পাখির পায়।' },
+
 
   // প্রতুল মুখোপাধ্যায় - ওঠো হে আলবাম
   { title: 'ছোকরা চাঁদ জোওয়ান চাঁদ', artist: 'প্রতুল মুখোপাধ্যায়', lyricist: 'প্রতুল মুখোপাধ্যায়', genre: 'জীবনমুখী', releaseYear: 1990, lyrics: 'ছোকরা চাঁদ জোওয়ান চাঁদ (পাঠ সহ) ৩:৪৯' }, // Assuming 1990 as a placeholder year for album
@@ -338,7 +340,7 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'সার্থক জনম আমার', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1905, lyrics: 'সার্থক জনম আমার জন্মেছি এই দেশে।', genre: 'রবীন্দ্রসঙ্গীত' },
   { title: 'পুরাতন প্রেমের স্মৃতি', artist: 'বিভিন্ন শিল্পী', lyricist: 'হিমাংশু দত্ত', releaseYear: 1935, lyrics: 'পুরাতন প্রেমের স্মৃতি।', genre: 'আধুনিক' },
   { title: 'মালতী লতা দোলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'মুকুন্দ দাস', releaseYear: 1920, lyrics: 'মালতী লতা দোলে।', genre: 'স্বদেশী' },
-  { title: 'আজি শ্রাবণ-ঘন-মেঘের', artist: 'বিভিন্ন শিল্পী', lyricist: 'গগন হরকরা', releaseYear: 1890, lyrics: 'আজি শ্রাবণ-ঘন-মেঘের।', genre: 'গগন হরকরার গান' },
+  { title: 'আজি শ্রাবণ ঘন মেঘের', artist: 'বিভিন্ন শিল্পী', lyricist: 'গগন হরকরা', releaseYear: 1890, lyrics: 'আজি শ্রাবণ ঘন মেঘের।', genre: 'গগন হরকরার গান' },
   { title: 'নিষ্ফল প্রেমের ভ্রান্তি', artist: 'বিভিন্ন শিল্পী', lyricist: 'কমলাকান্ত ভট্টাচার্য', releaseYear: 1800, lyrics: 'নিষ্ফল প্রেমের ভ্রান্তি।', genre: 'শ্যামাসংগীত' },
   { title: 'তুমি সন্ধ্যার মেঘমালা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1914, lyrics: 'তুমি সন্ধ্যার মেঘমালা, তুমি আমার সাধের সাধনা।', genre: 'রবীন্দ্রসঙ্গীত' },
   { title: 'তুমি যে সুরের আগুন', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1926, lyrics: 'তুমি যে সুরের আগুন লাগিয়ে দিলে মোর প্রাণে।', genre: 'রবীন্দ্রসঙ্গীত' },
@@ -385,7 +387,7 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'এ মণিহার', artist: 'বিভিন্ন শিল্পী', lyricist: 'জয় গোস্বামী', releaseYear: 2005, lyrics: 'এ মণিহার।', genre: 'আধুনিক' },
   { title: 'এসো হে এসো', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবীর সুমন', releaseYear: 1992, lyrics: 'এসো হে এসো।', genre: 'সুমনীয়' },
   { title: 'এসো আমার ঘরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1910, lyrics: 'এসো আমার ঘরে এসো, আমার ঘরে।', genre: 'রবীন্দ্রসঙ্গীত' },
-  { title: 'এসো গো জগত-তারণ', artist: 'বিভিন্ন শিল্পী', lyricist: 'কুমার জ্ঞানেন্দ্র', releaseYear: 1930, lyrics: 'এসো গো জগত-তারণ।', genre: 'ভক্তিগীতি' },
+  { title: 'এসো গো জগত তারণ', artist: 'বিভিন্ন শিল্পী', lyricist: 'কুমার জ্ঞানেন্দ্র', releaseYear: 1930, lyrics: 'এসো গো জগত তারণ।', genre: 'ভক্তিগীতি' },
   { title: 'ও আমার জীবন', artist: 'বিভিন্ন শিল্পী', lyricist: 'মনোজ মুর্শিদ (বাংলাদেশি)', releaseYear: 2000, lyrics: 'ও আমার জীবন।', genre: 'আধুনিক' },
   { title: 'ও চাঁদ', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাইকেল মধুসূদন দত্ত', releaseYear: 1860, lyrics: 'ও চাঁদ।', genre: 'মাইকেল মধুসূদন দত্তের গান' },
   { title: 'কী আর চাইব', artist: 'বিভিন্ন শিল্পী', lyricist: 'গৌতম চট্টোপাধ্যায় (মোহিনের ঘোড়াগুলি)', releaseYear: 1977, lyrics: 'কী আর চাইব।', genre: 'মহীনের ঘোড়াগুলি' },
@@ -495,6 +497,12 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'মনের ক্যানভাসে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রিয়াজ উদ্দিন আহমেদ', releaseYear: 2019, lyrics: 'মনের ক্যানভাসে।', genre: 'আধুনিক' },
   { title: 'এই মন তোমাকে দিলাম (আবুল হায়াত)', artist: 'বিভিন্ন শিল্পী', lyricist: 'আবুল হায়াত', releaseYear: 1990, lyrics: 'এই মন তোমাকে দিলাম (নাটকের গান)।', genre: 'আধুনিক' },
   { title: 'উত্তরাধিকার', artist: 'বিভিন্ন শিল্পী', lyricist: 'সমরেশ মজুমদার', releaseYear: 1995, lyrics: 'উত্তরাধিকার (উপন্যাস অবলম্বনে গান)।', genre: 'আধুনিক' },
+  { title: 'আমার দুঃখ গুলো', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাহমুদুজ্জামান বাবু', releaseYear: 2015, lyrics: 'আমার দুঃখ গুলো ,,,,,', genre: 'আধুনিক' },
+  { title: 'হৃদয়ের কথা', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাহমুদুজ্জামান বাবু', releaseYear: 2016, lyrics: 'হৃদয়ের কথা ,,,,,', genre: 'আধুনিক' },
+  { title: 'জানালার পাশে', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাহমুদুজ্জামান বাবু', releaseYear: 2017, lyrics: 'জানালার পাশে ,,,,,', genre: 'আধুনিক' },
+  { title: 'একতারা তুই দেশের কথা (গাজী মাজহারুল আনোয়ার)', artist: 'বিভিন্ন শিল্পী', lyricist: 'গাজী মাজহারুল আনোয়ার', releaseYear: 1970, lyrics: 'একতারা তুই দেশের কথা (সুরকার)।', genre: 'দেশাত্মবোধক' },
+  { title: 'এক মুঠো ভালোবাসা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবির বকুল', releaseYear: 2010, lyrics: 'এক মুঠো ভালোবাসা।', genre: 'আধুনিক' },
+  { title: 'যদি সুন্দর একখান মুখ পাইতাম', artist: 'বিভিন্ন শিল্পী', lyricist: 'মোহাম্মদ রফিকুজ্জামান', releaseYear: 1980, lyrics: 'যদি সুন্দর একখান মুখ পাইতাম।', genre: 'আধুনিক' },
   { title: 'যেতে পারি কিন্তু কেন যাবো', artist: 'বিভিন্ন শিল্পী', lyricist: 'শক্তি চট্টোপাধ্যায়', releaseYear: 1983, lyrics: 'যেতে পারি কিন্তু কেন যাবো।', genre: 'আধুনিক' },
   { title: 'আমার স্বপ্ন তুমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রদীপ ঘোষ', releaseYear: 1994, lyrics: 'আমার স্বপ্ন তুমি।', genre: 'আধুনিক' },
   { title: 'গায়ত্রী', artist: 'বিভিন্ন শিল্পী', lyricist: 'বিনয় মজুমদার', releaseYear: 1973, lyrics: 'গায়ত্রী।', genre: 'আধুনিক' },
@@ -504,7 +512,7 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'ফসিলসের গান (উৎপল কুমার বসু)', artist: 'ফসিলস', lyricist: 'উৎপল কুমার বসু', releaseYear: 2002, lyrics: 'ফসিলসের গান।', genre: 'ব্যান্ড সঙ্গীত' },
   { title: 'চন্দ্রবিন্দুর গান (অনিন্দ্য)', artist: 'চন্দ্রবিন্দু', lyricist: 'অনিন্দ্য চট্টোপাধ্যায়', releaseYear: 1999, lyrics: 'চন্দ্রবিন্দুর গান।', genre: 'ব্যান্ড সঙ্গীত' },
   { title: 'চন্দ্রবিন্দুর গান (উপল)', artist: 'চন্দ্রবিন্দু', lyricist: 'উপল সেনগুপ্ত', releaseYear: 1999, lyrics: 'চন্দ্রবিন্দুর গান।', genre: 'ব্যান্ড সঙ্গীত' },
-  { title: 'একটি লোকগান (প্রতুল মুখোপাধ্যায়)', artist: 'প্রতুল মুখোপাধ্যায়', lyricist: 'প্রতুল মুখোপাধ্যায়', releaseYear: 1990, lyrics: 'একটি লোকগান।', genre: 'জীবনমুখী' },
+  { title: 'একটি লোকগান (প্রতুল মুখোপাধ্যায়)', artist: 'প্রতুল মুখোপাধ্যায়', lyricist: 'প্রতুল মুখোপাধ্যায়', releaseYear: 1990, lyrics: 'একটি লোকগান।', genre: 'জীবনমুখী' },
   { title: 'ক্যাকটাসের গান (অরিজিৎ দাস)', artist: 'ক্যাকটাস', lyricist: 'অরিজিৎ দাস', releaseYear: 1995, lyrics: 'ক্যাকটাসের গান।', genre: 'ব্যান্ড সঙ্গীত' },
   { title: 'বডিকন্টেক্সটের গান (সন্দীপ চট্টোপাধ্যায়)', artist: 'বডিকন্টেক্সট', lyricist: 'সন্দীপ চট্টোপাধ্যায়', releaseYear: 2000, lyrics: 'বডিকন্টেক্সটের গান।', genre: 'ব্যান্ড সঙ্গীত' },
   { title: 'চলচ্চিত্রের গান (কৃষ্ণেন্দু মুখোপাধ্যায়)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কৃষ্ণেন্দু মুখোপাধ্যায়', releaseYear: 1990, lyrics: 'চলচ্চিত্রের গান।', genre: 'আধুনিক' },
@@ -532,12 +540,61 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'ডিজিটাল প্ল্যাটফর্মের গান (রুদ্র ঘোষ)', artist: 'বিভিন্ন শিল্পী', lyricist: 'রুদ্র ঘোষ', releaseYear: 2019, lyrics: 'ডিজিটাল প্ল্যাটফর্মের গান।', genre: 'আধুনিক' },
   { title: 'সংগৃহীত গান', artist: 'বিভিন্ন শিল্পী', lyricist: 'সংগৃহীত', releaseYear: 1900, lyrics: 'সংগৃহীত গান।', genre: 'লোকগীতি' },
   { title: 'ভাষার গান (আব্দুল গাফফার চৌধুরী)', artist: 'বিভিন্ন শিল্পী', lyricist: 'আব্দুল গাফফার চৌধুরী', releaseYear: 1952, lyrics: 'আমার ভাইয়ের রক্তে রাঙানো।', genre: 'দেশাত্মবোধক' },
-  { title: 'একতারা তুই দেশের কথা (গাজী মাজহারুল আনোয়ার)', artist: 'বিভিন্ন শিল্পী', lyricist: 'গাজী মাজহারুল আনোয়ার', releaseYear: 1970, lyrics: 'একতারা তুই দেশের কথা (সুরকার)।', genre: 'দেশাত্মবোধক' },
-  { title: 'এক মুঠো ভালোবাসা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবির বকুল', releaseYear: 2010, lyrics: 'এক মুঠো ভালোবাসা।', genre: 'আধুনিক' },
-  { title: 'যদি সুন্দর একখান মুখ পাইতাম', artist: 'বিভিন্ন শিল্পী', lyricist: 'মোহাম্মদ রফিকুজ্জামান', releaseYear: 1980, lyrics: 'যদি সুন্দর একখান মুখ পাইতাম।', genre: 'আধুনিক' },
+  { title: 'সকরুণ নয়নে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শৈলেন্দ্র (শৈলেন রায়)', releaseYear: 1955, lyrics: 'সকরুণ নয়নে।', genre: 'আধুনিক' },
+  { title: 'সকাতর আমন্ত্রণ', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি ভোলানাথ', releaseYear: 1860, lyrics: 'সকাতর আমন্ত্রণ।', genre: 'কবিগান' },
+  { title: 'সখী, তোরা দেখিবি', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি নীলকণ্ঠ', releaseYear: 1870, lyrics: 'সখী, তোরা দেখিবি।', genre: 'কবিগান' },
+  { title: 'সকলি শুকায়ে', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি ভবানীচরণ', releaseYear: 1880, lyrics: 'সকলি শুকায়ে।', genre: 'কবিগান' },
+  { title: 'সোনার তরী', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি হরু ঠাকুর', releaseYear: 1800, lyrics: 'সোনার তরী।', genre: 'কবিগান' },
+  { title: 'আজি তোমায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি যতীন্দ্রমোহন বাগচী', releaseYear: 1910, lyrics: 'আজি তোমায়।', genre: 'আধুনিক' },
+  { title: 'আমার সোনার কাঠি', artist: 'বিভিন্ন শিল্পী', lyricist: 'শ্যামল গুপ্ত', releaseYear: 1960, lyrics: 'আমার সোনার কাঠি।', genre: 'আধুনিক' },
+  { title: 'এ কী হেরিলাম হরি', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রণব রায়', releaseYear: 1950, lyrics: 'এ কী হেরিলাম হরি।', genre: 'আধুনিক' },
+  { title: 'এ শুধু মায়া', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুধীন দাশগুপ্ত', releaseYear: 1965, lyrics: 'এ শুধু মায়া।', genre: 'আধুনিক' },
+  { title: 'এসো হে', artist: 'বিভিন্ন শিল্পী', lyricist: 'পুলক বন্দ্যোপাধ্যায়', releaseYear: 1970, lyrics: 'এসো হে।', genre: 'আধুনিক' },
+  { title: 'কাঙ্গাল আমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'সলিল চৌধুরী', releaseYear: 1965, lyrics: 'কাঙ্গাল আমি।', genre: 'আধুনিক' },
+  { title: 'কেহ নাকি', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রেমেন্দ্র মিত্র', releaseYear: 1940, lyrics: 'কেহ নাকি।', genre: 'আধুনিক' },
+  { title: 'কেন আমায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুকুমার রায়', releaseYear: 1920, lyrics: 'কেন আমায়।', genre: 'সুকুমার রায়ের গান' },
+  { title: 'ক্ষণে ক্ষণে', artist: 'বিভিন্ন শিল্পী', lyricist: 'কাজী মোতাহার হোসেন', releaseYear: 1930, lyrics: 'ক্ষণে ক্ষণে।', genre: 'আধুনিক' },
+  { title: 'চিরদিন আমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'শিবদাস বন্দ্যোপাধ্যায়', releaseYear: 1970, lyrics: 'চিরদিন আমি।', genre: 'আধুনিক' },
+  { title: 'যে শুধু', artist: 'বিভিন্ন শিল্পী', lyricist: 'মুকুল দত্ত', releaseYear: 1975, lyrics: 'যে শুধু।', genre: 'আধুনিক' },
+  { title: 'সবারে দাও', artist: 'বিভিন্ন শিল্পী', lyricist: 'অমিতাভ ভট্টাচার্য', releaseYear: 2000, lyrics: 'সবারে দাও।', genre: 'আধুনিক' },
+  { title: 'সবারে রাজার', artist: 'বিভিন্ন শিল্পী', lyricist: 'অঞ্জন চৌধুরী', releaseYear: 1980, lyrics: 'সবারে রাজার।', genre: 'আধুনিক' },
+  { title: 'সখি, আমারি', artist: 'বিভিন্ন শিল্পী', lyricist: 'অনুপম দত্ত', releaseYear: 1995, lyrics: 'সখি, আমারি।', genre: 'আধুনিক' },
+  { title: 'তুমি কাছে', artist: 'বিভিন্ন শিল্পী', lyricist: 'আসাদুজ্জামান নূর (বাংলাদেশি)', releaseYear: 1990, lyrics: 'তুমি কাছে।', genre: 'আধুনিক' },
+  { title: 'তুমি যদি না দেখা', artist: 'বিভিন্ন শিল্পী', lyricist: 'ভূপেন হাজারিকা', releaseYear: 1970, lyrics: 'তুমি যদি না দেখা।', genre: 'জীবনমুখী' },
+  { title: 'তুমি মোরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'চন্দন ঘাটক', releaseYear: 1985, lyrics: 'তুমি মোরে।', genre: 'আধুনিক' },
+  { title: 'আজি মিলন', artist: 'বিভিন্ন শিল্পী', lyricist: 'চিত্তরঞ্জন দাস', releaseYear: 1925, lyrics: 'আজি মিলন।', genre: 'দেশবন্ধু গীতি' },
+  { title: 'এ কী রূপ', artist: 'বিভিন্ন শিল্পী', lyricist: 'হেমাঙ্গ বিশ্বাস', releaseYear: 1950, lyrics: 'এ কী রূপ।', genre: 'গণসঙ্গীত' },
+  { title: 'এসো হে প্রেম', artist: 'বিভিন্ন শিল্পী', lyricist: 'ইন্দ্রনাথ সেন', releaseYear: 1945, lyrics: 'এসো হে প্রেম।', genre: 'আধুনিক' },
+  { title: 'এসো হে সখা', artist: 'বিভিন্ন শিল্পী', lyricist: 'জয় গোস্বামী', releaseYear: 2005, lyrics: 'এসো হে সখা।', genre: 'আধুনিক' },
+  { title: 'ও আমার', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবীর সুমন', releaseYear: 1992, lyrics: 'ও আমার।', genre: 'সুমনীয়' },
+  { title: 'ওগো, তোমরা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কুমার জ্ঞানেন্দ্র', releaseYear: 1930, lyrics: 'ওগো, তোমরা।', genre: 'ভক্তিগীতি' },
+  { title: 'কাঁদি আমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', releaseYear: 1850, lyrics: 'কাঁদি আমি।', genre: 'বাউল' },
+  { title: 'ক্ষণিকের অতিথি', artist: 'বিভিন্ন শিল্পী', lyricist: 'মনোজ মুর্শিদ (বাংলাদেশি)', releaseYear: 2000, lyrics: 'ক্ষণিকের অতিথি।', genre: 'আধুনিক' },
+  { title: 'চিরসখা', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাইকেল মধুসূদন দত্ত', releaseYear: 1860, lyrics: 'চিরসখা।', genre: 'মাইকেল মধুসূদন দত্তের গান' },
+  { title: 'তোমারে', artist: 'বিভিন্ন শিল্পী', lyricist: 'গৌতম চট্টোপাধ্যায় (মোহিনের ঘোড়াগুলি)', releaseYear: 1977, lyrics: 'তোমারে।', genre: 'মহীনের ঘোড়াগুলি' },
+  { title: 'কেবল', artist: 'বিভিন্ন শিল্পী', lyricist: 'নচিকেতা চক্রবর্তী', releaseYear: 1993, lyrics: 'কেবল।', genre: 'জীবনমুখী' },
+  { title: 'সবারে পর', artist: 'বিভিন্ন শিল্পী', lyricist: 'নিরেন্দ্রনাথ চক্রবর্তী', releaseYear: 1960, lyrics: 'সবারে পর।', genre: 'আধুনিক' },
+  { title: 'সকলি নবীন', artist: 'বিভিন্ন শিল্পী', lyricist: 'পবিত্র সরকার', releaseYear: 1970, lyrics: 'সকলি নবীন।', genre: 'আধুনিক' },
+  { title: 'সখি, বারে বারে', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রীতিভূষণ ভট্টাচার্য', releaseYear: 1950, lyrics: 'সখি, বারে বারে।', genre: 'আধুনিক' },
+  { title: 'তুমি কি তাই', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রবীর মজুমদার', releaseYear: 1960, lyrics: 'তুমি কি তাই।', genre: 'আধুনিক' },
+  { title: 'তুমি সুন্দর', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রিয় চট্টোপাধ্যায়', releaseYear: 1970, lyrics: 'তুমি সুন্দর।', genre: 'আধুনিক' },
+  { title: 'আজি শুভ', artist: 'বিভিন্ন শিল্পী', lyricist: 'ফকির আলমগীর (বাংলাদেশি)', releaseYear: 1975, lyrics: 'আজি শুভ।', genre: 'গণসঙ্গীত' },
+  { title: 'আমার মুক্তি দাও', artist: 'বিভিন্ন শিল্পী', lyricist: 'বুদ্ধদেব দাশগুপ্ত', releaseYear: 1980, lyrics: 'আমার মুক্তি দাও।', genre: 'আধুনিক' },
+  { title: 'আলোকের ঝর্ণা', artist: 'বিভিন্ন শিল্পী', lyricist: 'মণীন্দ্র গুপ্ত', releaseYear: 1960, lyrics: 'আলোকের ঝর্ণা।', genre: 'আধুনিক' },
+  { title: 'এ কী গভীর বাণী', artist: 'বিভিন্ন শিল্পী', lyricist: 'মন্টু মুখোপাধ্যায়', releaseYear: 1955, lyrics: 'এ কী গভীর বাণী।', genre: 'আধুনিক' },
+  { title: 'এসো হে রাজা', artist: 'বিভিন্ন শিল্পী', lyricist: 'মলয় গাঙ্গুলি', releaseYear: 1970, lyrics: 'এসো হে রাজা।', genre: 'আধুনিক' },
+  { title: 'ওগো, তোরা যাস নে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রীতুপর্ণ ঘোষ', releaseYear: 1995, lyrics: 'ওগো, তোরা যাস নে।', genre: 'আধুনিক' },
+  { title: 'কেউ যাহা', artist: 'বিভিন্ন শিল্পী', lyricist: 'শিবরাম চক্রবর্তী', releaseYear: 1940, lyrics: 'কেউ যাহা।', genre: 'আধুনিক' },
+  { title: 'কেন দূরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শ্যামল মিত্র', releaseYear: 1960, lyrics: 'কেন দূরে।', genre: 'আধুনিক' },
+  { title: 'ক্ষমা করো', artist: 'বিভিন্ন শিল্পী', lyricist: 'শ্রীজাত', releaseYear: 2010, lyrics: 'ক্ষমা করো।', genre: 'আধুনিক' },
+  { title: 'চলে যায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুদীপ্ত মুখোপাধ্যায়', releaseYear: 2000, lyrics: 'চলে যায়।', genre: 'আধুনিক' },
+  { title: 'ডাকিলে ধীরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুধীরলাল চক্রবর্তী', releaseYear: 1940, lyrics: 'ডাকিলে ধীরে।', genre: 'আধুনিক' },
+  { title: 'পথে চলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুনীল গঙ্গোপাধ্যায়', releaseYear: 1970, lyrics: 'পথে চলে।', genre: 'আধুনিক' },
+  { title: 'বুঝি দিলে প্রেম', artist: 'বিভিন্ন শিল্পী', lyricist: 'স্বপন চক্রবর্তী', releaseYear: 1975, lyrics: 'বুঝি দিলে প্রেম।', genre: 'আধুনিক' }
 ];
 
-// Deduplication logic
+
+// Deduplication logic based on title and lyricist
 const uniqueSongsMap = new Map<string, Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalArtist' >>();
 
 rawMockSongsData.forEach(song => {
@@ -546,20 +603,17 @@ rawMockSongsData.forEach(song => {
 
   // Handle undefined or placeholder lyricists for the unique key
   if (!cleanedLyricist || ['সংগৃহীত', 'অজানা গীতিকার', 'অজানা-গীতিকার'].includes(cleanedLyricist)) {
-    cleanedLyricist = 'unknown-lyricist'; // Group them under a common key if desired, or keep distinct
+    cleanedLyricist = 'unknown-lyricist';
   }
-
   const uniqueKey = `${cleanedTitle}---${cleanedLyricist}`;
 
   if (!uniqueSongsMap.has(uniqueKey)) {
     uniqueSongsMap.set(uniqueKey, song);
-  } else {
-    // Optional: console.log(`Duplicate song (Title: ${cleanedTitle}, Lyricist: ${cleanedLyricist}) skipped.`);
   }
 });
 
 const mockSongsData = Array.from(uniqueSongsMap.values());
-console.log(`Total songs after deduplication (Title & Lyricist): ${mockSongsData.length}`);
+// console.log(`Total songs after deduplication (Title & Lyricist): ${mockSongsData.length}`);
 
 
 // Generate slugs and IDs for all songs
@@ -678,7 +732,6 @@ export async function getAllSongs(): Promise<Song[]> {
   }
 }
 
-
 export async function getSongBySlug(slug: string): Promise<Song | undefined> {
   if (!slug || typeof slug !== 'string' || slug.trim() === '') {
     console.warn('Mock: getSongBySlug called with invalid slug.');
@@ -687,35 +740,44 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
 
   let decodedSlugToSearch: string;
   try {
-    decodedSlugToSearch = decodeURIComponent(slug);
+    decodedSlugToSearch = decodeURIComponent(slug).trim(); // Trim after decoding
   } catch (e) {
     console.warn(`Mock: Error decoding slug "${slug}", using as is. Error:`, e);
-    decodedSlugToSearch = slug;
+    decodedSlugToSearch = slug.trim(); // Use raw trimmed slug if decoding fails
   }
 
-  const cleanedSearchSlug = cleanString(decodedSlugToSearch);
-  if (!cleanedSearchSlug) {
-    console.warn(`Mock: Cleaned search slug is empty for raw slug "${slug}".`);
-    return undefined;
+  // Ensure the decoded slug is then cleaned using the same `cleanString` function
+  // that was used to generate the canonical s.slug values.
+  const finalSearchSlug = cleanString(decodedSlugToSearch);
+
+  if (!finalSearchSlug) {
+      console.warn(`Mock: Final search slug is empty after cleaning decoded slug: "${decodedSlugToSearch}" (raw input: ${slug}).`);
+      return undefined;
   }
 
   try {
-    const song = mockSongs.find(s => {
-        const cleanedSongSlug = cleanString(s.slug);
-        return cleanedSongSlug === cleanedSearchSlug;
-    });
+    // Compare with the canonical s.slug which is already cleaned and includes the ID.
+    const song = mockSongs.find(s => s.slug === finalSearchSlug);
 
-    if (song && song.genre !== 'Placeholder') { // Ensure found song is not a placeholder
+    if (song && song.genre !== 'Placeholder') {
       return song;
     } else if (song && song.genre === 'Placeholder'){
-       console.warn(`Mock: Matched a placeholder song for slug: "${cleanedSearchSlug}". Placeholders are not valid song entries.`);
+       console.warn(`Mock: Matched a placeholder song for final search slug: "${finalSearchSlug}". Placeholders are not valid song entries.`);
        return undefined;
     } else {
-      console.warn(`Mock: Song not found by direct slug match for cleaned slug: "${cleanedSearchSlug}" (raw: ${slug}). No fallback implemented for mock data as ID is part of slug.`);
+      // This log indicates that even after cleaning the input, no exact match was found.
+      // This might happen if the ID part of the slug is incorrect or missing from the input.
+      console.warn(`Mock: Song not found by final search slug: "${finalSearchSlug}" (raw input: ${slug}).`);
+      // Log potential partial matches for easier debugging
+        mockSongs.forEach(s => {
+            if (s.slug.startsWith(finalSearchSlug.substring(0, finalSearchSlug.lastIndexOf('-')))) {
+                 console.log(`Potential partial match (base slug): DB song ID "${s.id}", DB slug "${s.slug}"`);
+            }
+        });
       return undefined;
     }
-  } catch (error: any)     {
-     console.error(`Mock: Error fetching song by slug "${cleanedSearchSlug}" (raw: ${slug}):`, error);
+  } catch (error: any) {
+     console.error(`Mock: Error fetching song by final search slug "${finalSearchSlug}" (raw input: ${slug}):`, error);
      return undefined;
   }
 }
@@ -735,22 +797,23 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     if (song.genre === 'Placeholder') return false;
 
     const songTitleMatch = song.title?.toLowerCase() || "";
-    const songOriginalArtistMatch = song.originalArtist?.toLowerCase() || "";
-    const songDisplayArtistMatch = song.artist?.toLowerCase() || "";
+    const songOriginalArtistMatch = song.originalArtist?.toLowerCase() || ""; // Use originalArtist for broader matching
+    const songDisplayArtistMatch = song.artist?.toLowerCase() || ""; // Keep for exact display match if needed
     const songLyricistMatch = song.lyricist?.toLowerCase() || "";
     const songGenreMatch = song.genre?.toLowerCase() || "";
     const songLyricsMatch = song.lyrics?.toLowerCase() || "";
 
-    const songArtistParts = song.originalArtist?.split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
+    // Split original artist string by common delimiters to match individual artist names
+    const songArtistParts = (song.originalArtist || song.artist || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
         .map(a => cleanDisplayString(a.trim())?.toLowerCase())
-        .filter(Boolean) as string[] || [];
+        .filter((cleanedPart): cleanedPart is string => !!cleanedPart);
 
 
     const match = queryTokens.every(token =>
         songTitleMatch.includes(token) ||
-        songOriginalArtistMatch.includes(token) ||
-        songDisplayArtistMatch.includes(token) ||
-        songArtistParts.some(artistPart => artistPart.includes(token)) ||
+        songOriginalArtistMatch.includes(token) || // Check against the full original string
+        songDisplayArtistMatch.includes(token) ||   // Check against the cleaned display artist
+        songArtistParts.some(artistPart => artistPart.includes(token)) || // Check against individual parts
         songLyricistMatch.includes(token) ||
         songGenreMatch.includes(token) ||
         songLyricsMatch.includes(token)
@@ -760,23 +823,32 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
 
   const rankedSongs = filteredSongs.map(song => {
     let matchCount = 0;
-    const songTitleMatch = song.title?.toLowerCase() || "";
-    const songDisplayArtistMatch = song.artist?.toLowerCase() || "";
-    const songLyricistMatch = song.lyricist?.toLowerCase() || "";
-    const songArtists = (song.originalArtist || song.artist || "").toLowerCase().split(/[,;&]|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
+    const songTitleLower = song.title?.toLowerCase() || "";
+    const songArtistLower = song.artist?.toLowerCase() || ""; // Use cleaned display artist for ranking primary
+    const songLyricistLower = song.lyricist?.toLowerCase() || "";
+    const originalArtistLower = song.originalArtist?.toLowerCase() || "";
 
+    // Exact match for full query
+    if (songTitleLower === cleanedQuery) matchCount += 20; // Higher weight for exact title match
+    if (songArtistLower === cleanedQuery) matchCount += 15; // Higher weight for exact artist match
+    if (originalArtistLower === cleanedQuery) matchCount += 14; // Slightly less for original if different
+    if (songLyricistLower === cleanedQuery) matchCount += 10;
 
-    if (songTitleMatch.includes(cleanedQuery)) matchCount += 10;
-    if (songArtists.some(artist => artist === cleanedQuery)) matchCount += 8;
-    if (songLyricistMatch.includes(cleanedQuery)) matchCount += 5;
+    // Starts with query
+    if (songTitleLower.startsWith(cleanedQuery)) matchCount += 8;
+    if (songArtistLower.startsWith(cleanedQuery)) matchCount += 6;
+    if (originalArtistLower.startsWith(cleanedQuery)) matchCount += 5;
+
 
     queryTokens.forEach(token => {
-      if (songTitleMatch.includes(token)) matchCount += 3;
-      if (songArtists.some(artist => artist.includes(token))) matchCount += 2;
-      if (songLyricistMatch.includes(token)) matchCount += 1;
-    });
+      if (songTitleLower.includes(token)) matchCount += 5;
+      // Consider original artist parts for token matching
+      const artistParts = (originalArtistLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
+      if (artistParts.some(part => part.includes(token))) matchCount += 3;
+      else if (songArtistLower.includes(token)) matchCount +=2; // Fallback to display artist
 
-    if (songTitleMatch.startsWith(cleanedQuery)) matchCount += 4;
+      if (songLyricistLower.includes(token)) matchCount += 2;
+    });
 
 
     return { ...song, matchCount };
@@ -800,12 +872,12 @@ export async function getPopularSongs(): Promise<Song[]> {
   try {
     popular = popularSongDefinitions.map(def => {
         const searchTitle = cleanDisplayString(def.title);
-        const searchArtist = cleanDisplayString(def.artist);
+        const searchArtist = cleanDisplayString(def.artist); // Use cleanDisplayString for artist matching
         const searchLyricist = cleanDisplayString(def.lyricist);
 
         return mockSongs.find(s =>
             s.title === searchTitle &&
-            s.artist === searchArtist &&
+            s.artist === searchArtist && // Match against the cleaned display artist
             s.lyricist === searchLyricist &&
             s.genre !== 'Placeholder'
         );
@@ -813,35 +885,35 @@ export async function getPopularSongs(): Promise<Song[]> {
 
 
     if (popular.length < popularSongDefinitions.length) {
-        console.warn("Mock: Could not find all predefined popular songs. Filling with other songs.");
+        // console.warn("Mock: Could not find all predefined popular songs. Filling with other songs.");
         const existingSlugs = new Set(popular.map(p => p.slug));
         const needed = popularSongDefinitions.length - popular.length;
         let addedCount = 0;
 
         const fallbackSongs = [...mockSongs]
           .filter(s => s.releaseYear && s.genre !== 'Placeholder' && s.slug && !existingSlugs.has(s.slug))
-          .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0));
+          .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)); // Sort by release year to get newer songs
 
         for (const song of fallbackSongs) {
             if (addedCount >= needed) break;
             popular.push(song);
-            existingSlugs.add(song.slug);
+            existingSlugs.add(song.slug); // Keep track of added slugs to avoid duplicates in popular list
             addedCount++;
         }
     }
   } catch (error:any) {
     console.error("Mock: Error fetching popular songs:", error);
-    return [];
+    return []; // Return empty or handle as appropriate
   }
-  return popular.slice(0, 8);
+  return popular.slice(0, 8); // Ensure only up to 8 are returned
 }
 
 export async function getNewSongs(): Promise<Song[]> {
     try {
       const sortedSongs = [...mockSongs]
-        .filter(s => s.releaseYear && s.genre !== 'Placeholder')
-        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0))
-        .slice(0, 8);
+        .filter(s => s.releaseYear && s.genre !== 'Placeholder') // Ensure songs have a release year and are not placeholders
+        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)) // Sort by release year, newest first
+        .slice(0, 8); // Take the top 8
       return sortedSongs;
     } catch (error: any) {
       console.error("Mock: Error fetching new songs:", error);
@@ -859,40 +931,46 @@ async function getUniqueFieldValues(
     mockSongs.forEach(song => {
       let valueToProcess: string | undefined | string[];
 
+      // Determine which field to process based on conceptualFieldName
       if (conceptualFieldName === 'artist') {
+          // Use originalArtist if available, fallback to artist. This allows processing combined artist strings.
           valueToProcess = song.originalArtist || song.artist;
       } else if (conceptualFieldName === 'genre') {
           valueToProcess = song.genre;
       } else if (conceptualFieldName === 'lyricist') {
+          // Special handling for placeholder lyricists to ensure they are listed correctly
           if (song.genre === 'Placeholder' && song.lyricist) {
               const cleanedPlaceholderLyricist = cleanDisplayString(song.lyricist);
               if (cleanedPlaceholderLyricist) valuesSet.add(cleanedPlaceholderLyricist);
-              return;
+              return; // Skip further processing for this placeholder song's lyricist
           }
           valueToProcess = song.lyricist;
       }
 
+      // Skip non-lyricist fields for placeholder songs
       if (song.genre === 'Placeholder' && conceptualFieldName !== 'lyricist') return;
 
       if (valueToProcess) {
           let finalItemsForSet: string[] = [];
 
           if (splitCombined && conceptualFieldName === 'artist' && typeof valueToProcess === 'string') {
+              // Split combined artist strings by common delimiters
               finalItemsForSet = valueToProcess.split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
-                  .map(part => cleanDisplayString(part.trim()))
-                  .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0);
+                  .map(part => cleanDisplayString(part.trim())) // Clean each part
+                  .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0); // Filter out empty/null parts
           } else if (typeof valueToProcess === 'string') {
-              const cleanedItem = cleanDisplayString(valueToProcess.trim());
+              const cleanedItem = cleanDisplayString(valueToProcess.trim()); // Clean single string value
               if (cleanedItem) finalItemsForSet.push(cleanedItem);
-          } else if (Array.isArray(valueToProcess)) {
+          } else if (Array.isArray(valueToProcess)) { // If valueToProcess is already an array (though not expected from current Song type)
              finalItemsForSet = valueToProcess
                  .map(item => cleanDisplayString(item.trim()))
                  .filter((cleanedItem): cleanedItem is string => !!cleanedItem && cleanedItem.length > 0);
           }
 
+          // Add processed items to the set, normalizing "various artists" type names
           finalItemsForSet.forEach(item => {
-              if (item.toLowerCase().includes('various') || item.includes('বিভিন্ন') || item.includes('বভিন্ন')) {
-                  valuesSet.add('বিভিন্ন শিল্পী');
+              if (item.toLowerCase().includes('various') || item.includes('বিভিন্ন') || item.includes('বভিন্ন') ) {
+                  valuesSet.add('বিভিন্ন শিল্পী'); // Standardize to 'বিভিন্ন শিল্পী'
               } else {
                   valuesSet.add(item);
               }
@@ -900,9 +978,10 @@ async function getUniqueFieldValues(
       }
     });
 
+    // Convert set to array, filter out any remaining empty strings, and sort
     return Array.from(valuesSet)
       .filter(val => val && val.trim() !== '')
-      .sort((a, b) => a.localeCompare(b, 'bn'));
+      .sort((a, b) => a.localeCompare(b, 'bn')); // Sort alphabetically in Bengali
 
   } catch (error: any) {
     console.error(`Mock: Error fetching unique field values for ${conceptualFieldName}:`, error);
@@ -912,16 +991,17 @@ async function getUniqueFieldValues(
 
 
 export async function getAllArtists(): Promise<string[]> {
-    const artists = await getUniqueFieldValues('artist', true);
+    const artists = await getUniqueFieldValues('artist', true); // true to split combined artists
+    // Define a priority order for specific artists to appear at the top
     const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'ভূপেন হাজারিকা', 'বিভিন্ন শিল্পী'];
     return artists.sort((a, b) => {
         const aPriority = priorityOrder.indexOf(a);
         const bPriority = priorityOrder.indexOf(b);
 
-        if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority;
-        if (aPriority !== -1) return -1;
-        if (bPriority !== -1) return 1;
-        return a.localeCompare(b, 'bn');
+        if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority; // Both are priority artists
+        if (aPriority !== -1) return -1; // 'a' is priority, 'b' is not
+        if (bPriority !== -1) return 1;  // 'b' is priority, 'a' is not
+        return a.localeCompare(b, 'bn'); // Default alphabetical sort for non-priority artists
     });
 }
 
@@ -950,10 +1030,10 @@ export async function getPaginatedSongs(page: number, limitPerPage: number): Pro
     const end = start + limitPerPage;
     const nonPlaceholderSongs = mockSongs.filter(song => song.genre !== 'Placeholder');
     if (start >= nonPlaceholderSongs.length) {
-        return { songs: [], nextPageCursor: null };
+        return { songs: [], nextPageCursor: null }; // Return empty if page is out of bounds
     }
     const songs = nonPlaceholderSongs.slice(start, Math.min(end, nonPlaceholderSongs.length));
-    return { songs, nextPageCursor: null };
+    return { songs, nextPageCursor: null }; // nextPageCursor is null for mock pagination
 }
 
 
@@ -962,8 +1042,8 @@ export async function getTotalSongCount(): Promise<number> {
 }
 
 
-console.log("Using MOCK bangla-song-database.ts loaded.");
-console.log(`Final mockSongs count after placeholder check: ${mockSongs.length}`);
+// console.log("Using MOCK bangla-song-database.ts loaded.");
+// console.log(`Final mockSongs count after placeholder check: ${mockSongs.length}`);
 
 
 // This function is for a real database, not used with mock data.

@@ -1,14 +1,13 @@
 
-// src/app/song/[slug]/page.tsx
 'use client';
 
 import * as React from 'react';
-import { useParams } from 'next/navigation';
+import { useParams } from 'next/navigation'; // Corrected import
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Info } from 'lucide-react';
-import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
+import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
@@ -20,12 +19,15 @@ interface SongPageProps {
   };
 }
 
+// Note: generateMetadata should be in a separate metadata.ts file if this component is 'use client'
+// For simplicity with mock data, if this page becomes a server component, metadata can be here.
+// However, with 'use client', generateMetadata must be moved.
+// Assuming metadata.ts handles metadata generation.
+
 export default function SongPage({ params: paramsFromProps }: SongPageProps) {
   const paramsFromHook = useParams();
-  // Ensure rawSlugFromParams is treated as potentially undefined or an array
   const rawSlugParam = paramsFromHook?.slug || paramsFromProps?.slug;
   const rawSlugFromParams = Array.isArray(rawSlugParam) ? rawSlugParam[0] : rawSlugParam;
-
 
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -36,15 +38,14 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
     let slugToUse: string | undefined = rawSlugFromParams;
 
     if (!slugToUse || typeof slugToUse !== 'string' || slugToUse.trim() === '') {
-      console.error("Client-side: No valid slug provided in params.", rawSlugFromParams);
+      // console.error("Client-side: No valid slug provided in params.", rawSlugFromParams); // Reduced logging
       setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
       setLoading(false);
-      setSong(null); // Explicitly set to null
+      setSong(null);
       return;
     }
     
-    // Slug from Next.js router (params) is already URI-decoded.
-    const finalSlug = slugToUse.trim();
+    const finalSlug = slugToUse.trim(); // Slug from Next.js router is already URI-decoded.
     setDecodedSlug(finalSlug);
 
   }, [rawSlugFromParams]);
@@ -52,9 +53,6 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
 
   React.useEffect(() => {
     if (!decodedSlug) {
-      // This condition handles the case where rawSlugFromParams was invalid from the start
-      // and decodedSlug was never set, or explicitly set to null.
-      // Only set loading to false if we expected a slug but it became null/invalid.
       if (rawSlugFromParams) { 
          setLoading(false);
       }
@@ -67,14 +65,14 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
       try {
         const fetchedSong = await getSongBySlug(slugToFetch);
         if (!fetchedSong) {
-          console.error(`Client-side: Song not found for slug: ${slugToFetch}`);
+          // console.error(`Client-side: Song not found for decoded slug: ${slugToFetch}`); // Reduced logging
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
           setSong(null);
         } else {
           setSong(fetchedSong);
         }
       } catch (error: any) {
-        console.error(`Client-side: Error fetching song for slug ${slugToFetch}:`, error);
+        // console.error(`Client-side: Error fetching song for slug ${slugToFetch}:`, error); // Reduced logging
         setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
         setSong(null);
       } finally {
@@ -84,7 +82,7 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
 
     loadSong(decodedSlug);
 
-  }, [decodedSlug, rawSlugFromParams]); // rawSlugFromParams added to dependencies
+  }, [decodedSlug, rawSlugFromParams]);
 
 
   if (loading) {
@@ -177,3 +175,5 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
     </div>
   );
 }
+// export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered
+// Moved generateMetadata to src/app/song/[slug]/metadata.ts

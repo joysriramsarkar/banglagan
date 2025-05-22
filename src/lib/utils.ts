@@ -11,7 +11,6 @@ export function cn(...inputs: ClassValue[]) {
  * Cleans a string by removing specific problematic characters, multiple spaces,
  * problematic punctuation, and standardizes hyphens for use in slugs or internal keys.
  * Preserves Unicode letters, marks, numbers, and ensures single hyphens as separators.
- * Converts to lowercase.
  * @param str The string to clean.
  * @returns The cleaned string, suitable for slugs, or undefined if input is invalid/empty.
  */
@@ -22,12 +21,12 @@ export function cleanString(str: string | undefined | null): string | undefined 
   let cleaned = str
     .normalize('NFC') // Normalize Unicode to composed form
     .replace(/\u00AD/g, '') // Remove soft hyphens
-    .replace(/[\u200B-\u200D\uFEFF]/g, '') // Remove zero-width spaces and similar characters
-    .toLowerCase(); // Convert to lowercase
+    .replace(/[\u200B-\u200D\uFEFF]/g, ''); // Remove zero-width spaces and similar characters
+    // .toLowerCase(); // Removed for Bengali, as it can cause issues with some characters
 
   // Keep Bengali letters (\u0980-\u09FF), Latin letters (a-z), digits (0-9), spaces, and hyphens.
   // Replace everything else with a space.
-  cleaned = cleaned.replace(/[^a-z0-9\u0980-\u09ff\s-]/g, ' ').trim();
+  cleaned = cleaned.replace(/[^a-z0-9\u0980-\u09FF\s-]/g, ' ').trim();
 
   // Consolidate spaces and hyphens:
   // 1. Replace sequences of one or more whitespace characters with a single hyphen.
@@ -209,4 +208,3 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
-

@@ -305,7 +305,10 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'আমার নয়ন ভরা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'আমার নয়ন ভরা জল' },
   { title: 'দুই নয়নে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'দুই নয়নে দেখি যাহা' },
   { title: 'খুলে দে মা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'খুলে দে মা শিকলের বন্ধন' },
-  { title: 'ভোর হয়নি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই' },
+  { title: 'যাবে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'যাবে? যাও, যাত্রা শুভ হোক' },
+  { title: 'সোনার অঙ্গ', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'সোনার অঙ্গ' },
+  { title: 'মেঘবালিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2016, lyrics: 'মেঘবালিকা ও মেঘবালিকা, কত স্বপ্নকথা ছিল তোমার সাথে' },
+  { title: 'ভোর হয়নি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই'},
   { title: 'রাজা যায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'রাজা যায় রাজা আসে'},
   { title: 'আস্থা হারোনোর দিন', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'আস্থা হারোনোর দিন'},
   { title: 'রাত্রি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'রাত্রি ঘনঘোর, জানি বহুদূর প্রিয় সেই ভোর' },
@@ -313,9 +316,6 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'স্বপ্ন দেখার চোখ', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'স্বপ্ন দেখার দিন' },
   { title: 'ঋণখেলাপি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'ঋণখেলাপি ধমক দিলেন' },
   { title: 'মনের খবর', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2014, lyrics: 'মনের খবর রাখি না, মন লুকালো মনের ভিতর' },
-  { title: 'যাবে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'যাবে? যাও, যাত্রা শুভ হোক' },
-  { title: 'সোনার অঙ্গ', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'সোনার অঙ্গ' },
-  { title: 'মেঘবালিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2016, lyrics: 'মেঘবালিকা ও মেঘবালিকা, কত স্বপ্নকথা ছিল তোমার সাথে' },
   { title: 'এক জীবন', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2005, lyrics: 'এক জীবন হেঁটে গেছি, দু’জীবন বসে আছি, তিন জীবন ঘুমিয়ে রব কবরে বন্ধু। তুমি কি আমার হবে?' },
   { title: 'গঙ্গার জলে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2008, lyrics: 'গঙ্গার জলে গঙ্গাজল থাকে না, মানুষের মনে কি মানুষ থাকে? প্রেম তো আগুনে পোড়ে না, পানি তো মেঘেতে ওড়ে না, কেন এ জীবন ভরে এত ফাঁকি?' },
   { title: 'আমার পরাণ যাহা চায় (বাবু)', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', genre: 'রবীন্দ্রসঙ্গীত', releaseYear: 2010, lyrics: 'আমার পরাণ যাহা চায়, তুমি তাই, তুমি তাই গো। তোমা ছাড়া আর এ জগতে মোর কেহ নাই, কিছু নাই গো।' },
@@ -585,7 +585,7 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
   { title: 'চলচ্চিত্রের গান (কৃষ্ণেন্দু মুখোপাধ্যায়)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কৃষ্ণেন্দু মুখোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1990, lyrics: 'চলচ্চিত্রের গান।', genre: 'আধুনিক' },
   { title: 'আধুনিক গান (অভিজিৎ বসু)', artist: 'অভিজিৎ বসু', lyricist: 'অভিজিৎ বসু', composer: 'অভিজিৎ বসু', releaseYear: 1985, lyrics: 'আধুনিক গান।', genre: 'আধুনিক' },
   { title: 'আধুনিক গান (শাহীন সামাদ)', artist: 'শাহীন সামাদ', lyricist: 'শাহীন সামাদ', composer: 'শাহীন সামাদ', releaseYear: 1980, lyrics: 'আধুনিক গান।', genre: 'আধুনিক' },
-  { title: 'পপ গান (ইমরান মাহমুদ)', artist: 'ইমরান মাহমুদউল্লাহ', lyricist: 'ইমরان মাহমুদউল্লাহ', composer: 'ইমরান মাহমুদউল্লাহ', releaseYear: 2015, lyrics: 'পপ গান।', genre: 'পপ' },
+  { title: 'পপ গান (ইমরান মাহমুদ)', artist: 'ইমরান মাহমুদউল্লাহ', lyricist: 'ইমরান মাহমুদউল্লাহ', composer: 'ইমরান মাহমুদউল্লাহ', releaseYear: 2015, lyrics: 'পপ গান।', genre: 'পপ' },
   { title: 'চলচ্চিত্রের গান (তানজিদ তুহিন)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানজিদ তুহিন', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'চলচ্চিত্রের গান।', genre: 'আধুনিক' },
   { title: 'লোকসংগীত (নাজমুল হাসান)', artist: 'বিভিন্ন শিল্পী', lyricist: 'নাজমুল হাসান', composer: 'নাজমুল হাসান', releaseYear: 1990, lyrics: 'লোকসংগীত।', genre: 'লোকগীতি' },
   { title: 'আর্টসেলের গান (ফাহিম হোসেন)', artist: 'আর্টসেল', lyricist: 'ফাহিম হোসেন চৌধুরী', composer: 'আর্টসেল', releaseYear: 2002, lyrics: 'আর্টসেলের গান।', genre: 'ব্যান্ড সঙ্গীত' },
@@ -680,9 +680,6 @@ rawMockSongsData.forEach(song => {
 
     if (!uniqueSongsMap.has(uniqueKey)) {
         uniqueSongsMap.set(uniqueKey, song);
-    } else {
-        // Optional: Log if a duplicate is found based on title and lyricist
-        // console.log(`Duplicate found and skipped: Title: ${song.title}, Lyricist: ${song.lyricist}`);
     }
 });
 
@@ -694,7 +691,7 @@ const mockSongs: Song[] = mockSongsData.map((songItem, index) => {
     const id = (index + 1).toString();
 
     const displayTitle = cleanDisplayString(songItem.title) || 'শিরোনামহীন';
-    const displayArtist = cleanDisplayString(songItem.artist) || 'অজানা শিল্পী';
+    const displayArtist = cleanDisplayString(songItem.artist) || 'বিভিন্ন শিল্পী'; // Default to "বিভিন্ন শিল্পী"
     const displayLyricist = songItem.lyricist ? cleanDisplayString(songItem.lyricist) : 'অজানা গীতিকার';
     const displayComposer = songItem.composer ? cleanDisplayString(songItem.composer) : 'অজানা সুরকার';
 
@@ -707,7 +704,7 @@ const mockSongs: Song[] = mockSongsData.map((songItem, index) => {
         slug: slug,
         title: displayTitle,
         artist: displayArtist,
-        originalArtist: songItem.artist,
+        originalArtist: songItem.artist, // Keep original for broader search if needed
         lyricist: displayLyricist,
         originalLyricist: songItem.lyricist,
         composer: displayComposer,
@@ -757,8 +754,8 @@ function addPlaceholderSongsForMissingLyricists() {
       'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন',
       'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
       'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
-      'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
-      'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল'
+      'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'কমলাকান্ত ভট্টাচার্য', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
+      'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু'
     ];
 
 
@@ -817,11 +814,9 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
     console.warn('Mock: getSongBySlug called with invalid or empty slug.');
     return undefined;
   }
-  // Slug from URL is already decoded by Next.js routing.
-  const trimmedSlugToSearch = slug.trim();
+  const trimmedSlugToSearch = slug.trim(); // Assumes slug is already decoded by Next.js router
 
   try {
-    // Direct comparison first, as `s.slug` should be canonical
     const song = mockSongs.find(s => s.slug === trimmedSlugToSearch);
 
     if (song && song.genre !== 'Placeholder') {
@@ -830,18 +825,13 @@ export async function getSongBySlug(slug: string): Promise<Song | undefined> {
        console.warn(`Mock: Matched a placeholder song for slug: "${trimmedSlugToSearch}". Placeholders are not valid song entries.`);
        return undefined;
     } else {
-      // Fallback: clean the incoming slug again, just in case.
-      // This helps if the incoming slug from URL isn't perfectly matching the `createSlug` output used for `s.slug`.
-      const reCleanedSearchSlug = cleanString(trimmedSlugToSearch); // Use the same cleaning as `createSlug`
-      const songByReCleanedSlug = mockSongs.find(s => s.slug === reCleanedSearchSlug);
-
-      if (songByReCleanedSlug && songByReCleanedSlug.genre !== 'Placeholder') {
-        // console.log(`Mock: Song found by re-cleaned slug match: "${reCleanedSearchSlug}"`);
-        return songByReCleanedSlug;
-      } else {
-        // console.error(`Mock: Song still not found for slug: "${trimmedSlugToSearch}" (re-cleaned: "${reCleanedSearchSlug || 'N/A'}").`);
-        return undefined;
-      }
+      // Detailed logging if not found
+      console.error(`Mock: Song not found by direct slug match: "${trimmedSlugToSearch}".`);
+      // For debugging, list a few slugs from the DB to compare format
+      // if (mockSongs.length > 0) {
+      //   console.log("Sample slugs from DB:", mockSongs.slice(0, 5).map(s => s.slug));
+      // }
+      return undefined;
     }
   } catch (error: any) {
      console.error(`Mock: Error fetching song by slug "${trimmedSlugToSearch}":`, error);
@@ -864,14 +854,12 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     if (song.genre === 'Placeholder') return false;
 
     const songTitleLower = song.title?.toLowerCase() || "";
-    const songArtistLower = song.artist?.toLowerCase() || ""; // Cleaned display artist
-    const songLyricistLower = song.lyricist?.toLowerCase() || ""; // Cleaned display lyricist
-    const songComposerLower = song.composer?.toLowerCase() || ""; // Cleaned display composer
+    const songArtistLower = song.artist?.toLowerCase() || ""; 
+    const songLyricistLower = song.lyricist?.toLowerCase() || "";
+    const songComposerLower = song.composer?.toLowerCase() || "";
     const songGenreLower = song.genre?.toLowerCase() || "";
     const songLyricsLower = song.lyrics?.toLowerCase() || "";
 
-
-    // Check against original, potentially comma-separated artist/lyricist/composer strings for broader matching
     const originalArtistParts = (song.originalArtist || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
         .map(a => cleanDisplayString(a.trim())?.toLowerCase())
         .filter((cleanedPart): cleanedPart is string => !!cleanedPart);
@@ -900,9 +888,9 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
   const rankedSongs = filteredSongs.map(song => {
     let matchCount = 0;
     const songTitleLower = song.title?.toLowerCase() || "";
-    const songArtistLower = song.artist?.toLowerCase() || ""; // Cleaned display artist
-    const songLyricistLower = song.lyricist?.toLowerCase() || ""; // Cleaned display lyricist
-    const songComposerLower = song.composer?.toLowerCase() || ""; // Cleaned display composer
+    const songArtistLower = song.artist?.toLowerCase() || ""; 
+    const songLyricistLower = song.lyricist?.toLowerCase() || ""; 
+    const songComposerLower = song.composer?.toLowerCase() || ""; 
 
     const originalArtistLower = song.originalArtist?.toLowerCase() || "";
     const originalLyricistLower = song.originalLyricist?.toLowerCase() || "";
@@ -923,18 +911,17 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     queryTokens.forEach(token => {
       if (songTitleLower.includes(token)) matchCount += 5;
       
-      // Match in parts of original artist/lyricist/composer string for better recall
       const artistParts = (originalArtistLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
       if (artistParts.some(part => part.includes(token))) matchCount += 3;
-      else if (songArtistLower.includes(token)) matchCount +=2; // Match in cleaned single artist string
+      else if (songArtistLower.includes(token)) matchCount +=2;
 
       const lyricistParts = (originalLyricistLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
       if (lyricistParts.some(part => part.includes(token))) matchCount += 2;
-      else if (songLyricistLower.includes(token)) matchCount +=1; // Match in cleaned single lyricist string
+      else if (songLyricistLower.includes(token)) matchCount +=1; 
       
       const composerParts = (originalComposerLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
       if (composerParts.some(part => part.includes(token))) matchCount += 1;
-      else if (songComposerLower.includes(token)) matchCount +=1; // Match in cleaned single composer string
+      else if (songComposerLower.includes(token)) matchCount +=1; 
     });
 
 
@@ -1020,20 +1007,20 @@ async function getUniqueFieldValues(
 
       if (conceptualFieldName === 'artist') {
           originalValueToProcess = song.originalArtist;
-          valueToProcess = song.artist; // This is the cleaned display value
+          valueToProcess = song.artist; 
       } else if (conceptualFieldName === 'genre') {
           valueToProcess = song.genre;
       } else if (conceptualFieldName === 'lyricist') {
           originalValueToProcess = song.originalLyricist;
-          valueToProcess = song.lyricist; // This is the cleaned display value
-          if (song.genre === 'Placeholder' && valueToProcess) { // Use displayLyricist for placeholders
+          valueToProcess = song.lyricist; 
+          if (song.genre === 'Placeholder' && valueToProcess) { 
               const cleanedPlaceholderItem = cleanDisplayString(valueToProcess);
               if (cleanedPlaceholderItem) valuesSet.add(cleanedPlaceholderItem);
               return;
           }
       } else if (conceptualFieldName === 'composer') {
           originalValueToProcess = song.originalComposer;
-          valueToProcess = song.composer; // This is the cleaned display value
+          valueToProcess = song.composer; 
           if (song.genre === 'Placeholder' && valueToProcess) {
             const cleanedPlaceholderItem = cleanDisplayString(valueToProcess);
             if (cleanedPlaceholderItem) valuesSet.add(cleanedPlaceholderItem);
@@ -1052,10 +1039,10 @@ async function getUniqueFieldValues(
           if (splitCombined && (conceptualFieldName === 'artist' || conceptualFieldName === 'lyricist' || conceptualFieldName === 'composer') ) {
               finalItemsForSet = sourceForSplitting.split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
                   .map(part => cleanDisplayString(part.trim()))
-                  .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0);
-          } else if (typeof valueToProcess === 'string'){ // Use cleaned display value if not splitting
+                  .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0 && cleanedPart !== 'বিভিন্ন শিল্পী' && cleanedPart !== 'অজানা শিল্পী' && cleanedPart !== 'অজানা গীতিকার' && cleanedPart !== 'অজানা সুরকার' && cleanedPart !== 'সংগৃহীত' && cleanedPart !== 'প্রচলিত' );
+          } else if (typeof valueToProcess === 'string'){ 
               const cleanedItem = cleanDisplayString(valueToProcess.trim());
-              if (cleanedItem) finalItemsForSet.push(cleanedItem);
+              if (cleanedItem && cleanedItem !== 'বিভিন্ন শিল্পী' && cleanedItem !== 'অজানা শিল্পী' && cleanedItem !== 'অজানা গীতিকার' && cleanedItem !== 'অজানা সুরকার' && cleanedItem !== 'সংগৃহীত' && cleanedItem !== 'প্রচলিত') finalItemsForSet.push(cleanedItem);
           }
           
           finalItemsForSet.forEach(item => {
@@ -1065,7 +1052,13 @@ async function getUniqueFieldValues(
                   if (conceptualFieldName === 'lyricist') valuesSet.add('অজানা গীতিকার');
                   else if (conceptualFieldName === 'composer') valuesSet.add('অজানা সুরকার');
                   else if (conceptualFieldName === 'genre') valuesSet.add('অজানা ধরণ');
-              } else if (item.toLowerCase() === 'placeholder' && conceptualFieldName === 'genre') {
+              } else if (item.toLowerCase() === 'collected' || item.includes('সংগৃহীত')) {
+                  if (conceptualFieldName === 'lyricist') valuesSet.add('সংগৃহীত');
+                  else if (conceptualFieldName === 'composer') valuesSet.add('সংগৃহীত');
+              } else if (item.toLowerCase() === 'traditional' || item.includes('প্রচলিত')) {
+                 if (conceptualFieldName === 'composer') valuesSet.add('প্রচলিত');
+              }
+              else if (item.toLowerCase() === 'placeholder' && conceptualFieldName === 'genre') {
                   // Do not add 'Placeholder' genre to the list
               }
               else {
@@ -1075,6 +1068,16 @@ async function getUniqueFieldValues(
       }
     });
     
+    // Add specific default/generic values if they weren't added through songs
+    if (conceptualFieldName === 'artist' && !valuesSet.has('বিভিন্ন শিল্পী')) valuesSet.add('বিভিন্ন শিল্পী');
+    if (conceptualFieldName === 'lyricist' && !valuesSet.has('অজানা গীতিকার')) valuesSet.add('অজানা গীতিকার');
+    if (conceptualFieldName === 'lyricist' && !valuesSet.has('সংগৃহীত')) valuesSet.add('সংগৃহীত');
+    if (conceptualFieldName === 'composer' && !valuesSet.has('অজানা সুরকার')) valuesSet.add('অজানা সুরকার');
+    if (conceptualFieldName === 'composer' && !valuesSet.has('সংগৃহীত')) valuesSet.add('সংগৃহীত');
+    if (conceptualFieldName === 'composer' && !valuesSet.has('প্রচলিত')) valuesSet.add('প্রচলিত');
+    if (conceptualFieldName === 'genre' && !valuesSet.has('অজানা ধরণ')) valuesSet.add('অজানা ধরণ');
+
+
     return Array.from(valuesSet)
       .filter(val => val && val.trim() !== '' && val.toLowerCase() !== 'placeholder')
       .sort((a, b) => a.localeCompare(b, 'bn'));

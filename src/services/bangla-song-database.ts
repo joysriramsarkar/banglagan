@@ -293,7 +293,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   {
     id: '116',
     title: 'খাঁচার ভিতর অচিন পাখি',
-    artist: 'বিভিন্ন শিল্পী', // Changed from 'বিভিন্ন বাউল' to 'বিভিন্ন শিল্পী'
+    artist: 'বিভিন্ন শিল্পী', 
     lyricist: 'লালন ফকির',
     composer: 'লালন ফকির',
     genre: 'বাউল',
@@ -689,8 +689,9 @@ rawMockSongsData.forEach(song => {
     const rawLyricist = song.lyricist || 'অজানা গীতিকার'; // Default to 'অজানা গীতিকার' for consistent key generation
 
     // For deduplication key, always use cleanStringForSlugProcessing (which is an alias for cleanString)
-    const cleanedTitleForUniqueKey = cleanStringForSlugProcessing(rawTitle, 'untitled');
-    const cleanedLyricistForUniqueKey = cleanStringForSlugProcessing(rawLyricist, 'অজানা-গীতিকার');
+    // And ensure lowercase for consistent key generation
+    const cleanedTitleForUniqueKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
+    const cleanedLyricistForUniqueKey = cleanStringForSlugProcessing(rawLyricist, 'অজানা-গীতিকার').toLowerCase();
 
     const uniqueKey = `${cleanedTitleForUniqueKey}-lyricist:${cleanedLyricistForUniqueKey}`;
 
@@ -712,7 +713,7 @@ const mockSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, 
         rawSongData.title, // Use original title from raw data
         rawSongData.artist, // Use original artist from raw data
         id
-    );
+    ).toLowerCase(); // Ensure slug is lowercase
 
     const displayTitle = cleanDisplayString(rawSongData.title) || 'শিরোনামহীন';
     let displayArtist = cleanDisplayString(rawSongData.artist) || 'বিভিন্ন শিল্পী';
@@ -733,7 +734,7 @@ const mockSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, 
         originalGenre: rawSongData.genre,
 
         id: id,
-        slug: slug, // This slug is now generated from the most original string values
+        slug: slug, // This slug is now generated from the most original string values and lowercased
         title: displayTitle,
         artist: displayArtist,
         lyricist: displayLyricist,
@@ -789,7 +790,7 @@ function addPlaceholderSongsForMissingLyricists() {
 
 
     const existingLyricistSlugs = new Set(
-        mockSongs.map(song => song.originalLyricist ? cleanStringForSlugProcessing(song.originalLyricist, 'unknown') : 'unknown').filter(Boolean) as string[]
+        mockSongs.map(song => song.originalLyricist ? cleanStringForSlugProcessing(song.originalLyricist, 'unknown').toLowerCase() : 'unknown').filter(Boolean) as string[]
     );
     let placeholderIdCounter = mockSongs.length + 10000; // Start placeholder IDs from a high number
 
@@ -797,7 +798,7 @@ function addPlaceholderSongsForMissingLyricists() {
         const displayLyricist = cleanDisplayString(lyricistName);
         if (!displayLyricist) return;
 
-        const lyricistSlugForCheck = cleanStringForSlugProcessing(lyricistName, 'unknown');
+        const lyricistSlugForCheck = cleanStringForSlugProcessing(lyricistName, 'unknown').toLowerCase();
         if (!lyricistSlugForCheck || lyricistSlugForCheck === 'unknown') return;
 
         if (!existingLyricistSlugs.has(lyricistSlugForCheck)) {
@@ -806,7 +807,7 @@ function addPlaceholderSongsForMissingLyricists() {
             const placeholderArtist = 'বিভিন্ন শিল্পী';
             const placeholderComposer = 'অজানা সুরকার';
 
-            const placeholderSlug = createSlug(placeholderTitle, placeholderArtist, placeholderId);
+            const placeholderSlug = createSlug(placeholderTitle, placeholderArtist, placeholderId).toLowerCase();
 
             const placeholderSong: Song = {
                 id: placeholderId,
@@ -842,22 +843,22 @@ export async function getAllSongs(): Promise<Song[]> {
 
 export async function getSongBySlug(slugFromUrl: string): Promise<Song | undefined> {
   if (!slugFromUrl || typeof slugFromUrl !== 'string' || !slugFromUrl.trim()) {
-    // console.error("getSongBySlug: Received invalid or empty slugFromUrl:", slugFromUrl);
     return undefined;
   }
+  // IMPORTANT: The slugFromUrl is already decoded by Next.js params.
+  // We just need to ensure it's in the same case and trimmed.
+  const slugToSearch = slugFromUrl.trim().toLowerCase();
 
-  // The slug from URL (params.slug) is already URI-decoded by Next.js.
-  // We just need to ensure it's lowercased for comparison, as our stored slugs are lowercased by cleanString.
-  const trimmedLowerSlugFromUrl = slugFromUrl.trim().toLowerCase();
-  
-  const song = mockSongs.find(s => s.slug.toLowerCase() === trimmedLowerSlugFromUrl);
+  const song = mockSongs.find(s => {
+    // Ensure s.slug is also consistently lowercased for comparison,
+    // although createSlug should already ensure this when mockSongs are generated.
+    return s.slug.toLowerCase() === slugToSearch;
+  });
 
   if (!song) {
-    // console.error(`getSongBySlug: Song NOT FOUND for URL slug: "${slugFromUrl}", Processed slug: "${trimmedLowerSlugFromUrl}"`);
-    // console.error(`First few stored slugs: ${mockSongs.slice(0,5).map(s => s.slug).join(', ')}`);
     return undefined;
   }
-   // Do not return placeholder songs via direct slug lookup, even if they technically have a slug
+  // Do not return placeholder songs via direct slug lookup
   if (song.genre === 'Placeholder') return undefined;
   return song;
 }
@@ -926,13 +927,9 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     if (cleanStringForSlugProcessing(song.originalGenre, "").toLowerCase().includes(querySlugLower)) matchCount += 1;
     
     // Additionally, consider matches in display fields if not already heavily weighted
-    // This prevents double counting if original and display are very similar but boosts if they differ yet still match
-    if ((song.title?.toLowerCase() || "").includes(queryLower) && matchCount < 10) matchCount += 8; // Slightly less than original title match
+    if ((song.title?.toLowerCase() || "").includes(queryLower) && matchCount < 10) matchCount += 8; 
     if ((song.artist?.toLowerCase() || "").includes(queryLower) && matchCount < 5) matchCount += 4;
     if ((song.lyricist?.toLowerCase() || "").includes(queryLower) && matchCount < 3) matchCount += 2;
-    // Composer and Genre display names are less likely to be very different from original if cleaned properly
-    // so we can omit separate display matching for them if original already matched, or give lower weight.
-
 
     return { ...song, matchCount };
   }).sort((a, b) => (b.matchCount || 0) - (a.matchCount || 0));
@@ -954,7 +951,6 @@ export async function getPopularSongs(): Promise<Song[]> {
 
   try {
     popular = popularSongDefinitions.map(def => {
-        // Match against the original, raw values for better accuracy
         const searchTitleRaw = def.title;
         const searchArtistRaw = def.artist;
         const searchLyricistRaw = def.lyricist;
@@ -977,7 +973,7 @@ export async function getPopularSongs(): Promise<Song[]> {
 
         const fallbackSongs = [...mockSongs]
           .filter(s => s.releaseYear && s.genre !== 'Placeholder' && s.slug && !existingSlugs.has(s.slug))
-          .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)); // Sort by release year for some relevance
+          .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)); 
 
         for (const song of fallbackSongs) {
             if (addedCount >= needed) break;
@@ -995,9 +991,9 @@ export async function getPopularSongs(): Promise<Song[]> {
 export async function getNewSongs(): Promise<Song[]> {
     try {
       const sortedSongs = [...mockSongs]
-        .filter(s => s.releaseYear && s.genre !== 'Placeholder') // Ensure releaseYear exists and not placeholder
-        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)) // Sort by release year, descending
-        .slice(0, 8); // Get top 8
+        .filter(s => s.releaseYear && s.genre !== 'Placeholder') 
+        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)) 
+        .slice(0, 8); 
       return sortedSongs;
     } catch (error: any) {
       return [];
@@ -1012,7 +1008,7 @@ async function getUniqueFieldValues(
   try {
     const valuesSet = new Set<string>();
     mockSongs.forEach(song => {
-      if (song.genre === 'Placeholder' && conceptualFieldName !== 'lyricist') { // Allow placeholders for lyricists to ensure all listed lyricists appear
+      if (song.genre === 'Placeholder' && conceptualFieldName !== 'lyricist') { 
           return;
       }
       
@@ -1020,7 +1016,7 @@ async function getUniqueFieldValues(
 
       switch (conceptualFieldName) {
         case 'artist': originalSourceValue = song.originalArtist; break;
-        case 'genre': originalSourceValue = song.originalGenre; break; // Use original for consistency
+        case 'genre': originalSourceValue = song.originalGenre; break; 
         case 'lyricist': originalSourceValue = song.originalLyricist; break;
         case 'composer': originalSourceValue = song.originalComposer; break;
       }
@@ -1043,7 +1039,6 @@ async function getUniqueFieldValues(
 
       valuesToProcess.forEach(item => {
           const itemLower = item.toLowerCase();
-          // Consolidate generic names after splitting and cleaning
           if (itemLower === 'বিভিন্ন শিল্পী' || itemLower === 'various artists' || itemLower === 'various') valuesSet.add('বিভিন্ন শিল্পী');
           else if (itemLower === 'অজানা শিল্পী' || itemLower === 'unknown artist') valuesSet.add('অজানা শিল্পী');
           else if (itemLower === 'অজানা গীতিকার' || itemLower === 'unknown lyricist') valuesSet.add('অজানা গীতিকার');
@@ -1052,12 +1047,11 @@ async function getUniqueFieldValues(
           else if (itemLower === 'সংগৃহীত' || itemLower === 'collected') valuesSet.add('সংগৃহীত');
           else if (itemLower === 'প্রচলিত' || itemLower === 'traditional') valuesSet.add('প্রচলিত');
           else {
-              valuesSet.add(item); // Add the cleaned, individual item
+              valuesSet.add(item); 
           }
       });
     });
     
-    // Ensure 'নীরেন্দ্রনাথ চক্রবর্তী' is preferred if both variations exist due to data inconsistency
     if (valuesSet.has('নিরেন্দ্রনাথ চক্রবর্তী') && valuesSet.has('নীরেন্দ্রনাথ চক্রবর্তী')) {
         valuesSet.delete('নিরেন্দ্রনাথ চক্রবর্তী');
     }
@@ -1066,12 +1060,11 @@ async function getUniqueFieldValues(
     return Array.from(valuesSet)
       .filter(val => val && val.trim() !== '' && val.toLowerCase() !== 'placeholder' && val.toLowerCase() !== 'undefined') 
       .sort((a, b) => {
-          // Prioritize Bengali names, then sort alphabetically
           const isABengali = /[\u0980-\u09FF]/.test(a);
           const isBBengali = /[\u0980-\u09FF]/.test(b);
           if (isABengali && !isBBengali) return -1;
           if (!isABengali && isBBengali) return 1;
-          return a.localeCompare(b, 'bn'); // Use Bengali locale for sorting
+          return a.localeCompare(b, 'bn'); 
       });
 
   } catch (error: any) {
@@ -1081,7 +1074,7 @@ async function getUniqueFieldValues(
 
 
 export async function getAllArtists(): Promise<string[]> {
-    const artists = await getUniqueFieldValues('artist', true); // Split combined artists
+    const artists = await getUniqueFieldValues('artist', true); 
     const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'ভূপেন হাজারিকা', 'বিভিন্ন শিল্পী', 'অজানা শিল্পী'];
     return artists.sort((a, b) => {
         const aPriority = priorityOrder.indexOf(a);
@@ -1096,11 +1089,11 @@ export async function getAllArtists(): Promise<string[]> {
 
 
 export async function getAllGenres(): Promise<string[]> {
-  return getUniqueFieldValues('genre'); // Genres are usually not combined
+  return getUniqueFieldValues('genre'); 
 }
 
 export async function getAllLyricists(): Promise<string[]> {
-  const lyricists = await getUniqueFieldValues('lyricist', true); // Split combined lyricists
+  const lyricists = await getUniqueFieldValues('lyricist', true); 
   const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন', 'সংগৃহীত', 'অজানা গীতিকার'];
   return lyricists.sort((a, b) => {
     const aPriority = priorityOrder.indexOf(a);
@@ -1114,7 +1107,7 @@ export async function getAllLyricists(): Promise<string[]> {
 }
 
 export async function getAllComposers(): Promise<string[]> {
-  const composers = await getUniqueFieldValues('composer', true); // Split combined composers
+  const composers = await getUniqueFieldValues('composer', true); 
    const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'সলিল চৌধুরী', 'হেমন্ত মুখোপাধ্যায়', 'সংগৃহীত', 'প্রচলিত', 'অজানা সুরকার'];
    return composers.sort((a, b) => {
     const aPriority = priorityOrder.indexOf(a);
@@ -1147,11 +1140,6 @@ export async function getTotalSongCount(): Promise<number> {
 
 // This function is for a real database, not used with mock data.
 export async function seedDatabase() {
-  // console.log("Mock database: seedDatabase called, but no action is taken in mock mode.");
   return Promise.resolve();
 }
-
-// Final check to ensure mockSongs is correctly populated
-// console.log(`Final mockSongs count after placeholder check: ${mockSongs.length}`);
-// mockSongs.slice(0, 5).forEach(s => console.log(`Sample slug: ${s.slug}, Title: ${s.title}, Artist: ${s.artist}`));
 

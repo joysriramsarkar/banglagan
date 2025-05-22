@@ -7,31 +7,36 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Cleans a string for use in slugs (Simplified for debugging).
- * Converts to lowercase and replaces spaces with hyphens.
+ * Cleans a string for use in slugs or general processing.
+ * Converts to lowercase, normalizes, replaces spaces and problematic chars with hyphens.
  * @param str The string to clean.
  * @param defaultVal The default string to return if cleaning fails or input is invalid.
  * @returns The cleaned string, suitable for slugs, or the defaultVal.
  */
 export function cleanString(str: string | undefined | null, defaultVal: string = 'unknown'): string {
   if (!str || typeof str !== 'string' || !str.trim()) {
-    return defaultVal.toLowerCase();
+    return defaultVal.toLowerCase().replace(/\s+/g, '-').replace(/-+/g, '-');
   }
 
-  // Simplified: lowercase and replace spaces with hyphens. No character removal.
   let cleaned = str
-    .normalize('NFC') // Still good to normalize
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, '-'); // Replace one or more spaces with a single hyphen
+    .normalize('NFC') // Normalize Unicode
+    .toLowerCase()    // Convert to lowercase
+    .trim();
 
-  // Replace multiple hyphens with a single hyphen (e.g., if original had " - ")
+  // Replace common separators and some problematic characters with a single hyphen
+  cleaned = cleaned.replace(/[\s_,\.;!\?"'\(\)\[\]\{\}&*+%#@\^~\\\/<>]+/g, '-');
+
+  // Keep Bengali characters, English letters, numbers, and hyphens. Remove others.
+  // \u0980-\u09FF is the Unicode range for Bengali characters.
+  cleaned = cleaned.replace(/[^\u0980-\u09FFa-z0-9-]/g, '');
+
+  // Consolidate multiple hyphens into a single hyphen
   cleaned = cleaned.replace(/-+/g, '-');
 
-  // Remove leading/trailing hyphens that might result from previous replacements
+  // Remove leading or trailing hyphens
   cleaned = cleaned.replace(/^-+|-+$/g, '');
 
-  return cleaned === "" ? defaultVal.toLowerCase() : cleaned;
+  return cleaned || defaultVal.toLowerCase().replace(/\s+/g, '-').replace(/-+/g, '-');
 }
 
 
@@ -50,7 +55,7 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     let cleaned = str.normalize('NFC');
 
     cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF\u00AD]/g, ''); // Remove zero-width spaces and soft hyphens
-    cleaned = cleaned.replace(/\s+-\s+/g, ' '); // Hyphens surrounded by spaces become a single space
+    // cleaned = cleaned.replace(/\s+-\s+/g, ' '); // Hyphens surrounded by spaces become a single space - this might be too aggressive for some names
     cleaned = cleaned.replace(/\s*\([^)]*\)\s*$/, ''); // Remove trailing parenthetical notes like (Live), (Remix)
     cleaned = cleaned.trim().replace(/\s+/g, ' '); // Trim and normalize multiple spaces to one
 
@@ -75,16 +80,15 @@ export function cleanDisplayString(str: string | undefined | null): string | und
         'দ্বিজেন্দ্রলাল রয়': 'দ্বিজেন্দ্রলাল রায়',
         'আর ডি বর্মন': 'রাহুল দেববর্মণ',
         'আর. ডি. বর্মন': 'রাহুল দেববর্মণ',
-        'বিভিন্ন বাউল': 'বিভিন্ন শিল্পী',
+        // 'বিভিন্ন বাউল': 'বিভিন্ন শিল্পী', // This is handled in the data processing step
         'সংগৃহিত': 'সংগৃহীত',
+        'নিরেন্দ্রনাথ চক্রবর্তী': 'নীরেন্দ্রনাথ চক্রবর্তী',
         // 'অজানা': 'অজানা', // This might be too broad if "অজানা" is genuinely part of a name
         'অজানা গীতিকার': 'অজানা গীতিকার',
         'অজানা শিল্পী': 'অজানা শিল্পী',
         'অজানা সুরকার': 'অজানা সুরকার',
         'অজানা ধরণ': 'অজানা ধরণ',
         'মাহমুদুজ্জামান বাবু': 'মাহমুদুজ্জামান বাবু',
-        // 'নচিকেতা': 'নচিকেতা চক্রবর্তী', // Let deduplication handle this if both exist
-        // 'নিরেন্দ্রনাথ চক্রবর্তী': 'নীরেন্দ্রনাথ চক্রবর্তী' // Keep the one with dirgho e kar via dedupe logic
     };
 
     if (corrections[cleaned]) {
@@ -95,7 +99,6 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     if (problematicFragments.some(fragment => cleaned === fragment)) {
         return undefined;
     }
-
 
     return cleaned === "" ? undefined : cleaned;
 }
@@ -162,26 +165,17 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
 }
 
 /**
- * Creates a URL-friendly slug from a song title, artist, and a unique ID.
- * Uses the `cleanString` function for each part. All parts are joined by hyphens.
- * Slug format: title-artist-id
- * @param title The song title (original).
- * @param artist The song artist (original).
+ * Creates a URL-friendly slug. For debugging, it will now ONLY use the uniqueId.
+ * @param title The song title (original) - currently unused for slug.
+ * @param artist The song artist (original) - currently unused for slug.
  * @param uniqueId A unique identifier for the song (string or number).
  * @returns A string suitable for use in a URL path segment, already lowercased.
  */
 export const createSlug = (title?: string, artist?: string, uniqueId?: string | number): string => {
-  const titleSlug = cleanString(title, 'untitled');
-  const artistSlug = cleanString(artist, 'unknown-artist');
-  const idSlug = cleanString(String(uniqueId), `id-${Date.now()}`); // Ensure uniqueId is stringified
-
-  const slugParts = [titleSlug, artistSlug, idSlug];
-  let finalSlug = slugParts.join('-');
-  
-  // This final replace might be redundant if cleanString handles it well, but it's safe.
-  finalSlug = finalSlug.replace(/-+/g, '-').replace(/^-+|-+$/g, '');
-  
-  return finalSlug || `song-${idSlug}`; // finalSlug will already be lowercase from cleanString
+  // For debugging purposes, the slug will ONLY be the string representation of uniqueId, lowercased.
+  // This bypasses any issues with cleaning title/artist strings for slug generation.
+  const idStr = String(uniqueId || `fallback-id-${Date.now()}`);
+  return idStr.toLowerCase();
 };
 
 
@@ -207,4 +201,3 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
-

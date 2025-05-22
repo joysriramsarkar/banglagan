@@ -684,22 +684,29 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 // The primary purpose here is to avoid duplicate *content* (song by same lyricist).
 const uniqueSongsMap = new Map<string, Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre' >>();
 
-rawMockSongsData.forEach(song => {
-    const rawTitle = song.title || 'untitled';
-    const rawLyricist = song.lyricist || 'অজানা গীতিকার'; // Default to 'অজানা গীতিকার' for consistent key generation
+rawMockSongsData.forEach(songItem => {
+    // Use original (raw) title and lyricist for deduplication key
+    const rawTitle = songItem.title || 'untitled';
+    let rawLyricist = songItem.lyricist;
 
-    // For deduplication key, always use cleanStringForSlugProcessing (which is an alias for cleanString)
-    // And ensure lowercase for consistent key generation
-    const cleanedTitleForUniqueKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
-    const cleanedLyricistForUniqueKey = cleanStringForSlugProcessing(rawLyricist, 'অজানা-গীতিকার').toLowerCase();
+    // Handle cases where lyricist might be undefined, null, or "সংগৃহীত" before cleaning for key
+    if (rawLyricist === undefined || rawLyricist === null || rawLyricist.trim() === "" || rawLyricist.toLowerCase() === 'সংগৃহীত') {
+        rawLyricist = 'সংগৃহীত'; // Normalize to a consistent placeholder for deduplication
+    } else if (rawLyricist.toLowerCase() === 'অজানা গীতিকার') {
+        rawLyricist = 'অজানা গীতিকার';
+    }
 
-    const uniqueKey = `${cleanedTitleForUniqueKey}-lyricist:${cleanedLyricistForUniqueKey}`;
+
+    const cleanedTitleForKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
+    const cleanedLyricistForKey = cleanStringForSlugProcessing(rawLyricist, 'সংগৃহীত').toLowerCase();
+
+
+    const uniqueKey = `${cleanedTitleForKey}-lyricist:${cleanedLyricistForKey}`;
 
     if (!uniqueSongsMap.has(uniqueKey)) {
-        uniqueSongsMap.set(uniqueKey, song);
+        uniqueSongsMap.set(uniqueKey, songItem);
     } else {
-      // Optionally log duplicates found
-      // console.log(`Duplicate song skipped: Title: ${rawTitle}, Lyricist: ${rawLyricist}`);
+        // console.log(`Skipping duplicate song (Title: ${rawTitle}, Lyricist: ${rawLyricist})`);
     }
 });
 
@@ -708,25 +715,20 @@ rawMockSongsData.forEach(song => {
 const mockSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, index) => {
     const id = rawSongData.id || `gen-${index + 1}-${Date.now()}`; // Ensure unique ID if not provided
 
-    // Generate slug from the original raw data, not display-cleaned versions
-    const slug = createSlug(
-        rawSongData.title, // Use original title from raw data
-        rawSongData.artist, // Use original artist from raw data
-        id
-    ).toLowerCase(); // Ensure slug is lowercase
+    // Slug is now generated using ONLY the ID for simplicity and to avoid character issues.
+    const slug = createSlug(undefined, undefined, id);
 
     const displayTitle = cleanDisplayString(rawSongData.title) || 'শিরোনামহীন';
     let displayArtist = cleanDisplayString(rawSongData.artist) || 'বিভিন্ন শিল্পী';
     if (displayArtist?.toLowerCase() === 'বিভিন্ন বাউল') {
         displayArtist = 'বিভিন্ন শিল্পী';
     }
-    const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' ? undefined : 'অজানা গীতিকার');
-    const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' ? undefined : 'অজানা সুরকার');
-    const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' ? undefined : 'অজানা ধরণ');
+    const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকার' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
+    const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' || rawSongData.composer === null || rawSongData.composer === undefined ? 'অজানা সুরকার' : 'অজানা সুরকার');
+    const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' || rawSongData.genre === null || rawSongData.genre === undefined ? 'অজানা ধরণ' : 'অজানা ধরণ');
 
 
     return {
-        // Store original values if needed for other purposes or for re-generating display strings
         originalTitle: rawSongData.title,
         originalArtist: rawSongData.artist,
         originalLyricist: rawSongData.lyricist,
@@ -734,7 +736,7 @@ const mockSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, 
         originalGenre: rawSongData.genre,
 
         id: id,
-        slug: slug, // This slug is now generated from the most original string values and lowercased
+        slug: slug, // Slug is now just the lowercased ID
         title: displayTitle,
         artist: displayArtist,
         lyricist: displayLyricist,
@@ -807,7 +809,7 @@ function addPlaceholderSongsForMissingLyricists() {
             const placeholderArtist = 'বিভিন্ন শিল্পী';
             const placeholderComposer = 'অজানা সুরকার';
 
-            const placeholderSlug = createSlug(placeholderTitle, placeholderArtist, placeholderId).toLowerCase();
+            const placeholderSlug = createSlug(undefined, undefined, placeholderId); // Slug is now just the ID
 
             const placeholderSong: Song = {
                 id: placeholderId,
@@ -845,17 +847,17 @@ export async function getSongBySlug(slugFromUrl: string): Promise<Song | undefin
   if (!slugFromUrl || typeof slugFromUrl !== 'string' || !slugFromUrl.trim()) {
     return undefined;
   }
-  // IMPORTANT: The slugFromUrl is already decoded by Next.js params.
-  // We just need to ensure it's in the same case and trimmed.
+  // The slug from the URL (params.slug) is already decoded by Next.js.
+  // We just need to ensure it's consistently cased (lowercase) for comparison.
   const slugToSearch = slugFromUrl.trim().toLowerCase();
 
-  const song = mockSongs.find(s => {
-    // Ensure s.slug is also consistently lowercased for comparison,
-    // although createSlug should already ensure this when mockSongs are generated.
-    return s.slug.toLowerCase() === slugToSearch;
-  });
+  // mockSongs slugs are also generated as lowercase IDs via createSlug
+  const song = mockSongs.find(s => s.slug === slugToSearch);
+
 
   if (!song) {
+    // console.error(`Song not found for slug: ${slugToSearch}. Checked against ${mockSongs.length} songs.`);
+    // mockSongs.slice(0, 5).forEach(s => console.log(`Sample stored slug: ${s.slug}`));
     return undefined;
   }
   // Do not return placeholder songs via direct slug lookup
@@ -1027,7 +1029,8 @@ async function getUniqueFieldValues(
 
       let valuesToProcess: string[] = [];
       if (splitCombined && (conceptualFieldName === 'artist' || conceptualFieldName === 'lyricist' || conceptualFieldName === 'composer')) {
-          valuesToProcess = originalSourceValue.split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
+          // Split by common delimiters like comma, semicolon, slash, ' ও ', ' এবং '
+          valuesToProcess = originalSourceValue.split(/[,;\/\\]+|\s+ও\s+|\s+এবং\s+/)
               .map(part => cleanDisplayString(part.trim())) 
               .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0 && cleanedPart.toLowerCase() !== 'placeholder' && cleanedPart.toLowerCase() !== 'undefined');
       } else {
@@ -1142,4 +1145,3 @@ export async function getTotalSongCount(): Promise<number> {
 export async function seedDatabase() {
   return Promise.resolve();
 }
-

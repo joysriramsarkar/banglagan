@@ -20,20 +20,20 @@ export function cn(...inputs: ClassValue[]) {
  */
 export function cleanString(str: string | undefined | null, defaultVal: string = 'unknown'): string {
   if (!str || typeof str !== 'string' || !str.trim()) {
-    return defaultVal;
+    return defaultVal.toLowerCase();
   }
 
   let cleaned = str
     .normalize('NFC') // Normalize Unicode
-    .toLowerCase()    // Convert to lowercase
+    .toLowerCase()    // Convert to lowercase FIRST
     .trim();
 
-  // Replace spaces and common separators with hyphens
-  // Also replace other problematic characters that might not be caught by the next regex
+  // Replace spaces and common separators with hyphens.
+  // Also replace other problematic characters that might not be caught by the next regex.
   cleaned = cleaned.replace(/[\s_.,;!?"'()[\]{}&*+%$#@^~`=|\\/<>\u200B-\u200D\uFEFF\u00AD]+/g, '-');
 
-  // Allow Bengali, Latin alphanumeric, and hyphens. Remove others by replacing with empty string.
-  // \u0980-\u09FF is the Bengali Unicode block.
+  // Allow Bengali (\u0980-\u09FF), Latin alphanumeric (a-z0-9), and hyphens (-).
+  // Remove any character NOT in this set by replacing it with an empty string.
   cleaned = cleaned.replace(/[^\u0980-\u09FFa-z0-9-]/g, '');
 
   // Replace multiple hyphens with a single hyphen
@@ -41,7 +41,7 @@ export function cleanString(str: string | undefined | null, defaultVal: string =
   // Remove leading/trailing hyphens
   cleaned = cleaned.replace(/^-+|-+$/g, '');
 
-  return cleaned === "" ? defaultVal : cleaned;
+  return cleaned === "" ? defaultVal.toLowerCase() : cleaned;
 }
 
 
@@ -94,7 +94,8 @@ export function cleanDisplayString(str: string | undefined | null): string | und
         'অজানা ধরণ': 'অজানা ধরণ',
         'মাহমুদুজ্জামান বাবু': 'মাহমুদুজ্জামান বাবু',
         'নচিকেতা': 'নচিকেতা চক্রবর্তী',
-        'নিরেন্দ্রনাথ চক্রবর্তী': 'নীরেন্দ্রনাথ চক্রবর্তী'
+        // Keep 'নিরেন্দ্রনাথ চক্রবর্তী' as is, it will be handled by deduplication preference if both exist.
+        // 'নিরেন্দ্রনাথ চক্রবর্তী': 'নীরেন্দ্রনাথ চক্রবর্তী' 
     };
 
     if (corrections[cleaned]) {
@@ -133,7 +134,7 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   const newlinePlaceholder = '___NEWLINE_PLACEHOLDER___';
   cleanedText = cleanedText.replace(/\n(\s*\n)+/g, (match) => {
     const newlineCount = (match.match(/\n/g) || []).length;
-    return `\n${newlinePlaceholder.repeat(newlineCount -1)}\n`;
+    return `\n${newlinePlaceholder.repeat(newlineCount - 1)}\n`;
   });
   
   cleanedText = cleanedText
@@ -173,9 +174,11 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
  * @returns A string suitable for use in a URL path segment, already lowercased.
  */
 export const createSlug = (title?: string, artist?: string, uniqueId?: string | number): string => {
+  // Use original values and let cleanString handle them.
+  // Default values ensure cleanString doesn't fail on undefined/null.
   const titleSlug = cleanString(title, 'untitled');
   const artistSlug = cleanString(artist, 'unknown-artist');
-  // ID should always be present and cleanable. Convert to string and clean.
+  // ID should always be present and cleanable. Convert to string.
   // Use a timestamp-based fallback for ID if it's somehow still invalid after cleaning.
   const idSlug = cleanString(String(uniqueId), `id-${Date.now()}`);
 
@@ -187,7 +190,7 @@ export const createSlug = (title?: string, artist?: string, uniqueId?: string | 
   finalSlug = finalSlug.replace(/-+/g, '-').replace(/^-+|-+$/g, '');
   
   // Ensure a final slug always exists and is not empty
-  return finalSlug || `song-${idSlug}`;
+  return finalSlug || `song-${idSlug}`; // finalSlug will already be lowercase from cleanString
 };
 
 

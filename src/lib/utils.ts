@@ -21,29 +21,16 @@ export function cleanString(str: string | undefined | null): string | undefined 
     return undefined;
   }
 
-  let cleaned = str
-    .normalize('NFC') // Normalize Unicode characters (Very important for Bengali)
-    .toLowerCase();   // Convert to lowercase FIRST
-
-  // Allow Bengali letters (\u0980-\u09FF), basic Latin letters (a-z), numbers (0-9), and hyphens.
-  // Replace everything else with a hyphen.
-  cleaned = cleaned.replace(/[^\u0980-\u09FFa-z0-9-]+/g, '-');
-
-  cleaned = cleaned
-    .replace(/-+/g, '-')     // Replace multiple hyphens with a single hyphen
-    .replace(/^-+|-+$/g, ''); // Remove leading and trailing hyphens
-
-  // Specific hack for "মাহমুদুজ্জামান বাবু" if general regex fails for "বাবু" part.
-  // This might still be needed if NFC + regex doesn't perfectly handle all ligatures or specific sequences
-  // that result in the "-া-ু" pattern after the main regex.
-  if (cleaned.includes('মাহমুদুজ্জামান-া-ু')) {
-    cleaned = cleaned.replace('মাহমুদুজ্জামান-া-ু', 'মাহমুদুজ্জামান-বাবু');
-  }
-  // This case handles if "babu" was typed in Latin letters mixed with Bengali for the artist.
-  if (cleaned.includes('মাহমুদুজ্জামান-বabu')) {
-    cleaned = cleaned.replace('মাহমুদুজ্জামান-বabu', 'মাহমুদুজ্জামান-বাবু');
-  }
-
+  // Normalize, convert to lowercase
+  let cleaned = str.normalize('NFC').toLowerCase();
+  // Replace spaces with hyphens
+  cleaned = cleaned.replace(/\s+/g, '-');
+  // Remove any character that is not a Bengali letter, a Latin letter, a digit, or a hyphen
+  cleaned = cleaned.replace(/[^\u0980-\u09FFa-z0-9-]/g, '');
+  // Replace multiple hyphens with a single hyphen
+  cleaned = cleaned.replace(/-+/g, '-');
+  // Remove leading/trailing hyphens
+  cleaned = cleaned.replace(/^-+|-+$/g, '');
 
   return cleaned === "" ? undefined : cleaned;
 }
@@ -210,4 +197,3 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
-

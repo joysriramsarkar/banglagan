@@ -10,13 +10,12 @@ export interface Song extends SongInterface {
   slug: string; // Make slug mandatory
   keywords?: string[];
   matchCount?: number;
-  originalArtist?: string; // For processing complex artist strings before cleaning
-  originalLyricist?: string; // For processing complex lyricist strings before cleaning
-  originalComposer?: string; // For processing complex composer strings before cleaning
+  originalArtist?: string; 
+  originalLyricist?: string; 
+  originalComposer?: string;
 }
 
 // Base mock data without pre-computed id/slug/keywords
-// Contains potential duplicates which will be removed later
 const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalArtist' | 'originalLyricist' | 'originalComposer' >[] = [
   // Rabindranath Tagore Songs (Grouping maintained)
   {
@@ -665,7 +664,6 @@ const rawMockSongsData: Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | '
 
 
 // Deduplication logic based on title and lyricist for absolute uniqueness.
-// Using a Map to store unique songs. The key for the map will be a combination of title and lyricist.
 const uniqueSongsMap = new Map<string, Omit<Song, 'id' | 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalArtist' | 'originalLyricist' | 'originalComposer' >>();
 
 rawMockSongsData.forEach(song => {
@@ -683,23 +681,29 @@ rawMockSongsData.forEach(song => {
     }
 });
 
-const mockSongsData = Array.from(uniqueSongsMap.values());
+const uniqueMockSongsData = Array.from(uniqueSongsMap.values());
 
 
 // Generate slugs and IDs for all songs
-const mockSongs: Song[] = mockSongsData.map((songItem, index) => {
+const mockSongs: Song[] = uniqueMockSongsData.map((songItem, index) => {
     const id = (index + 1).toString();
 
     const displayTitle = cleanDisplayString(songItem.title) || 'শিরোনামহীন';
-    const displayArtist = cleanDisplayString(songItem.artist) || 'বিভিন্ন শিল্পী'; // Default to "বিভিন্ন শিল্পী"
+    const displayArtist = cleanDisplayString(songItem.artist) || 'বিভিন্ন শিল্পী';
     const displayLyricist = songItem.lyricist ? cleanDisplayString(songItem.lyricist) : 'অজানা গীতিকার';
     const displayComposer = songItem.composer ? cleanDisplayString(songItem.composer) : 'অজানা সুরকার';
+    const displayGenre = songItem.genre ? cleanDisplayString(songItem.genre) : 'অজানা ধরণ';
 
-    // Ensure slug includes ID for guaranteed uniqueness
-    const slug = createSlug(displayTitle, displayArtist, displayLyricist, id);
+    // For slug generation, use the original values from songItem, or a default if undefined
+    // This ensures createSlug gets less-processed input for consistent cleaning via cleanString
+    const slug = createSlug(
+        songItem.title || 'শিরোনামহীন',
+        songItem.artist || 'বিভিন্ন শিল্পী',
+        songItem.lyricist, // Pass undefined if lyricist is not there
+        id
+    );
 
     return {
-        ...songItem,
         id: id,
         slug: slug,
         title: displayTitle,
@@ -709,12 +713,11 @@ const mockSongs: Song[] = mockSongsData.map((songItem, index) => {
         originalLyricist: songItem.lyricist,
         composer: displayComposer,
         originalComposer: songItem.composer,
-        genre: songItem.genre ? cleanDisplayString(songItem.genre) : 'অজানা ধরণ',
+        genre: displayGenre,
         lyrics: cleanLyricsForDisplay(songItem.lyrics),
+        releaseYear: songItem.releaseYear,
     };
 });
-
-
 
 // Helper function to ensure every listed lyricist has at least one song entry
 function addPlaceholderSongsForMissingLyricists() {
@@ -755,14 +758,14 @@ function addPlaceholderSongsForMissingLyricists() {
       'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
       'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
       'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'কমলাকান্ত ভট্টাচার্য', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
-      'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু'
+      'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু', 'গোবিন্দ হালদার'
     ];
 
 
     const existingLyricistSlugs = new Set(
         mockSongs.map(song => song.lyricist ? cleanString(song.lyricist) : undefined).filter(Boolean) as string[]
     );
-    let placeholderIndex = mockSongs.length + 1000; // Start placeholder IDs from a higher number
+    let placeholderIndex = mockSongs.length + 1000; 
 
     allKnownLyricists.forEach(lyricistName => {
         const displayLyricist = cleanDisplayString(lyricistName);
@@ -787,7 +790,7 @@ function addPlaceholderSongsForMissingLyricists() {
                 originalLyricist: lyricistName,
                 composer: placeholderComposer,
                 originalComposer: placeholderComposer,
-                genre: 'Placeholder', // Special genre to identify these placeholders
+                genre: 'Placeholder', 
                 lyrics: `এই গানটি গীতিকার ${displayLyricist} এর জন্য একটি স্থানধারক।`,
                 slug: placeholderSlug,
                 releaseYear: 0,
@@ -809,32 +812,31 @@ export async function getAllSongs(): Promise<Song[]> {
   }
 }
 
-export async function getSongBySlug(slug: string): Promise<Song | undefined> {
-  if (!slug || typeof slug !== 'string' || slug.trim() === '') {
+export async function getSongBySlug(slugFromUrl: string): Promise<Song | undefined> {
+  if (!slugFromUrl || typeof slugFromUrl !== 'string' || slugFromUrl.trim() === '') {
     console.warn('Mock: getSongBySlug called with invalid or empty slug.');
     return undefined;
   }
-  const trimmedSlugToSearch = slug.trim(); // Assumes slug is already decoded by Next.js router
+  // The slug from the URL is already decoded by Next.js.
+  // Convert to lowercase for consistent comparison, as stored slugs are also lowercased.
+  const trimmedAndLoweredSlugToSearch = slugFromUrl.trim().toLowerCase();
 
   try {
-    const song = mockSongs.find(s => s.slug === trimmedSlugToSearch);
+    const song = mockSongs.find(s => s.slug === trimmedAndLoweredSlugToSearch);
 
     if (song && song.genre !== 'Placeholder') {
       return song;
     } else if (song && song.genre === 'Placeholder') {
-       console.warn(`Mock: Matched a placeholder song for slug: "${trimmedSlugToSearch}". Placeholders are not valid song entries.`);
+       console.warn(`Mock: Matched a placeholder song for slug: "${trimmedAndLoweredSlugToSearch}". Placeholders are not valid song entries.`);
        return undefined;
     } else {
-      // Detailed logging if not found
-      console.error(`Mock: Song not found by direct slug match: "${trimmedSlugToSearch}".`);
-      // For debugging, list a few slugs from the DB to compare format
-      // if (mockSongs.length > 0) {
-      //   console.log("Sample slugs from DB:", mockSongs.slice(0, 5).map(s => s.slug));
-      // }
+      console.error(`Mock: Song not found by slug: "${trimmedAndLoweredSlugToSearch}".`);
+      // For debugging, log a few existing slugs to compare format
+      // console.log("Sample stored slugs:", mockSongs.slice(0, 5).map(s => s.slug));
       return undefined;
     }
   } catch (error: any) {
-     console.error(`Mock: Error fetching song by slug "${trimmedSlugToSearch}":`, error);
+     console.error(`Mock: Error fetching song by slug "${trimmedAndLoweredSlugToSearch}":`, error);
      return undefined;
   }
 }
@@ -853,77 +855,84 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
   const filteredSongs = mockSongs.filter(song => {
     if (song.genre === 'Placeholder') return false;
 
-    const songTitleLower = song.title?.toLowerCase() || "";
-    const songArtistLower = song.artist?.toLowerCase() || ""; 
-    const songLyricistLower = song.lyricist?.toLowerCase() || "";
-    const songComposerLower = song.composer?.toLowerCase() || "";
-    const songGenreLower = song.genre?.toLowerCase() || "";
-    const songLyricsLower = song.lyrics?.toLowerCase() || "";
-
-    const originalArtistParts = (song.originalArtist || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
-        .map(a => cleanDisplayString(a.trim())?.toLowerCase())
-        .filter((cleanedPart): cleanedPart is string => !!cleanedPart);
-
-    const originalLyricistParts = (song.originalLyricist || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
-        .map(l => cleanDisplayString(l.trim())?.toLowerCase())
-        .filter((cleanedPart): cleanedPart is string => !!cleanedPart);
+    // Use cleaned display values for matching
+    const songTitleMatch = song.title?.toLowerCase() || "";
+    const songArtistDisplay = song.artist?.toLowerCase() || ""; // from cleanDisplayString
+    const songLyricistDisplay = song.lyricist?.toLowerCase() || ""; // from cleanDisplayString
+    const songComposerDisplay = song.composer?.toLowerCase() || ""; // from cleanDisplayString
     
-    const originalComposerParts = (song.originalComposer || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
+    // Also consider original values for broader matching if they exist
+    const songOriginalArtistMatch = song.originalArtist?.toLowerCase() || "";
+    const songOriginalLyricistMatch = song.originalLyricist?.toLowerCase() || "";
+    const songOriginalComposerMatch = song.originalComposer?.toLowerCase() || "";
+
+    const songGenreMatch = song.genre?.toLowerCase() || "";
+    const songLyricsMatch = song.lyrics?.toLowerCase() || "";
+
+    // Check against individual artist/lyricist/composer names if they are combined
+    const artistParts = (song.originalArtist || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
+        .map(a => cleanDisplayString(a.trim())?.toLowerCase())
+        .filter(Boolean) as string[];
+    
+    const lyricistParts = (song.originalLyricist || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
+        .map(l => cleanDisplayString(l.trim())?.toLowerCase())
+        .filter(Boolean) as string[];
+
+    const composerParts = (song.originalComposer || "").split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/)
         .map(c => cleanDisplayString(c.trim())?.toLowerCase())
-        .filter((cleanedPart): cleanedPart is string => !!cleanedPart);
+        .filter(Boolean) as string[];
 
 
     const match = queryTokens.every(token =>
-        songTitleLower.includes(token) ||
-        originalArtistParts.some(artistPart => artistPart.includes(token)) ||
-        originalLyricistParts.some(lyricistPart => lyricistPart.includes(token)) ||
-        originalComposerParts.some(composerPart => composerPart.includes(token)) ||
-        songGenreLower.includes(token) ||
-        songLyricsLower.includes(token)
+        songTitleMatch.includes(token) ||
+        artistParts.some(part => part.includes(token)) || // Check split original parts
+        songArtistDisplay.includes(token) || // Check displayed artist string
+        lyricistParts.some(part => part.includes(token)) ||
+        songLyricistDisplay.includes(token) ||
+        composerParts.some(part => part.includes(token)) ||
+        songComposerDisplay.includes(token) ||
+        songGenreMatch.includes(token) ||
+        songLyricsMatch.includes(token) ||
+        songOriginalArtistMatch.includes(token) || // Check raw original string
+        songOriginalLyricistMatch.includes(token) ||
+        songOriginalComposerMatch.includes(token)
     );
     return match;
   });
 
-  // Rank songs based on match quality
   const rankedSongs = filteredSongs.map(song => {
     let matchCount = 0;
     const songTitleLower = song.title?.toLowerCase() || "";
-    const songArtistLower = song.artist?.toLowerCase() || ""; 
-    const songLyricistLower = song.lyricist?.toLowerCase() || ""; 
-    const songComposerLower = song.composer?.toLowerCase() || ""; 
-
+    const songArtistLower = song.artist?.toLowerCase() || "";
+    const songLyricistLower = song.lyricist?.toLowerCase() || "";
+    const songComposerLower = song.composer?.toLowerCase() || "";
     const originalArtistLower = song.originalArtist?.toLowerCase() || "";
     const originalLyricistLower = song.originalLyricist?.toLowerCase() || "";
     const originalComposerLower = song.originalComposer?.toLowerCase() || "";
 
-
-    // Exact match for full query
     if (songTitleLower === cleanedQuery) matchCount += 20;
-    if (songArtistLower === cleanedQuery || originalArtistLower === cleanedQuery) matchCount += 15;
-    if (songLyricistLower === cleanedQuery || originalLyricistLower === cleanedQuery) matchCount += 10;
-    if (songComposerLower === cleanedQuery || originalComposerLower === cleanedQuery) matchCount += 8;
+    if (songArtistLower === cleanedQuery || originalArtistLower.includes(cleanedQuery)) matchCount += 15;
+    if (songLyricistLower === cleanedQuery || originalLyricistLower.includes(cleanedQuery)) matchCount += 10;
+    if (songComposerLower === cleanedQuery || originalComposerLower.includes(cleanedQuery)) matchCount += 8;
 
-    // Starts with query
     if (songTitleLower.startsWith(cleanedQuery)) matchCount += 8;
     if (songArtistLower.startsWith(cleanedQuery) || originalArtistLower.startsWith(cleanedQuery)) matchCount += 6;
-
 
     queryTokens.forEach(token => {
       if (songTitleLower.includes(token)) matchCount += 5;
       
       const artistParts = (originalArtistLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
       if (artistParts.some(part => part.includes(token))) matchCount += 3;
-      else if (songArtistLower.includes(token)) matchCount +=2;
+      else if (songArtistLower.includes(token)) matchCount += 2;
 
       const lyricistParts = (originalLyricistLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
       if (lyricistParts.some(part => part.includes(token))) matchCount += 2;
-      else if (songLyricistLower.includes(token)) matchCount +=1; 
+      else if (songLyricistLower.includes(token)) matchCount += 1;
       
       const composerParts = (originalComposerLower).split(/[,;/&]+|\s+ও\s+|\s+এবং\s+/).map(s => s.trim()).filter(Boolean);
       if (composerParts.some(part => part.includes(token))) matchCount += 1;
-      else if (songComposerLower.includes(token)) matchCount +=1; 
+      else if (songComposerLower.includes(token)) matchCount += 1;
     });
-
 
     return { ...song, matchCount };
   }).sort((a, b) => (b.matchCount || 0) - (a.matchCount || 0));
@@ -1006,8 +1015,8 @@ async function getUniqueFieldValues(
       let originalValueToProcess: string | undefined;
 
       if (conceptualFieldName === 'artist') {
-          originalValueToProcess = song.originalArtist;
-          valueToProcess = song.artist; 
+          originalValueToProcess = song.originalArtist; // Use original for splitting
+          valueToProcess = song.artist; // Use cleaned for direct display if not splitting
       } else if (conceptualFieldName === 'genre') {
           valueToProcess = song.genre;
       } else if (conceptualFieldName === 'lyricist') {
@@ -1028,7 +1037,6 @@ async function getUniqueFieldValues(
           }
       }
 
-
       if (song.genre === 'Placeholder' && (conceptualFieldName !== 'lyricist' && conceptualFieldName !== 'composer')) return;
 
       const sourceForSplitting = originalValueToProcess || (typeof valueToProcess === 'string' ? valueToProcess : undefined);
@@ -1042,7 +1050,10 @@ async function getUniqueFieldValues(
                   .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0 && cleanedPart !== 'বিভিন্ন শিল্পী' && cleanedPart !== 'অজানা শিল্পী' && cleanedPart !== 'অজানা গীতিকার' && cleanedPart !== 'অজানা সুরকার' && cleanedPart !== 'সংগৃহীত' && cleanedPart !== 'প্রচলিত' );
           } else if (typeof valueToProcess === 'string'){ 
               const cleanedItem = cleanDisplayString(valueToProcess.trim());
-              if (cleanedItem && cleanedItem !== 'বিভিন্ন শিল্পী' && cleanedItem !== 'অজানা শিল্পী' && cleanedItem !== 'অজানা গীতিকার' && cleanedItem !== 'অজানা সুরকার' && cleanedItem !== 'সংগৃহীত' && cleanedItem !== 'প্রচলিত') finalItemsForSet.push(cleanedItem);
+              // For genre, don't filter out "অজানা ধরণ" here as it's a valid distinct category.
+              if (cleanedItem && (conceptualFieldName === 'genre' || (cleanedItem !== 'বিভিন্ন শিল্পী' && cleanedItem !== 'অজানা শিল্পী' && cleanedItem !== 'অজানা গীতিকার' && cleanedItem !== 'অজানা সুরকার' && cleanedItem !== 'সংগৃহীত' && cleanedItem !== 'প্রচলিত'))) {
+                  finalItemsForSet.push(cleanedItem);
+              }
           }
           
           finalItemsForSet.forEach(item => {
@@ -1159,3 +1170,7 @@ export async function seedDatabase() {
   console.log("Mock database: seedDatabase called, but no action is taken in mock mode.");
   return Promise.resolve();
 }
+
+// Final check to ensure mockSongs is correctly populated
+// console.log(`Final mockSongs count after placeholder check: ${mockSongs.length}`);
+// console.log("Sample final slugs from mockSongs:", mockSongs.slice(0, 5).map(s => s.slug));

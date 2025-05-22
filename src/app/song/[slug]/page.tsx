@@ -2,16 +2,15 @@
 'use client';
 
 import * as React from 'react';
-import { useParams } from 'next/navigation'; // Corrected import
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
+import { useParams, notFound } from 'next/navigation'; // Corrected import for notFound
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
-import { toBengaliNumerals, cleanLyricsForDisplay, cleanDisplayString } from '@/lib/utils';
+import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils'; // cleanDisplayString is not used here
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 
 interface SongPageProps {
   params: {
@@ -19,60 +18,42 @@ interface SongPageProps {
   };
 }
 
-// Note: generateMetadata should be in a separate metadata.ts file if this component is 'use client'
-// For simplicity with mock data, if this page becomes a server component, metadata can be here.
-// However, with 'use client', generateMetadata must be moved.
-// Assuming metadata.ts handles metadata generation.
-
 export default function SongPage({ params: paramsFromProps }: SongPageProps) {
-  const paramsFromHook = useParams();
-  const rawSlugParam = paramsFromHook?.slug || paramsFromProps?.slug;
-  const rawSlugFromParams = Array.isArray(rawSlugParam) ? rawSlugParam[0] : rawSlugParam;
+  const paramsFromHook = useParams(); // For client-side fetching of slug
+  const rawSlugFromParams = Array.isArray(paramsFromHook?.slug) ? paramsFromHook.slug[0] : paramsFromHook?.slug || paramsFromProps?.slug;
+
 
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
-  const [decodedSlug, setDecodedSlug] = React.useState<string | null>(null);
+  // No need for decodedSlug state if we use rawSlugFromParams directly for fetching
 
   React.useEffect(() => {
-    let slugToUse: string | undefined = rawSlugFromParams;
+    let slugToFetch: string | undefined | null = rawSlugFromParams;
 
-    if (!slugToUse || typeof slugToUse !== 'string' || slugToUse.trim() === '') {
-      // console.error("Client-side: No valid slug provided in params.", rawSlugFromParams); // Reduced logging
-      setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
+    if (!slugToFetch || typeof slugToFetch !== 'string' || slugToFetch.trim() === '') {
       setLoading(false);
+      setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
       setSong(null);
       return;
     }
     
-    const finalSlug = slugToUse.trim(); // Slug from Next.js router is already URI-decoded.
-    setDecodedSlug(finalSlug);
+    const finalSlugToFetch = slugToFetch.trim();
 
-  }, [rawSlugFromParams]);
-
-
-  React.useEffect(() => {
-    if (!decodedSlug) {
-      if (rawSlugFromParams) { 
-         setLoading(false);
-      }
-      return;
-    }
-
-    const loadSong = async (slugToFetch: string) => {
+    const loadSong = async (slug: string) => {
       setLoading(true);
       setFetchError(null);
       try {
-        const fetchedSong = await getSongBySlug(slugToFetch);
+        const fetchedSong = await getSongBySlug(slug); // getSongBySlug will handle cleaning
         if (!fetchedSong) {
-          // console.error(`Client-side: Song not found for decoded slug: ${slugToFetch}`); // Reduced logging
+          // console.error(`Client-side: Song not found for slug: ${slug}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
           setSong(null);
         } else {
           setSong(fetchedSong);
         }
       } catch (error: any) {
-        // console.error(`Client-side: Error fetching song for slug ${slugToFetch}:`, error); // Reduced logging
+        // console.error(`Client-side: Error fetching song for slug ${slug}:`, error);
         setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
         setSong(null);
       } finally {
@@ -80,9 +61,9 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
       }
     };
 
-    loadSong(decodedSlug);
+    loadSong(finalSlugToFetch);
 
-  }, [decodedSlug, rawSlugFromParams]);
+  }, [rawSlugFromParams]);
 
 
   if (loading) {
@@ -105,10 +86,11 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
   }
 
   if (!song) {
-     notFound(); 
+     notFound();
   }
-  
-  const displayTitle = song.title.replace(/-/g, ' ');
+
+  // Display title should be the one fetched from the database, already cleaned by cleanDisplayString there
+  const displayTitle = song.title; // song.title is already cleaned for display
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
@@ -123,8 +105,8 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
             <div className="flex items-center">
               <User className="w-4 h-4 mr-2 text-primary/80" />
               <strong>শিল্পী:</strong>
-              <Link href={`/search?q=${encodeURIComponent(song.artist)}`} className="ml-1 hover:underline text-primary">
-                {song.artist}
+              <Link href={`/search?q=${encodeURIComponent(song.artist || 'অজানা শিল্পী')}`} className="ml-1 hover:underline text-primary">
+                {song.artist || 'অজানা শিল্পী'}
               </Link>
             </div>
             {song.lyricist && song.lyricist !== 'অজানা গীতিকার' && (
@@ -138,7 +120,7 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
             )}
             {song.composer && song.composer !== 'অজানা সুরকার' && (
               <div className="flex items-center">
-                <Disc3 className="w-4 h-4 mr-2 text-primary/80" /> 
+                <Disc3 className="w-4 h-4 mr-2 text-primary/80" />
                 <strong>সুরকার:</strong>
                 <Link href={`/search?q=${encodeURIComponent(song.composer)}`} className="ml-1 hover:underline text-primary">
                   {song.composer}
@@ -168,7 +150,7 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
             <CardDescription className="mt-2 mb-2 text-base font-semibold text-foreground">গানের কথা:</CardDescription>
             <Separator className="mb-4" />
             <div className="whitespace-pre-wrap leading-relaxed text-foreground/90 lyrics-container"
-                 dangerouslySetInnerHTML={{ __html: cleanLyricsForDisplay(song.lyrics).replace(/\n/g, '<br />') }} />
+                 dangerouslySetInnerHTML={{ __html: cleanLyricsForDisplay(song.lyrics) }} />
           </CardContent>
         )}
       </Card>

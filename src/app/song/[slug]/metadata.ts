@@ -1,6 +1,7 @@
+
 import type { Metadata, ResolvingMetadata } from 'next';
 import { getSongBySlug } from '@/services/bangla-song-database';
-import { cleanDisplayString } from '@/lib/utils';
+import { cleanDisplayString } from '@/lib/utils'; // cleanDisplayString for metadata titles
 
 interface SongPageProps {
   params: {
@@ -14,37 +15,33 @@ export async function generateMetadata(
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const rawSlug = params.slug;
-  let decodedSlug = '';
 
   if (!rawSlug || typeof rawSlug !== 'string' || rawSlug.trim() === '') {
-     console.warn(`generateMetadata: Invalid or empty slug provided: "${rawSlug}"`);
+    //  console.warn(`generateMetadata: Invalid or empty slug provided: "${rawSlug}"`);
      return {
        title: 'অবৈধ লিঙ্ক - বাংলা গান',
        description: 'গানটির লিঙ্কটি সঠিক নয়।',
      };
   }
 
-  try {
-    decodedSlug = decodeURIComponent(rawSlug);
-  } catch (e) {
-    console.warn(`generateMetadata: Error decoding slug "${rawSlug}", using as is. Error:`, e);
-    decodedSlug = rawSlug; // Use raw slug if decoding fails
-  }
+  // Slug from params is already URI-decoded by Next.js.
+  // getSongBySlug will internally use cleanString to match the stored slug format.
+  const slugToFetch = rawSlug.trim();
 
   try {
-    const song = await getSongBySlug(decodedSlug);
+    const song = await getSongBySlug(slugToFetch);
 
     if (!song) {
-       console.error(`generateMetadata: Song not found for decoded slug: ${decodedSlug} (raw: ${rawSlug})`);
+      //  console.error(`generateMetadata: Song not found for slug: ${slugToFetch}`);
        return {
          title: 'গান পাওয়া যায়নি - বাংলা গান',
          description: 'আপনি যে গানটি খুঁজছেন তা পাওয়া যায়নি।',
        };
     }
 
-    const rawMetaTitle = cleanDisplayString(song.title) || 'শিরোনামহীন গান';
-    const metaTitle = rawMetaTitle.replace(/-/g, ' ');
-    const metaArtist = cleanDisplayString(song.artist) || 'অজানা শিল্পী';
+    // Use display-cleaned values for metadata
+    const metaTitle = song.title || 'শিরোনামহীন গান'; // song.title is already display-cleaned
+    const metaArtist = song.artist || 'অজানা শিল্পী'; // song.artist is already display-cleaned
 
     return {
       title: `${metaTitle} - ${metaArtist} | বাংলা গান`,
@@ -55,7 +52,7 @@ export async function generateMetadata(
       },
     };
   } catch (error) {
-    console.error(`generateMetadata: Error fetching metadata for decoded slug ${decodedSlug} (raw: ${rawSlug}):`, error);
+    // console.error(`generateMetadata: Error fetching metadata for slug ${slugToFetch}:`, error);
     return {
       title: 'তথ্য লোড করতে সমস্যা - বাংলা গান',
       description: 'গানটির তথ্য এই মুহূর্তে আনা সম্ভব হচ্ছে না।',

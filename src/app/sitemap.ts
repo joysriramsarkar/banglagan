@@ -1,10 +1,11 @@
+
 // src/app/sitemap.ts
 import type { MetadataRoute } from 'next';
-import { getAllSongs, getAllArtists, getAllGenres, getAllLyricists } from '@/services/bangla-song-database'; // Assuming these functions exist and return appropriate data for sitemap
+import { getAllSongs, getAllArtists, getAllGenres, getAllLyricists, getAllComposers } from '@/services/bangla-song-database'; // Assuming these functions exist and return appropriate data for sitemap
 import { createSlug, cleanDisplayString } from '@/lib/utils';
 
 // IMPORTANT: Replace this with your actual domain
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://yourdomain.com';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || 'https://studio--banglagan.us-central1.hosted.app';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();
@@ -37,6 +38,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${BASE_URL}/lyricists`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${BASE_URL}/composers`,
       lastModified: currentDate,
       changeFrequency: 'weekly',
       priority: 0.7,

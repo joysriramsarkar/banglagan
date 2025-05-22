@@ -27,6 +27,8 @@ export default function RootLayout({
     <html lang="bn">
       <head>
         <meta name="google-site-verification" content="jWk5AWz3oakP75t1oZDXp1nv4E1z3mfP149_sqV5Gh4" />
+        <link rel="icon" href="/logo.png" />
+        <link rel="apple-touch-icon" href="/logo.png" />
       </head>
       <body
         className={cn(

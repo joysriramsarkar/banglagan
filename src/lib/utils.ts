@@ -13,26 +13,35 @@ export function cn(...inputs: ClassValue[]) {
  * Removes leading/trailing hyphens.
  * Ensures NFC normalization and converts to lowercase.
  * Specifically targets Bengali characters using their Unicode range.
+ * Returns a default string if the input is invalid or cleaning results in an empty string.
  * @param str The string to clean.
- * @returns The cleaned string, suitable for slugs, or undefined if input is invalid/empty.
+ * @param defaultVal The default string to return if cleaning fails or input is invalid.
+ * @returns The cleaned string, suitable for slugs, or the defaultVal.
  */
-export function cleanString(str: string | undefined | null): string | undefined {
+export function cleanString(str: string | undefined | null, defaultVal: string = 'unknown'): string {
   if (!str || typeof str !== 'string' || !str.trim()) {
-    return undefined;
+    return defaultVal;
   }
 
-  // Normalize, convert to lowercase
-  let cleaned = str.normalize('NFC').toLowerCase();
-  // Replace spaces with hyphens
-  cleaned = cleaned.replace(/\s+/g, '-');
-  // Remove any character that is not a Bengali letter, a Latin letter, a digit, or a hyphen
+  let cleaned = str
+    .normalize('NFC') // Normalize Unicode
+    .toLowerCase()    // Convert to lowercase
+    .trim();
+
+  // Replace spaces and common separators with hyphens
+  // Also replace other problematic characters that might not be caught by the next regex
+  cleaned = cleaned.replace(/[\s_.,;!?"'()[\]{}&*+%$#@^~`=|\\/<>\u200B-\u200D\uFEFF\u00AD]+/g, '-');
+
+  // Allow Bengali, Latin alphanumeric, and hyphens. Remove others by replacing with empty string.
+  // \u0980-\u09FF is the Bengali Unicode block.
   cleaned = cleaned.replace(/[^\u0980-\u09FFa-z0-9-]/g, '');
+
   // Replace multiple hyphens with a single hyphen
   cleaned = cleaned.replace(/-+/g, '-');
   // Remove leading/trailing hyphens
   cleaned = cleaned.replace(/^-+|-+$/g, '');
 
-  return cleaned === "" ? undefined : cleaned;
+  return cleaned === "" ? defaultVal : cleaned;
 }
 
 
@@ -55,6 +64,9 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     cleaned = cleaned.replace(/\s*\([^)]*\)\s*$/, ''); // Remove trailing parenthetical notes like (Live), (Remix)
     cleaned = cleaned.trim().replace(/\s+/g, ' '); // Trim and normalize multiple spaces to one
 
+    // Specific problematic character sequence removals or replacements related to Bengali
+    cleaned = cleaned.replace(/Ç/g, 'চ'); // Example: Correct specific mistyped characters if known
+
     if (cleaned === "" || cleaned === "ঃ" || cleaned === ":" || cleaned === "-" || cleaned === "undefined") {
         return undefined;
     }
@@ -73,15 +85,16 @@ export function cleanDisplayString(str: string | undefined | null): string | und
         'দ্বিজেন্দ্রলাল রয়': 'দ্বিজেন্দ্রলাল রায়',
         'আর ডি বর্মন': 'রাহুল দেববর্মণ',
         'আর. ডি. বর্মন': 'রাহুল দেববর্মণ',
-        'বিভিন্ন বাউল': 'বিভিন্ন শিল্পী', // Standardize "বিভিন্ন বাউল"
+        'বিভিন্ন বাউল': 'বিভিন্ন শিল্পী',
         'সংগৃহিত': 'সংগৃহীত',
-        'অজানা': 'অজানা', // Default if nothing else, can be specialized by context
+        'অজানা': 'অজানা',
         'অজানা গীতিকার': 'অজানা গীতিকার',
         'অজানা শিল্পী': 'অজানা শিল্পী',
         'অজানা সুরকার': 'অজানা সুরকার',
         'অজানা ধরণ': 'অজানা ধরণ',
-        'মাহমুদুজ্জামান বাবু': 'মাহমুদুজ্জামান বাবু', // Ensure this specific common name is preserved if cleaned
-        'নচিকেতা': 'নচিকেতা চক্রবর্তী', // Assuming 'নচিকেতা' usually refers to 'নচিকেতা চক্রবর্তী'
+        'মাহমুদুজ্জামান বাবু': 'মাহমুদুজ্জামান বাবু',
+        'নচিকেতা': 'নচিকেতা চক্রবর্তী',
+        'নিরেন্দ্রনাথ চক্রবর্তী': 'নীরেন্দ্রনাথ চক্রবর্তী'
     };
 
     if (corrections[cleaned]) {
@@ -114,10 +127,15 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
     .replace(/\u00AD/g, '') // Remove soft hyphens
     .replace(/[\u200B-\u200D\uFEFF]/g, ''); // Remove zero-width spaces
 
-  // Preserve multiple newlines correctly
-  const newlinePlaceholder = '___NEWLINE_PLACEHOLDER___';
-  cleanedText = cleanedText.replace(/\n{2,}/g, `\n${newlinePlaceholder}\n`);
+  cleanedText = cleanedText.replace(/\r\n/g, '\n'); // Normalize CRLF to LF
 
+  // Preserve multiple newlines correctly by first marking them
+  const newlinePlaceholder = '___NEWLINE_PLACEHOLDER___';
+  cleanedText = cleanedText.replace(/\n(\s*\n)+/g, (match) => {
+    const newlineCount = (match.match(/\n/g) || []).length;
+    return `\n${newlinePlaceholder.repeat(newlineCount -1)}\n`;
+  });
+  
   cleanedText = cleanedText
     .split('\n')
     .map(line => line
@@ -138,7 +156,7 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   // Final trim of the whole block
   cleanedText = cleanedText.trim();
 
-  // Ensure lines are not just whitespace
+  // Ensure lines are not just whitespace and filter out empty lines that might result from cleaning
   cleanedText = cleanedText.split('\n').filter(line => line.trim().length > 0).join('\n');
 
 
@@ -146,32 +164,30 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
 }
 
 /**
- * Creates a URL-friendly slug from a song title, artist, lyricist, and a unique ID.
+ * Creates a URL-friendly slug from a song title, artist, and a unique ID.
  * Uses the `cleanString` function for each part. All parts are joined by hyphens.
+ * Slug format: title-artist-id
  * @param title The song title (original).
  * @param artist The song artist (original).
- * @param lyricist The song lyricist (original).
  * @param uniqueId A unique identifier for the song (string or number).
  * @returns A string suitable for use in a URL path segment, already lowercased.
  */
-export const createSlug = (title?: string, artist?: string, lyricist?: string, composer?: string, uniqueId?: string | number): string => {
-  // Use cleanString for each part, which handles undefined/null and lowercasing
-  const titleSlug = cleanString(title) || 'শিরোনামহীন';
-  const artistSlug = cleanString(artist) || 'অজানা-শিল্পী';
-  const lyricistSlug = cleanString(lyricist) || 'অজানা-গীতিকার';
-  // Composer is optional in the slug but can be added if needed for more uniqueness
-  // const composerSlug = cleanString(composer) || 'অজানা-সুরকার';
-  const idSlug = cleanString(String(uniqueId)) || 'id'; // Ensure uniqueId is a string and cleaned
+export const createSlug = (title?: string, artist?: string, uniqueId?: string | number): string => {
+  const titleSlug = cleanString(title, 'untitled');
+  const artistSlug = cleanString(artist, 'unknown-artist');
+  // ID should always be present and cleanable. Convert to string and clean.
+  // Use a timestamp-based fallback for ID if it's somehow still invalid after cleaning.
+  const idSlug = cleanString(String(uniqueId), `id-${Date.now()}`);
 
-  // Construct slug: title-artist-lyricist-id (simple and robust)
-  // The filter(Boolean) step is important to remove empty parts if cleanString returns undefined for some inputs.
-  const slugParts = [titleSlug, artistSlug, lyricistSlug, idSlug].filter(Boolean);
+  // Simpler slug structure: title-artist-id
+  const slugParts = [titleSlug, artistSlug, idSlug];
   let finalSlug = slugParts.join('-');
 
-  // Second pass to ensure no double hyphens from joining (though cleanString should prevent individual parts from being just '-')
+  // This final replace might be redundant if cleanString handles it well, but it's safe.
   finalSlug = finalSlug.replace(/-+/g, '-').replace(/^-+|-+$/g, '');
-
-  return finalSlug || 'unknown-song'; // Fallback if all parts are empty (highly unlikely with defaults)
+  
+  // Ensure a final slug always exists and is not empty
+  return finalSlug || `song-${idSlug}`;
 };
 
 

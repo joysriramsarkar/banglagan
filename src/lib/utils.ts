@@ -18,43 +18,27 @@ export function cleanString(str: string | undefined | null): string | undefined 
   if (!str || typeof str !== 'string' || !str.trim()) {
     return undefined;
   }
+
   let cleaned = str.normalize('NFC'); // Normalize Unicode to composed form
 
-  // Remove zero-width spaces, soft hyphens, etc. which can be invisible but affect processing
-  cleaned = cleaned.replace(/[\u00AD\u200B-\u200D\uFEFF]/g, '');
+  // Replace characters that are not Bengali, Latin alphanumeric, or hyphen with a hyphen
+  // \p{L} matches any kind of letter from any language (includes Bengali)
+  // \p{N} matches any kind of numeric character in any script
+  // We want to keep letters (Bengali, Latin), numbers, and hyphens. Others become hyphens.
+  // Added common Bengali punctuation that might be part of titles but should be removed for slugs.
+  cleaned = cleaned.replace(/[^\p{L}\p{N}-]+/gu, '-');
 
-  let result = '';
-  for (let i = 0; i < cleaned.length; i++) {
-    const char = cleaned[i];
-    const charCode = cleaned.charCodeAt(i);
+  // Replace multiple hyphens with a single hyphen
+  cleaned = cleaned.replace(/-+/g, '-');
 
-    // Check for standard Latin alphanumerics
-    if ((char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z') || (char >= '0' && char <= '9')) {
-      result += char;
-    }
-    // Check for Bengali Unicode block (covers letters, vowel signs, numerals, etc.)
-    else if (charCode >= 0x0980 && charCode <= 0x09FF) {
-      result += char;
-    }
-    // Allow hyphens and spaces to be processed later
-    else if (char === ' ' || char === '-') {
-      result += char;
-    }
-    // Replace any other character with a space
-    else {
-      result += ' ';
-    }
-  }
-  cleaned = result.trim();
+  // Remove leading and trailing hyphens
+  cleaned = cleaned.replace(/^-+|-+$/g, '');
+
+  // Convert to lowercase - crucial for consistent slug matching
+  cleaned = cleaned.toLowerCase();
 
 
-  // Convert multiple spaces/hyphens to single hyphens and remove leading/trailing hyphens.
-  cleaned = cleaned.replace(/[\s-]+/g, '-'); // Replace one or more spaces or hyphens with a single hyphen
-  cleaned = cleaned.replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
-
-  cleaned = cleaned.toLowerCase(); // Convert to lowercase for consistent slugs
-
-  return cleaned;
+  return cleaned === "" ? undefined : cleaned;
 }
 
 
@@ -80,34 +64,32 @@ export function cleanLyricsForDisplay(text: string | undefined | null): string {
   cleanedText = cleanedText
     .split('\n')
     .map(line => line
-        .replace(/\s+-\s+/g, ' ')
-        .replace(/^-+\s*|\s*-+$/g, '')
-        .replace(/([,.!?;:])-/g, '$1')
-        .replace(/-([,.!?;:])/g, '$1')
-        .replace(/[ \t]+/g, ' ')
+        // .replace(/\s+-\s+/g, ' ') // Keep hyphens that might be intentional in lyrics for now
+        // .replace(/^-+\s*|\s*-+$/g, '')
+        // .replace(/([,.!?;:])-/g, '$1')
+        // .replace(/-([,.!?;:])/g, '$1')
+        .replace(/[ \t]+/g, ' ') // Normalize horizontal spacing
         .trim()
     )
     .join('\n');
 
   cleanedText = cleanedText
       .replace(new RegExp(newlinePlaceholder, 'g'), '\n')
-      .replace(/\n +/g, '\n')
-      .replace(/ +\n/g, '\n');
+      .replace(/\n +/g, '\n') // Remove spaces at the beginning of a line (after newline)
+      .replace(/ +\n/g, '\n'); // Remove spaces at the end of a line (before newline)
 
-  // Remove hyphens that are not part of a word (e.g., "word - word" becomes "word word")
-  // but preserve hyphens within words (e.g., "e-mail", "co-operate").
-  // This regex looks for hyphens surrounded by spaces or at the beginning/end of lines after trim.
-  // However, for lyrics, we need to be careful not to remove hyphens used for phrasing or line breaks.
-  // The previous steps handle most stray hyphens. This specific replacement might be too broad.
-  // Consider if specific hyphen patterns in lyrics need preservation.
-  // For now, focusing on space normalization.
-  cleanedText = cleanedText.replace(/ +- +/g, ' '); // Hyphens surrounded by spaces
+
+  // Remove hyphens surrounded by spaces, but preserve hyphens within words or at line ends for phrasing.
+  cleanedText = cleanedText.replace(/ - /g, ' '); // Specifically hyphens surrounded by spaces
+  
+  // Remove isolated hyphens on a line, if any are left after other cleaning
+  cleanedText = cleanedText.split('\n').map(line => line.trim() === '-' ? '' : line).join('\n');
 
 
   cleanedText = cleanedText.replace(/ +/g, ' ').trim();
 
 
-  return cleanedText;
+  return cleanedText || 'গানের কথা পাওয়া যায়নি';
 }
 
 
@@ -126,7 +108,8 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     }
     let cleaned = str.normalize('NFC');
 
-    cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF\u00AD]/g, '');
+    cleaned = cleaned.replace(/[\u200B-\u200D\uFEFF\u00AD]/g, ''); // Remove zero-width spaces and soft hyphens
+    // Preserve hyphens that are part of names but clean up those used as separators
     cleaned = cleaned.replace(/\s+-\s+/g, ' '); // Hyphens surrounded by spaces become a single space
     cleaned = cleaned.replace(/\s*\([^)]*\)\s*$/, ''); // Remove trailing parenthetical notes like (Live), (Remix)
     cleaned = cleaned.trim().replace(/\s+/g, ' '); // Trim and normalize multiple spaces to one
@@ -135,29 +118,18 @@ export function cleanDisplayString(str: string | undefined | null): string | und
     if (cleaned === "" || cleaned === "ঃ" || cleaned === ":" || cleaned === "-") {
         return undefined;
     }
-    // Check for single character strings that are only diacritics (common in Bengali script)
-    // This regex checks for common Bengali vowel signs and other marks if they appear alone.
+    
     if (cleaned.length === 1 && /^[\u0981-\u0983\u09BE-\u09C4\u09C7-\u09C8\u09CB-\u09CC\u09D7\u09BC\u09CD]$/.test(cleaned)) {
         return undefined;
     }
     if (cleaned.startsWith('\u09CD')) return undefined; // Starts with Hasanta/Virama
 
-    // Specific problematic fragments that might result from over-cleaning or bad data
-    const problematicFragments = ["িন্দু", "ঁভূল", "িভিয়"]; // Add more as identified
+    const problematicFragments = ["িন্দু", "ঁভূল", "িভিয়"]; 
     if (problematicFragments.includes(cleaned)) return undefined;
-
-    // Allow specific short names that are valid
-    const allowedShortNames = ["ও", "এ", "বা", "মা", "বিভিন্ন শিল্পী", "কাজী নজরুল ইসলাম", "দ্বিজেন্দ্রলাল রায়"];
-    if (cleaned.length <= 2 && !allowedShortNames.some(name => name === cleaned || cleaned.startsWith(name + " "))) { // Check exact match or start of a multi-word name
-        // Additional check for very short Bengali names common in lists if they are not full words
-        if (cleaned === "ভী" || cleaned === "সু" ) {
-             if (cleaned !== "দ্বিজেন্দ্রলাল রায়") return undefined;
-        }
-    }
     
     // Specific common misspellings or variations to normalize for display
     if (cleaned === 'কাজী নজরুল ইসলম') cleaned = 'কাজী নজরুল ইসলাম';
-    if (cleaned === 'দ্বিজেন্দ্রলাল রয়') cleaned = 'দ্বিজেন্দ্রলাল রায়'; // Standardize Roy/Ray
+    if (cleaned === 'দ্বিজেন্দ্রলাল রয়') cleaned = 'দ্বিজেন্দ্রলাল রায়';
     if (cleaned === 'আর ডি বর্মন') cleaned = 'রাহুল দেববর্মণ';
     if (cleaned === 'আর. ডি. বর্মন') cleaned = 'রাহুল দেববর্মণ';
     if (cleaned === 'বিভিন্ন বাউল') cleaned = 'বিভিন্ন শিল্পী';
@@ -181,26 +153,28 @@ export function cleanDisplayString(str: string | undefined | null): string | und
 export const createSlug = (title?: string, artist?: string, lyricist?: string, uniqueId?: string | number): string => {
   const titleSlug = cleanString(title) || 'শিরোনামহীন';
   const artistSlug = cleanString(artist) || 'অজানা-শিল্পী';
-  const lyricistSlug = cleanString(lyricist); // This can be undefined if lyricist is not provided or cleans to empty
+  
+  // For lyricistSlug, ensure "সংগৃহীত" or similar placeholders are also cleaned consistently for slug generation.
+  let rawLyricistForSlug = lyricist;
+  if (lyricist && (lyricist.trim() === 'সংগৃহীত' || lyricist.trim() === 'অজানা গীতিকার' || lyricist.trim() === 'প্রচলিত')) {
+      rawLyricistForSlug = lyricist.trim(); // Use the placeholder as is for cleanString
+  }
+  const lyricistSlug = cleanString(rawLyricistForSlug);
 
   let baseSlugElements: string[] = [titleSlug];
 
-  // Only add artist if it's not the default placeholder.
-  // This helps in cases where artist might be truly unknown and shouldn't clutter the slug.
-  if (artistSlug !== 'অজানা-শিল্পী') {
+  if (artistSlug !== 'অজানা-শিল্পী' && artistSlug !== 'বিভিন্ন-শিল্পী') { // Avoid adding default artist slugs
     baseSlugElements.push('by', artistSlug);
   }
 
-  // Only add lyricist if it's valid and not a generic placeholder.
-  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার' && lyricistSlug !== 'অজানা গীতিকার' && lyricistSlug !== 'unknown-lyricist') {
+  if (lyricistSlug && lyricistSlug !== 'সংগৃহীত' && lyricistSlug !== 'অজানা-গীতিকার' && lyricistSlug !== 'প্রচলিত' && lyricistSlug !== 'unknown-lyricist' ) {
     baseSlugElements.push('lyricist', lyricistSlug);
   }
   
   let baseSlug = baseSlugElements.join('-');
 
-  // Append uniqueId if provided and valid
   if (uniqueId !== undefined && uniqueId !== null && String(uniqueId).trim() !== '') {
-     const cleanedUniqueId = String(uniqueId).replace(/\s+/g, '-'); // Clean the ID just in case
+     const cleanedUniqueId = String(uniqueId).replace(/[\s-]+/g, '-').toLowerCase();
      return `${baseSlug}-${cleanedUniqueId}`;
   }
 
@@ -230,3 +204,5 @@ export const toBengaliNumerals = (num: number | string | undefined | null): stri
   };
   return numStr.replace(/[0-9]/g, (digit) => bengaliDigits[digit] || digit);
 };
+
+    

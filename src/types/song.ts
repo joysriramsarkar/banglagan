@@ -1,3 +1,4 @@
+
 import type { Timestamp } from 'firebase/firestore';
 
 /**
@@ -23,6 +24,11 @@ export interface Song {
    * গীতিকারের নাম (বাংলায়, যদি থাকে)।
    */
   lyricist?: string;
+  /**
+   * The composer of the song in Bengali (optional).
+   * সুরকারের নাম (বাংলায়, যদি থাকে)।
+   */
+  composer?: string;
   /**
    * The genre of the song (optional).
    * গানের ধরণ (যদি থাকে)।

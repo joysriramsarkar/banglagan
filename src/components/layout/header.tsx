@@ -1,6 +1,7 @@
+
 import Link from 'next/link';
-import { Music } from 'lucide-react';
-import SearchBar from '@/components/search-bar'; // Assuming SearchBar component exists
+import Image from 'next/image'; // Import the Next.js Image component
+import SearchBar from '@/components/search-bar';
 
 export default function Header() {
   return (
@@ -8,7 +9,14 @@ export default function Header() {
       <div className="container flex h-14 items-center">
         <div className="mr-4 flex items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <Music className="h-6 w-6 text-primary" />
+            {/* Replace the Music icon with your logo */}
+            <Image
+              src="/logo.png" // Path to your logo in the public folder
+              alt="বাংলা গান লোগো" // Alt text for accessibility
+              width={32} // Specify a width (adjust as needed)
+              height={32} // Specify a height (adjust as needed)
+              className="h-8 w-8" // You can adjust styling here
+            />
             <span className="font-bold sm:inline-block text-lg">
               বাংলা গান
             </span>

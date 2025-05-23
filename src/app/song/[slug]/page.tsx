@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -7,26 +6,27 @@ import type { Song } from '@/services/bangla-song-database';
 import { useParams, notFound } from 'next/navigation'; // Corrected import for notFound
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
-import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils'; // cleanDisplayString is not used here
+import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
-interface SongPageProps {
-  params: {
-    slug: string;
-  };
-}
+// SongPageProps is removed as params will be derived from useParams hook
+// interface SongPageProps {
+//   params: {
+//     slug: string;
+//   };
+// }
 
-export default function SongPage({ params: paramsFromProps }: SongPageProps) {
-  const paramsFromHook = useParams(); // For client-side fetching of slug
-  const rawSlugFromParams = Array.isArray(paramsFromHook?.slug) ? paramsFromHook.slug[0] : paramsFromHook?.slug || paramsFromProps?.slug;
+export default function SongPage() {
+  const paramsFromHook = useParams<{ slug: string }>(); // Explicitly type the expected params
+  const rawSlugFromParams = paramsFromHook?.slug;
 
 
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
-  // No need for decodedSlug state if we use rawSlugFromParams directly for fetching
+
 
   React.useEffect(() => {
     let slugToFetch: string | undefined | null = rawSlugFromParams;
@@ -35,7 +35,7 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
       setLoading(false);
       setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
       setSong(null);
-      return;
+      return; // Return early
     }
     
     const finalSlugToFetch = slugToFetch.trim();
@@ -44,16 +44,14 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
       setLoading(true);
       setFetchError(null);
       try {
-        const fetchedSong = await getSongBySlug(slug); // getSongBySlug will handle cleaning
+        const fetchedSong = await getSongBySlug(slug);
         if (!fetchedSong) {
-          // console.error(`Client-side: Song not found for slug: ${slug}`);
           setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
           setSong(null);
         } else {
           setSong(fetchedSong);
         }
       } catch (error: any) {
-        // console.error(`Client-side: Error fetching song for slug ${slug}:`, error);
         setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
         setSong(null);
       } finally {
@@ -89,8 +87,7 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
      notFound();
   }
 
-  // Display title should be the one fetched from the database, already cleaned by cleanDisplayString there
-  const displayTitle = song.title; // song.title is already cleaned for display
+  const displayTitle = song.title;
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
@@ -157,5 +154,3 @@ export default function SongPage({ params: paramsFromProps }: SongPageProps) {
     </div>
   );
 }
-// export const dynamic = 'force-dynamic'; // Ensures the page is dynamically rendered
-// Moved generateMetadata to src/app/song/[slug]/metadata.ts

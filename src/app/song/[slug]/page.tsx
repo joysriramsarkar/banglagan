@@ -4,7 +4,6 @@
 import * as React from 'react';
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
-import { useParams } from 'next/navigation'; // Import and use useParams
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
@@ -13,64 +12,92 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
-export default function SongPage() {
-  // Use useParams hook to get the slug directly.
-  // The generic type ensures paramsFromHook is { slug: string } or null/undefined if not ready.
-  const paramsFromHook = useParams<{ slug: string }>(); 
-  
+interface PageResolvedParams {
+  slug: string;
+}
+
+interface SongPageActualProps {
+  params: Promise<PageResolvedParams>;
+}
+
+export default function SongPage(props: SongPageActualProps) {
   const [slug, setSlug] = React.useState<string | undefined>(undefined);
   const [song, setSong] = React.useState<Song | null>(null);
-  const [loading, setLoading] = React.useState(true); // Combined loading state
+  const [loading, setLoading] = React.useState(true); // Start true: must resolve params first
   const [fetchError, setFetchError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    // Extract slug from paramsFromHook once available
-    const currentSlug = paramsFromHook?.slug;
-    if (currentSlug) {
-      setSlug(currentSlug.trim());
-    } else if (paramsFromHook) { 
-      // paramsFromHook exists but slug is not there or empty, could be an invalid route or initial state
-      setLoading(false);
-      setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
+    let isMounted = true;
+    async function resolveParamsAndSetSlug() {
+      // setLoading(true); // Already true by default or from previous run
+      try {
+        const resolvedParams = await props.params;
+        if (isMounted) {
+          if (resolvedParams?.slug) {
+            const currentSlug = resolvedParams.slug.trim();
+            setSlug(currentSlug);
+            // Do not setLoading(false) here, let the song fetching effect do that
+          } else {
+            setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
+            setLoading(false); // Error in params, stop loading
+          }
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error resolving page params:", error);
+          setFetchError("পৃষ্ঠার তথ্য লোড করতে সমস্যা হয়েছে।");
+          setLoading(false); // Error in params, stop loading
+        }
+      }
     }
-    // If paramsFromHook is undefined/null initially, useEffect will re-run when it updates.
-  }, [paramsFromHook]); // Depend on paramsFromHook
+
+    resolveParamsAndSetSlug();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [props.params]); // Re-run if the params promise itself changes
 
   React.useEffect(() => {
-    // This effect runs when `slug` state is updated.
     if (!slug) {
-      // If slug is not set (e.g. paramsFromHook was not ready or slug was invalid),
-      // and we are not already in an error state from slug setting.
-      if (!fetchError && !loading) { // Avoid setting loading if already handled or error exists
-          // setLoading(false); // Ensure loading stops if slug is definitively missing.
-      }
+      // If slug is not yet resolved, or was invalid, don't fetch.
+      // setLoading(false) is handled by the params effect if slug resolution fails.
       return;
     }
 
+    let isMounted = true;
     const loadSongData = async (s: string) => {
-      setLoading(true); // Start loading for data fetching
+      setLoading(true); // Explicitly set loading before fetching song data
       setFetchError(null);
       setSong(null);
       try {
         const fetchedSong = await getSongBySlug(s);
-        if (!fetchedSong) {
-          setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
-          setSong(null);
-        } else {
-          setSong(fetchedSong);
+        if (isMounted) {
+          if (!fetchedSong) {
+            setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
+            setSong(null);
+          } else {
+            setSong(fetchedSong);
+          }
         }
       } catch (error: any) {
-        console.error(`Error fetching song data for slug ${s}:`, error);
-        setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-        setSong(null);
+        if (isMounted) {
+          console.error(`Error fetching song data for slug ${s}:`, error);
+          setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+          setSong(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false); // Loading finishes after song data attempt
+        }
       }
     };
 
     loadSongData(slug);
-
-  }, [slug]); // Depend only on the resolved slug state
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]); // This effect runs when the slug state is updated
 
   if (loading) {
     return (
@@ -92,9 +119,11 @@ export default function SongPage() {
   }
 
   if (!song) {
-    // If no song and no error, and not loading, then it's a notFound case.
-    notFound();
-    return null; 
+     // If slug was resolved, loading is false, no error, but still no song, then call notFound.
+    if (slug && !loading && !fetchError) {
+        notFound();
+    }
+    return null;
   }
 
   const displayTitle = song.title;

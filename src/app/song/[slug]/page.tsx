@@ -1,9 +1,10 @@
+
 'use client';
 
 import * as React from 'react';
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
-import { useParams, notFound } from 'next/navigation'; // Corrected import for notFound
+import { useParams, notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
@@ -11,22 +12,13 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
-// SongPageProps is removed as params will be derived from useParams hook
-// interface SongPageProps {
-//   params: {
-//     slug: string;
-//   };
-// }
-
 export default function SongPage() {
-  const paramsFromHook = useParams<{ slug: string }>(); // Explicitly type the expected params
+  const paramsFromHook = useParams<{ slug: string }>();
   const rawSlugFromParams = paramsFromHook?.slug;
-
 
   const [song, setSong] = React.useState<Song | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [fetchError, setFetchError] = React.useState<string | null>(null);
-
 
   React.useEffect(() => {
     let slugToFetch: string | undefined | null = rawSlugFromParams;
@@ -35,7 +27,7 @@ export default function SongPage() {
       setLoading(false);
       setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
       setSong(null);
-      return; // Return early
+      return; 
     }
     
     const finalSlugToFetch = slugToFetch.trim();
@@ -63,7 +55,6 @@ export default function SongPage() {
 
   }, [rawSlugFromParams]);
 
-
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)]">
@@ -84,7 +75,8 @@ export default function SongPage() {
   }
 
   if (!song) {
-     notFound();
+    // This will trigger the not-found.tsx UI boundary
+    notFound();
   }
 
   const displayTitle = song.title;
@@ -154,3 +146,5 @@ export default function SongPage() {
     </div>
   );
 }
+
+    

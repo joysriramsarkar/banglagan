@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { getAllComposers, getTotalSongCount } from '@/services/bangla-song-database';
 import { Card, CardContent } from '@/components/ui/card';
-import { Disc3, ListMusic } from 'lucide-react'; 
+import { Disc3, ListMusic } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { toBengaliNumerals } from '@/lib/utils';
 
@@ -31,7 +31,6 @@ export default async function ComposersPage() {
                 <Link
                   key={composerName}
                   href={`/search?q=${encodeURIComponent(composerName)}`}
-                  passHref
                   className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline shadow-sm border border-transparent hover:border-primary/20"
                 >
                   {composerName}

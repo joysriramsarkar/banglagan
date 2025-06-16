@@ -1,15 +1,15 @@
 
 import Link from 'next/link';
-import { getAllArtists, getTotalSongCount } from '@/services/bangla-song-database'; 
+import { getAllArtists, getTotalSongCount } from '@/services/bangla-song-database';
 import { Card, CardContent } from '@/components/ui/card';
-import { Users, ListMusic } from 'lucide-react'; 
+import { Users, ListMusic } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
-import { toBengaliNumerals } from '@/lib/utils'; 
+import { toBengaliNumerals } from '@/lib/utils';
 
 export default async function ArtistsPage() {
   // getAllArtists now returns display-ready, individual artist names
   const artists = await getAllArtists();
-  const totalSongs = await getTotalSongCount(); 
+  const totalSongs = await getTotalSongCount();
 
   return (
     <div className="space-y-6">
@@ -30,12 +30,11 @@ export default async function ArtistsPage() {
             <div className="flex flex-wrap gap-3">
               {artists.map((artistName) => ( // artistName is now a clean, individual name
                 <Link
-                  key={artistName} 
-                  href={`/search?q=${encodeURIComponent(artistName)}`} 
-                  passHref
+                  key={artistName}
+                  href={`/search?q=${encodeURIComponent(artistName)}`}
                   className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline shadow-sm border border-transparent hover:border-primary/20"
                 >
-                  {artistName} 
+                  {artistName}
                 </Link>
               ))}
             </div>
@@ -54,4 +53,3 @@ export const metadata = {
 };
 
 export const revalidate = 3600; // Revalidate every hour
-

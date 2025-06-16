@@ -3,7 +3,8 @@ import type { Metadata, ResolvingMetadata } from 'next';
 import { getSongBySlug } from '@/services/bangla-song-database';
 import { cleanDisplayString } from '@/lib/utils'; // cleanDisplayString for metadata titles
 
-interface SongPageProps {
+// Renamed interface to avoid potential conflicts
+interface SongMetadataProps {
   params: {
     slug: string;
   };
@@ -11,7 +12,7 @@ interface SongPageProps {
 }
 
 export async function generateMetadata(
-  { params }: SongPageProps,
+  { params }: SongMetadataProps, // Use the renamed interface
   parent: ResolvingMetadata
 ): Promise<Metadata> {
   const rawSlug = params.slug;

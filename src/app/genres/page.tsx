@@ -32,7 +32,6 @@ export default async function GenresPage() {
                  <Link
                    key={genre}
                    href={`/search?q=${encodeURIComponent(genre)}`}
-                   passHref
                    className="px-4 py-2 text-sm bg-secondary text-secondary-foreground rounded-full cursor-pointer hover:bg-accent hover:text-accent-foreground transition-colors no-underline shadow-sm border border-transparent hover:border-primary/20"
                  >
                    {genre} {/* Display genre name (already cleaned) */}

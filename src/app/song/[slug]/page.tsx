@@ -1,9 +1,10 @@
+
 'use client';
 
 import * as React from 'react';
 import { getSongBySlug } from '@/services/bangla-song-database';
 import type { Song } from '@/services/bangla-song-database';
-import { useParams, notFound } from 'next/navigation'; // Corrected import for notFound
+import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
@@ -11,58 +12,92 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 
-// SongPageProps is removed as params will be derived from useParams hook
-// interface SongPageProps {
-//   params: {
-//     slug: string;
-//   };
-// }
+interface PageResolvedParams {
+  slug: string;
+}
 
-export default function SongPage() {
-  const paramsFromHook = useParams<{ slug: string }>(); // Explicitly type the expected params
-  const rawSlugFromParams = paramsFromHook?.slug;
+interface SongPageActualProps {
+  params: Promise<PageResolvedParams>;
+}
 
-
+export default function SongPage(props: SongPageActualProps) {
+  const [slug, setSlug] = React.useState<string | undefined>(undefined);
   const [song, setSong] = React.useState<Song | null>(null);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(true); // Start true: must resolve params first
   const [fetchError, setFetchError] = React.useState<string | null>(null);
 
+  React.useEffect(() => {
+    let isMounted = true;
+    async function resolveParamsAndSetSlug() {
+      // setLoading(true); // Already true by default or from previous run
+      try {
+        const resolvedParams = await props.params;
+        if (isMounted) {
+          if (resolvedParams?.slug) {
+            const currentSlug = resolvedParams.slug.trim();
+            setSlug(currentSlug);
+            // Do not setLoading(false) here, let the song fetching effect do that
+          } else {
+            setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
+            setLoading(false); // Error in params, stop loading
+          }
+        }
+      } catch (error) {
+        if (isMounted) {
+          console.error("Error resolving page params:", error);
+          setFetchError("পৃষ্ঠার তথ্য লোড করতে সমস্যা হয়েছে।");
+          setLoading(false); // Error in params, stop loading
+        }
+      }
+    }
+
+    resolveParamsAndSetSlug();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [props.params]); // Re-run if the params promise itself changes
 
   React.useEffect(() => {
-    let slugToFetch: string | undefined | null = rawSlugFromParams;
-
-    if (!slugToFetch || typeof slugToFetch !== 'string' || slugToFetch.trim() === '') {
-      setLoading(false);
-      setFetchError("কোনো বৈধ গানের লিঙ্ক দেওয়া হয়নি।");
-      setSong(null);
-      return; // Return early
+    if (!slug) {
+      // If slug is not yet resolved, or was invalid, don't fetch.
+      // setLoading(false) is handled by the params effect if slug resolution fails.
+      return;
     }
-    
-    const finalSlugToFetch = slugToFetch.trim();
 
-    const loadSong = async (slug: string) => {
-      setLoading(true);
+    let isMounted = true;
+    const loadSongData = async (s: string) => {
+      setLoading(true); // Explicitly set loading before fetching song data
       setFetchError(null);
+      setSong(null);
       try {
-        const fetchedSong = await getSongBySlug(slug);
-        if (!fetchedSong) {
-          setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
-          setSong(null);
-        } else {
-          setSong(fetchedSong);
+        const fetchedSong = await getSongBySlug(s);
+        if (isMounted) {
+          if (!fetchedSong) {
+            setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
+            setSong(null);
+          } else {
+            setSong(fetchedSong);
+          }
         }
       } catch (error: any) {
-        setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-        setSong(null);
+        if (isMounted) {
+          console.error(`Error fetching song data for slug ${s}:`, error);
+          setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
+          setSong(null);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false); // Loading finishes after song data attempt
+        }
       }
     };
 
-    loadSong(finalSlugToFetch);
-
-  }, [rawSlugFromParams]);
-
+    loadSongData(slug);
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]); // This effect runs when the slug state is updated
 
   if (loading) {
     return (
@@ -84,7 +119,11 @@ export default function SongPage() {
   }
 
   if (!song) {
-     notFound();
+     // If slug was resolved, loading is false, no error, but still no song, then call notFound.
+    if (slug && !loading && !fetchError) {
+        notFound();
+    }
+    return null;
   }
 
   const displayTitle = song.title;

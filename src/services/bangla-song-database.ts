@@ -19,7 +19,7 @@ export interface Song extends SongInterface {
 
 // Base mock data without pre-computed id/slug/keywords
 // Add 'id' field to raw data if you have persistent IDs, otherwise it will be index-based.
-const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre' >[] = [
+const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre'>[] = [
   // Rabindranath Tagore Songs
   {
     id: '1',
@@ -152,55 +152,55 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '58', title: 'বাগিচায় বুলবুলি তুই', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'গজল', releaseYear: 1928, lyrics: 'বাগিচায় বুলবুলি তুই ফুলশাখাতে দিসনে আজি দোল।' },
   { id: '59', title: 'আমি চিরতরে দূরে চলে যাব', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিরহ', releaseYear: 1930, lyrics: 'আমি চিরতরে দূরে চলে যাব, তবু আমারে দেব না ভুলিতে।' },
   { id: '60', title: 'মোর প্রিয়া হবে এসো রানী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1929, lyrics: 'মোর প্রিয়া হবে এসো রানী, দেব খোঁপায় তারার ফুল।' },
-  { id: '61', title: 'আলগা করো গো খোঁপার বাঁধন', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1928, lyrics: 'আলগা করো গো খোঁপার বাঁধন, দিল ওহি মেরা ফাঁস গ্যয়ি।'},
-  { id: '62', title: 'বুলবুল নীরব নার্গিস বনে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'গজল', releaseYear: 1927, lyrics: 'বুলবুল নীরব নার্গিস বনে, ঝুরে বন গোলাপ বিলাপ করে।'},
-  { id: '63', title: 'দূর দ্বীপবাসিনী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'দূর দ্বীপবাসিনী, চিনি তোমারে চিনি।'},
-  { id: '64', title: 'এসো প্রিয় আরো কাছে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1931, lyrics: 'এসো প্রিয় আরো কাছে, এসো প্রিয়া।'},
-  { id: '65', title: 'তুমি সুন্দর তাই চেয়ে থাকি প্রিয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'তুমি সুন্দর তাই চেয়ে থাকি প্রিয়, সেকি মোর অপরাধ?'},
-  { id: '66', title: 'নদীর নাম সই অঞ্জনা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'নদীর নাম সই অঞ্জনা, নাচে তীরে খঞ্জনা।'},
-  { id: '67', title: 'আমার যাবার সময় হলো', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'আমার যাবার সময় হলো, দাও বিদায়।'},
-  { id: '68', title: 'শাওন রাতে যদি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিরহ', releaseYear: 1928, lyrics: 'শাওন রাতে যদি স্মরণে আসে মোরে, বাহিরে ঝড় বহে, নয়নে বারি ঝরে।'},
-  { id: '69', title: 'খেয়া পারের তরণী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: 'খেয়া পারের তরণী কে আছিস আয়, আমি পার করে নেব তোদের।'},
-  { id: '70', title: 'মোমের পুতুল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শিশুতোষ', releaseYear: 1930, lyrics: 'মোমের পুতুল মমীর দেশের মেয়ে, নেচে যায় সাথে সাথে সুরের গান গেয়ে।'},
-  { id: '71', title: 'চাঁদ হেরিছে চাঁদমুখ তার', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1929, lyrics: 'চাঁদ হেরিছে চাঁদমুখ তার সরসীর আরশিতে।'},
-  { id: '72', title: 'রুমঝুম রুমঝুম কে বাজায়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আনন্দ', releaseYear: 1930, lyrics: 'রুমঝুম রুমঝুম কে বাজায় জল নুপুর।'},
-  { id: '73', title: 'তোমারেই আমি চাহিয়াছি প্রিয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'তোমারেই আমি চাহিয়াছি প্রিয় শত রূপে শতবার।'},
-  { id: '74', title: 'কেমনে রাখি আঁখি বারি চাপিয়া', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিরহ', releaseYear: 1929, lyrics: 'কেমনে রাখি আঁখি বারি চাপিয়া, প্রদীপ নিভিল হায় অভাগিয়ার।'},
-  { id: '75', title: 'তোমার আঁখির মতো আকাশের দুটি তারা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'তোমার আঁখির মতো আকাশের দুটি তারা।'},
-  { id: '76', title: 'আমি যার নূপুরের ছন্দ', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'আমি যার নূপুরের ছন্দ, বেণুকার সুর।'},
-  { id: '77', title: 'সই ভালো করে বিনোদ বেনী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: ' श्रृंगार', releaseYear: 1930, lyrics: 'সই ভালো করে বিনোদ বেনী বাঁধিয়া দে।'},
+  { id: '61', title: 'আলগা করো গো খোঁপার বাঁধন', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1928, lyrics: 'আলগা করো গো খোঁপার বাঁধন, দিল ওহি মেরা ফাঁস গ্যয়ি।' },
+  { id: '62', title: 'বুলবুল নীরব নার্গিস বনে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'গজল', releaseYear: 1927, lyrics: 'বুলবুল নীরব নার্গিস বনে, ঝুরে বন গোলাপ বিলাপ করে।' },
+  { id: '63', title: 'দূর দ্বীপবাসিনী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'দূর দ্বীপবাসিনী, চিনি তোমারে চিনি।' },
+  { id: '64', title: 'এসো প্রিয় আরো কাছে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1931, lyrics: 'এসো প্রিয় আরো কাছে, এসো প্রিয়া।' },
+  { id: '65', title: 'তুমি সুন্দর তাই চেয়ে থাকি প্রিয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'তুমি সুন্দর তাই চেয়ে থাকি প্রিয়, সেকি মোর অপরাধ?' },
+  { id: '66', title: 'নদীর নাম সই অঞ্জনা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'নদীর নাম সই অঞ্জনা, নাচে তীরে খঞ্জনা।' },
+  { id: '67', title: 'আমার যাবার সময় হলো', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'আমার যাবার সময় হলো, দাও বিদায়।' },
+  { id: '68', title: 'শাওন রাতে যদি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিরহ', releaseYear: 1928, lyrics: 'শাওন রাতে যদি স্মরণে আসে মোরে, বাহিরে ঝড় বহে, নয়নে বারি ঝরে।' },
+  { id: '69', title: 'খেয়া পারের তরণী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: 'খেয়া পারের তরণী কে আছিস আয়, আমি পার করে নেব তোদের।' },
+  { id: '70', title: 'মোমের পুতুল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শিশুতোষ', releaseYear: 1930, lyrics: 'মোমের পুতুল মমীর দেশের মেয়ে, নেচে যায় সাথে সাথে সুরের গান গেয়ে।' },
+  { id: '71', title: 'চাঁদ হেরিছে চাঁদমুখ তার', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1929, lyrics: 'চাঁদ হেরিছে চাঁদমুখ তার সরসীর আরশিতে।' },
+  { id: '72', title: 'রুমঝুম রুমঝুম কে বাজায়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আনন্দ', releaseYear: 1930, lyrics: 'রুমঝুম রুমঝুম কে বাজায় জল নুপুর।' },
+  { id: '73', title: 'তোমারেই আমি চাহিয়াছি প্রিয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'তোমারেই আমি চাহিয়াছি প্রিয় শত রূপে শতবার।' },
+  { id: '74', title: 'কেমনে রাখি আঁখি বারি চাপিয়া', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিরহ', releaseYear: 1929, lyrics: 'কেমনে রাখি আঁখি বারি চাপিয়া, প্রদীপ নিভিল হায় অভাগিয়ার।' },
+  { id: '75', title: 'তোমার আঁখির মতো আকাশের দুটি তারা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'তোমার আঁখির মতো আকাশের দুটি তারা।' },
+  { id: '76', title: 'আমি যার নূপুরের ছন্দ', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'আমি যার নূপুরের ছন্দ, বেণুকার সুর।' },
+  { id: '77', title: 'সই ভালো করে বিনোদ বেনী', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: ' श्रृंगार', releaseYear: 1930, lyrics: 'সই ভালো করে বিনোদ বেনী বাঁধিয়া দে।' },
   { id: '78', title: 'ইসলাম আমার ধর্ম', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'ইসলাম আমার ধর্ম, কোরান আমার কর্ম।' },
   { id: '79', title: 'আল্লাহতে যার পূর্ণ ঈমান', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'আল্লাহতে যার পূর্ণ ঈমান, কোথা সে মুসলমান?' },
-  { id: '80', title: 'ইয়া মোহাম্মদ, বেহেশত হতে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'ইয়া মোহাম্মদ, বেহেশত হতে খোদায় পাওয়ার পথ দেখাও।'},
-  { id: '81', title: 'নবী মোর পরশমণি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'নবী মোর পরশমণি, নবী মোর সোনার খনি।'},
-  { id: '82', title: 'ওগো মনের দুঃখী!', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'ওগো মনের দুঃখী! এ কি তোর দুঃখের কাঁটা? '},
-  { id: '83', title: 'মাগো চিন্ময়ী রূপ ধরে আয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'মাগো চিন্ময়ী রূপ ধরে আয়, আমারই এ ভাঙ্গা ঘরে।'},
-  { id: '84', title: 'শ্মশানে জাগিছে শ্যামা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'শ্মশানে জাগিছে শ্যামা মা, এলোকেশে।'},
-  { id: '85', title: 'বল রে জবা বল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'বল রে জবা বল, কোন সাধনায় পেলি শ্যামা মায়ের চরণতল।'},
-  { id: '86', title: 'আমার কালো মেয়ের পায়ের তলায়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'আমার কালো মেয়ের পায়ের তলায় দেখে যা আলোর নাচন।'},
-  { id: '87', title: 'নয়ন ভরা জল গো তোমার', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'নয়ন ভরা জল গো তোমার, আঁচল ভরা ফুল।'},
-  { id: '88', title: 'আমার সকল দুঃখের প্রদীপ', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: 'আমার সকল দুঃখের প্রদীপ জ্বেলে দিবস গেলে করব নিবেদন।'},
-  { id: '89', title: 'আমার মুক্তি আলোয় আলোয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: 'আমার মুক্তি আলোয় আলোয় এই আকাশে।'}, // Note: Also by Tagore with same title
-  { id: '90', title: 'আমি ভাই ক্ষ্যাপা বাউল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বাউল', releaseYear: 1930, lyrics: 'আমি ভাই ক্ষ্যাপা বাউল, আমার দেউল আমার এই আপন দেহ।'},
-  { id: '91', title: 'যদি আর বাঁশি না বাজে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'যদি আর বাঁশি না বাজে, আমি সুরহারা হব যে।'},
-  { id: '92', title: 'বসিয়া বিজনে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'বসিয়া বিজনে কেন একা মনে, জল ভরে দু’নয়নে।'},
-  { id: '93', title: 'আমি চাঁদ নহি, অভিশাপ', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'আমি চাঁদ নহি, অভিশাপ তব।'},
-  { id: '94', title: 'একি অসীম পিয়াসা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'একি অসীম পিয়াসা, একি শেষহীন আশা।'},
-  { id: '95', title: 'নাই চিনিলে আমায় তুমি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'নাই চিনিলে আমায় তুমি রইব নীরবে।'},
-  { id: '96', title: 'আমি কবি হতে আসিনি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিপ্লবী', releaseYear: 1930, lyrics: 'আমি কবি হতে আসিনি, আমি এসেছি আঘাত করতে, আঘাত হানতে।'},
-  { id: '97', title: 'ফুলের জলসায় নীরব কেন কবি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'ফুলের জলসায় নীরব কেন কবি, এ যে বসন্ত নয়, এ যে হেমন্তের ছবি।'},
-  { id: '98', title: 'এ কূল ভাঙে ও কূল গড়ে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'দার্শনিক', releaseYear: 1930, lyrics: 'এ কূল ভাঙে ও কূল গড়ে, এই তো নদীর খেলা।'},
-  { id: '99', title: 'চেয়ো না সুনয়না', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'চেয়ো না সুনয়না আর চেয়ো না ওই নয়ন পানে।'},
-  { id: '100', title: 'আমার গানের স্বরলিপি লেখা রবে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'আমার গানের স্বরলিপি লেখা রবে, আমি যদি আর নাই আসি হেথা।'},
-  { id: '101', title: 'কে তুমি দূরের সাথি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'কে তুমি দূরের সাথি, ডাকো পিছে থেকে।'},
-  { id: '102', title: 'নাম মোহাম্মদ বোল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'নাম মোহাম্মদ বোল রে মন, নাম আহমদ বোল।'},
+  { id: '80', title: 'ইয়া মোহাম্মদ, বেহেশত হতে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'ইয়া মোহাম্মদ, বেহেশত হতে খোদায় পাওয়ার পথ দেখাও।' },
+  { id: '81', title: 'নবী মোর পরশমণি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'নবী মোর পরশমণি, নবী মোর সোনার খনি।' },
+  { id: '82', title: 'ওগো মনের দুঃখী!', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'ওগো মনের দুঃখী! এ কি তোর দুঃখের কাঁটা? ' },
+  { id: '83', title: 'মাগো চিন্ময়ী রূপ ধরে আয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'মাগো চিন্ময়ী রূপ ধরে আয়, আমারই এ ভাঙ্গা ঘরে।' },
+  { id: '84', title: 'শ্মশানে জাগিছে শ্যামা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'শ্মশানে জাগিছে শ্যামা মা, এলোকেশে।' },
+  { id: '85', title: 'বল রে জবা বল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'বল রে জবা বল, কোন সাধনায় পেলি শ্যামা মায়ের চরণতল।' },
+  { id: '86', title: 'আমার কালো মেয়ের পায়ের তলায়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'শ্যামা সঙ্গীত', releaseYear: 1930, lyrics: 'আমার কালো মেয়ের পায়ের তলায় দেখে যা আলোর নাচন।' },
+  { id: '87', title: 'নয়ন ভরা জল গো তোমার', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'নয়ন ভরা জল গো তোমার, আঁচল ভরা ফুল।' },
+  { id: '88', title: 'আমার সকল দুঃখের প্রদীপ', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: 'আমার সকল দুঃখের প্রদীপ জ্বেলে দিবস গেলে করব নিবেদন।' },
+  { id: '89', title: 'আমার মুক্তি আলোয় আলোয়', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: 'আমার মুক্তি আলোয় আলোয় এই আকাশে।' }, // Note: Also by Tagore with same title
+  { id: '90', title: 'আমি ভাই ক্ষ্যাপা বাউল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বাউল', releaseYear: 1930, lyrics: 'আমি ভাই ক্ষ্যাপা বাউল, আমার দেউল আমার এই আপন দেহ।' },
+  { id: '91', title: 'যদি আর বাঁশি না বাজে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'যদি আর বাঁশি না বাজে, আমি সুরহারা হব যে।' },
+  { id: '92', title: 'বসিয়া বিজনে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'বসিয়া বিজনে কেন একা মনে, জল ভরে দু’নয়নে।' },
+  { id: '93', title: 'আমি চাঁদ নহি, অভিশাপ', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'আমি চাঁদ নহি, অভিশাপ তব।' },
+  { id: '94', title: 'একি অসীম পিয়াসা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'একি অসীম পিয়াসা, একি শেষহীন আশা।' },
+  { id: '95', title: 'নাই চিনিলে আমায় তুমি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'নাই চিনিলে আমায় তুমি রইব নীরবে।' },
+  { id: '96', title: 'আমি কবি হতে আসিনি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিপ্লবী', releaseYear: 1930, lyrics: 'আমি কবি হতে আসিনি, আমি এসেছি আঘাত করতে, আঘাত হানতে।' },
+  { id: '97', title: 'ফুলের জলসায় নীরব কেন কবি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'ফুলের জলসায় নীরব কেন কবি, এ যে বসন্ত নয়, এ যে হেমন্তের ছবি।' },
+  { id: '98', title: 'এ কূল ভাঙে ও কূল গড়ে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'দার্শনিক', releaseYear: 1930, lyrics: 'এ কূল ভাঙে ও কূল গড়ে, এই তো নদীর খেলা।' },
+  { id: '99', title: 'চেয়ো না সুনয়না', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'চেয়ো না সুনয়না আর চেয়ো না ওই নয়ন পানে।' },
+  { id: '100', title: 'আমার গানের স্বরলিপি লেখা রবে', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'আমার গানের স্বরলিপি লেখা রবে, আমি যদি আর নাই আসি হেথা।' },
+  { id: '101', title: 'কে তুমি দূরের সাথি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'প্রেম', releaseYear: 1930, lyrics: 'কে তুমি দূরের সাথি, ডাকো পিছে থেকে।' },
+  { id: '102', title: 'নাম মোহাম্মদ বোল', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'নাম মোহাম্মদ বোল রে মন, নাম আহমদ বোল।' },
   { id: '103', title: 'ইসলাম আমার দিবানিশি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'ইসলাম আমার দিবানিশি, ইসলাম আমার ধ্যান।' },
-  { id: '104', title: 'আল্লাহ আমার প্রভু', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'আল্লাহ আমার প্রভু, আমার নাহি ভয়।'},
-  { id: '105', title: 'বক্ষে আমার কাবার ছবি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'বক্ষে আমার কাবার ছবি, চক্ষে মোহাম্মদ রাসুল।'},
+  { id: '104', title: 'আল্লাহ আমার প্রভু', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'আল্লাহ আমার প্রভু, আমার নাহি ভয়।' },
+  { id: '105', title: 'বক্ষে আমার কাবার ছবি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'ইসলামী সঙ্গীত', releaseYear: 1930, lyrics: 'বক্ষে আমার কাবার ছবি, চক্ষে মোহাম্মদ রাসুল।' },
   { id: '106', title: 'রক্তে আমার আবার প্রলয় দোলা', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিপ্লবী', releaseYear: 1930, lyrics: 'রক্তে আমার আবার প্রলয় দোলা, ফিনকি দিয়ে ছোটে।' },
-  { id: '107', title: 'আমি সেই দিন হব শান্ত', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিপ্লবী', releaseYear: 1925, lyrics: 'আমি সেই দিন হব শান্ত, যবে উৎপীড়িতের ক্রন্দনরোল আকাশে বাতাসে ধ্বনিবে না।'},
-  { id: '108', title: 'নম নম নম বাংলাদেশ মম', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'দেশাত্মবোধক', releaseYear: 1930, lyrics: 'নম নম নম বাংলাদেশ মম, চিরমনোরম চিরমধুর।'},
-  { id: '109', title: 'এই কি গো শেষ দান', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'এই কি গো শেষ দান, বিরহ দিয়ে গেলে।'},
+  { id: '107', title: 'আমি সেই দিন হব শান্ত', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিপ্লবী', releaseYear: 1925, lyrics: 'আমি সেই দিন হব শান্ত, যবে উৎপীড়িতের ক্রন্দনরোল আকাশে বাতাসে ধ্বনিবে না।' },
+  { id: '108', title: 'নম নম নম বাংলাদেশ মম', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'দেশাত্মবোধক', releaseYear: 1930, lyrics: 'নম নম নম বাংলাদেশ মম, চিরমনোরম চিরমধুর।' },
+  { id: '109', title: 'এই কি গো শেষ দান', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিদায়', releaseYear: 1930, lyrics: 'এই কি গো শেষ দান, বিরহ দিয়ে গেলে।' },
 
   // Other Artists' Songs
   {
@@ -293,7 +293,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   {
     id: '116',
     title: 'খাঁচার ভিতর অচিন পাখি',
-    artist: 'বিভিন্ন শিল্পী', 
+    artist: 'বিভিন্ন শিল্পী',
     lyricist: 'লালন ফকির',
     composer: 'লালন ফকির',
     genre: 'বাউল',
@@ -325,7 +325,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '126', title: 'মেঘবালিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2016, lyrics: 'মেঘবালিকা ও মেঘবালিকা, কত স্বপ্নকথা ছিল তোমার সাথে' },
   { id: '127', title: 'আমার পরাণ যাহা চায় (বাবু)', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', genre: 'রবীন্দ্রসঙ্গীত', releaseYear: 2010, lyrics: 'আমার পরাণ যাহা চায়, তুমি তাই, তুমি তাই গো। তোমা ছাড়া আর এ জগতে মোর কেহ নাই, কিছু নাই গো।' },
   { id: '128', title: 'ভোর হয়নি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই' },
-  { id: '129', title: 'রাজা যায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'রাজা যায় রাজা আসে'},
+  { id: '129', title: 'রাজা যায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'রাজা যায় রাজা আসে' },
   { id: '130', title: 'আস্থা হারোনোর দিন', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'আস্থা হারোনোর দিন' },
   { id: '131', title: 'রাত্রি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'রাত্রি ঘনঘোর, জানি বহুদূর প্রিয় সেই ভোর' },
   { id: '132', title: 'নাচতে নেমে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2011, lyrics: 'নাচতে নেমে ঘোমটা দেওয়া উচিত কাজ সে কখনও নয়' },
@@ -341,9 +341,9 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '140', title: 'তুই যাকে চাস', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2011, lyrics: 'তুই যাকে চাস' },
   { id: '141', title: 'চল রাস্তায় সাজি', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2010, lyrics: 'চল রাস্তায় সাজি ট্রাম লাইন, আর কবিতায় শুয়ে couplet' },
   { id: '142', title: 'বসন্ত এসে গেছে', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2015, lyrics: 'বসন্ত এসে গেছে' },
-  { id: '143', title: 'বেঁচে থাকার গান', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2013, lyrics: 'এই ভাবে বেঁচে থাকার মানে হয় না'},
-  { id: '144', title: 'কলকাতা', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2015, lyrics: 'কলকাতা, তুমিও হেঁটে দেখো কলকাতা'},
-  { id: '145', title: 'যেখানে শুরুর কথা', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2015, lyrics: 'যেখানে শুরুর কথা বলার আগেই শেষ'},
+  { id: '143', title: 'বেঁচে থাকার গান', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2013, lyrics: 'এই ভাবে বেঁচে থাকার মানে হয় না' },
+  { id: '144', title: 'কলকাতা', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2015, lyrics: 'কলকাতা, তুমিও হেঁটে দেখো কলকাতা' },
+  { id: '145', title: 'যেখানে শুরুর কথা', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2015, lyrics: 'যেখানে শুরুর কথা বলার আগেই শেষ' },
   { id: '146', title: 'তুই কি আমার হবি রে', artist: 'অনুপম রায়', lyricist: 'অনুপম রায়', composer: 'অনুপম রায়', genre: 'আধুনিক', releaseYear: 2016, lyrics: 'তুই কি আমার হবি রে' },
 
   // নচিকেতা চক্রবর্তী - 50 songs
@@ -675,162 +675,176 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '466', title: 'চলে যায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'স্বপন চক্রবর্তী', composer: 'অজানা সুরকার', releaseYear: 1975, lyrics: 'চলে যায়।', genre: 'আধুনিক' },
   { id: '467', title: 'ডাকিলে ধীরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'তারাপদ রায়', composer: 'অজানা সুরকার', releaseYear: 1965, lyrics: 'ডাকিলে ধীরে।', genre: 'আধুনিক' },
   { id: '468', title: 'পথে চলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'তৃপ্তি মিত্র', composer: 'অজানা সুরকার', releaseYear: 1950, lyrics: 'পথে চলে।', genre: 'আধুনিক' },
-  { id: '469', title: 'বুঝি দিলে প্রেম (তীর্থঙ্কর)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তীর্থঙ্কর দাস', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'বুঝি দিলে প্রেম।', genre: 'আধুনিক' }
+  { id: '469', title: 'বুঝি দিলে প্রেম (তীর্থঙ্কর)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তীর্থঙ্কর দাস', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'বুঝি দিলে প্রেম।', genre: 'আধুনিক' },
+   
+  // রূপম ইসলাম / ফসিলস এর গান
+  { id: '470', title: 'হাস্নুহানা', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2004, lyrics: 'তুমি চেয়ে আছো তাই আমি পথে হেঁটে যাই।' },
+  { id: '471', title: 'আরো একবার', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2004, lyrics: 'আরো একবার চলো ফিরে যাই, পাহাড়ের ওই বুকেতে দাঁড়াই।' },
+  { id: '472', title: 'নীল রঙ ছিল ভীষণ প্রিয়', artist: 'রূপম ইসলাম', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'আধুনিক রক', releaseYear: 2010, lyrics: 'নীল রঙ ছিল ভীষণ প্রিয়, তাই সব কিছু নীলিয়ে দিল।' },
+  { id: '473', title: 'একলা ঘর', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2002, lyrics: 'আমার একলা ছোট্ট ঘরে, ভাবনাগুলো কেবল ঘোরে।' },
+  { id: '474', title: 'কেন করলে এরকম', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2006, lyrics: 'কেন করলে এরকম, বলো না।' },
+  { id: '475', title: 'বিষাক্ত মানুষ', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2002, lyrics: 'আমি এক বিষাক্ত মানুষ, ছোঁয়াছুঁয়ি বাঁচিয়ে চল।' },
+  { id: '476', title: 'মা', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2009, lyrics: 'মা, তুমি আমার আগে যেও না গো মরে।' },
+  { id: '477', title: 'ফিরে চলো', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2013, lyrics: 'ফিরে চলো, ফিরে চলো, মাটির টানে।' },
+  { id: '478', title: 'অ্যাসিড', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2002, lyrics: 'অ্যাসিড বৃষ্টিতে ভিজবে এসো।' },
+  { id: '479', title: 'শয়তান', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2009, lyrics: 'আমার ভিতরে এক শয়তান, জেগে ওঠে মাঝে মাঝে।' }
+
+
 ];
 
 
 // Deduplication logic based on title and lyricist for absolute uniqueness.
 // Ensure 'id' is unique. If 'id' from raw data is not unique, this logic won't fix that.
 // The primary purpose here is to avoid duplicate *content* (song by same lyricist).
-const uniqueSongsMap = new Map<string, Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre' >>();
+const uniqueSongsMap = new Map<string, Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre'>>();
 
 rawMockSongsData.forEach(songItem => {
-    // Use original (raw) title and lyricist for deduplication key
-    const rawTitle = songItem.title || 'untitled';
-    let rawLyricist = songItem.lyricist;
+  // Use original (raw) title and lyricist for deduplication key
+  const rawTitle = songItem.title || 'untitled';
+  let rawLyricist = songItem.lyricist;
 
-    // Handle cases where lyricist might be undefined, null, or "সংগৃহীত" before cleaning for key
-    if (rawLyricist === undefined || rawLyricist === null || rawLyricist.trim() === "" || rawLyricist.toLowerCase() === 'সংগৃহীত') {
-        rawLyricist = 'সংগৃহীত'; // Normalize to a consistent placeholder for deduplication
-    } else if (rawLyricist.toLowerCase() === 'অজানা গীতিকার') {
-        rawLyricist = 'অজানা গীতিকার';
-    }
-
-
-    const cleanedTitleForKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
-    const cleanedLyricistForKey = cleanStringForSlugProcessing(rawLyricist, 'সংগৃহীত').toLowerCase();
+  // Handle cases where lyricist might be undefined, null, or "সংগৃহীত" before cleaning for key
+  if (rawLyricist === undefined || rawLyricist === null || rawLyricist.trim() === "" || rawLyricist.toLowerCase() === 'সংগৃহীত') {
+    rawLyricist = 'সংগৃহীত'; // Normalize to a consistent placeholder for deduplication
+  } else if (rawLyricist.toLowerCase() === 'অজানা গীতিকার') {
+    rawLyricist = 'অজানা গীতিকার';
+  }
 
 
-    const uniqueKey = `${cleanedTitleForKey}-lyricist:${cleanedLyricistForKey}`;
+  const cleanedTitleForKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
+  const cleanedLyricistForKey = cleanStringForSlugProcessing(rawLyricist, 'সংগৃহীত').toLowerCase();
 
-    if (!uniqueSongsMap.has(uniqueKey)) {
-        uniqueSongsMap.set(uniqueKey, songItem);
-    } else {
-        // console.log(`Skipping duplicate song (Title: ${rawTitle}, Lyricist: ${rawLyricist})`);
-    }
+
+  const uniqueKey = `${cleanedTitleForKey}-lyricist:${cleanedLyricistForKey}`;
+
+  if (!uniqueSongsMap.has(uniqueKey)) {
+    uniqueSongsMap.set(uniqueKey, songItem);
+  } else {
+    // console.log(`Skipping duplicate song (Title: ${rawTitle}, Lyricist: ${rawLyricist})`);
+  }
 });
 
 
 // Process and generate final mockSongs array
 const mockSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, index) => {
-    const id = rawSongData.id || `gen-${index + 1}-${Date.now()}`; // Ensure unique ID if not provided
+  const id = rawSongData.id || `gen-${index + 1}-${Date.now()}`; // Ensure unique ID if not provided
 
-    // Slug is now generated using ONLY the ID for simplicity and to avoid character issues.
-    const slug = createSlug(undefined, undefined, id);
+  // Slug is now generated using ONLY the ID for simplicity and to avoid character issues.
+  const slug = createSlug(undefined, undefined, id);
 
-    const displayTitle = cleanDisplayString(rawSongData.title) || 'শিরোনামহীন';
-    let displayArtist = cleanDisplayString(rawSongData.artist) || 'বিভিন্ন শিল্পী';
-    if (displayArtist?.toLowerCase() === 'বিভিন্ন বাউল') {
-        displayArtist = 'বিভিন্ন শিল্পী';
-    }
-    const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকার' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
-    const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' || rawSongData.composer === null || rawSongData.composer === undefined ? 'অজানা সুরকার' : 'অজানা সুরকার');
-    const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' || rawSongData.genre === null || rawSongData.genre === undefined ? 'অজানা ধরণ' : 'অজানা ধরণ');
+  const displayTitle = cleanDisplayString(rawSongData.title) || 'শিরোনামহীন';
+  let displayArtist = cleanDisplayString(rawSongData.artist) || 'বিভিন্ন শিল্পী';
+  if (displayArtist?.toLowerCase() === 'বিভিন্ন বাউল') {
+    displayArtist = 'বিভিন্ন শিল্পী';
+  }
+  const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকার' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
+  const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' || rawSongData.composer === null || rawSongData.composer === undefined ? 'অজানা সুরকার' : 'অজানা সুরকার');
+  const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' || rawSongData.genre === null || rawSongData.genre === undefined ? 'অজানা ধরণ' : 'অজানা ধরণ');
 
 
-    return {
-        originalTitle: rawSongData.title,
-        originalArtist: rawSongData.artist,
-        originalLyricist: rawSongData.lyricist,
-        originalComposer: rawSongData.composer,
-        originalGenre: rawSongData.genre,
+  return {
+    originalTitle: rawSongData.title,
+    originalArtist: rawSongData.artist,
+    originalLyricist: rawSongData.lyricist,
+    originalComposer: rawSongData.composer,
+    originalGenre: rawSongData.genre,
 
-        id: id,
-        slug: slug, // Slug is now just the lowercased ID
-        title: displayTitle,
-        artist: displayArtist,
-        lyricist: displayLyricist,
-        composer: displayComposer,
-        genre: displayGenre,
-        lyrics: cleanLyricsForDisplay(rawSongData.lyrics),
-        releaseYear: rawSongData.releaseYear,
-    };
+    id: id,
+    slug: slug, // Slug is now just the lowercased ID
+    title: displayTitle,
+    artist: displayArtist,
+    lyricist: displayLyricist,
+    composer: displayComposer,
+    genre: displayGenre,
+    lyrics: cleanLyricsForDisplay(rawSongData.lyrics),
+    releaseYear: rawSongData.releaseYear,
+  };
 });
 
 
 // Helper function to ensure every listed lyricist has at least one song entry
 function addPlaceholderSongsForMissingLyricists() {
-    const allKnownLyricists = [
-      'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন',
-      'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য্য', 'নিধুবাবু (রামনিধি গুপ্ত)',
-      'কালী মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্টনি ফিরিঙ্গি',
-      'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী',
-      'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়',
-      'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
-      'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত',
-      'আসাদুজ্জামান নূর (বাংলাদেশি)', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত',
-      'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন',
-      'কুমার জ্ঞানেন্দ্র', 'লালন ফকির', 'মনোজ মুর্শিদ (বাংলাদেশি)', 'মাইকেল মধুসূদন দত্ত', 'গৌতম চট্টোপাধ্যায় (মোহিনের ঘোড়াগুলি)',
-      'নচিকেতা চক্রবর্তী', 'নীরেন্দ্রনাথ চক্রবর্তী', 'নির্মলেন্দু গুণ (বাংলাদেশি)', 'পবিত্র সরকার', 'প্রীতিভূষণ ভট্টাচার্য',
-      'প্রবীর মজুমদার', 'প্রিয় চট্টোপাধ্যায়', 'ফকির আলমগীর (বাংলাদেশি)', 'বুদ্ধদেব দাশগুপ্ত', 'বেলাল চৌধুরী',
-      'মণীন্দ্র গুপ্ত', 'মন্টু মুখোপাধ্যায়', 'মলয় গাঙ্গুলি', 'রবি চট্টোপাধ্যায়', 'রীতুপর্ণ ঘোষ',
-      'শিবরাম চক্রবর্তী', 'শ্যামল মিত্র', 'শ্রীজাত', 'সুদীপ্ত মুখোপাধ্যায়', 'সুধীরলাল চক্রবর্তী',
-      'সুনীল গঙ্গোপাধ্যায়', 'স্বপন চক্রবর্তী', 'তারাপদ রায়', 'তৃপ্তি মিত্র', 'তীর্থঙ্কর দাস',
-      'উত্তম কুমার', 'উজ্জ্বল মুখোপাধ্যায়', 'ঊষা গাঙ্গুলি', 'বাঈজী প্রীতিলতা', 'বিশ্বজিৎ চট্টোপাধ্যায়',
-      'বিভাস চক্রবর্তী', 'বিপ্লব চৌধুরী', 'মৌসুমী ভৌমিক', 'যশ চোপড়া (বাংলা চলচ্চিত্রে অবদান)', 'রূপম ইসলাম',
-      'অনুপম রায়', 'অনিন্দ্য চট্টোপাধ্যায় (চন্দ্রবিন্দু)', 'উপল সেনগুপ্ত (চন্দ্রবিন্দু)', 'প্রসেনজিৎ মুখোপাধ্যায়', 'ঋদ্ধি বন্দ্যোপাধ্যায়',
-      'আনন্দ গুপ্ত', 'অরিন্দম চট্টোপাধ্যায়', 'সপ্তর্ষি মুখোপাধ্যায়', 'শান্তনু মৈত্র', 'সৌম্য চট্টোপাধ্যায়',
-      'শান্তা দেবী', 'সৌরভ চৌধুরী', 'তানভীর ফয়সাল (বাংলাদেশি)', 'জাহিদ আকবর (বাংলাদেশি)', 'শাহাবুদ্দিন নাগরী (বাংলাদেশি)',
-      'গাজী মাজহারুল আনোয়ার', 'কবির বকুল', 'মোহাম্মদ রফিকুজ্জামান', 'মাসুদ করিম', 'মনিরুজ্জামান মনির',
-      'সৈয়দ শামসুল হক', 'আহমেদ ইমতিয়াজ বুলবুল', 'খন্দকার নুরুল আলম', 'আপেল মাহমুদ', 'খন্দকার ফারুক আহমেদ',
-      'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু',
-      'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ',
-      'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থ বড়ুয়া',
-      'আনিসুল ইসলাম', 'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ',
-      'প্রীতম হাসান', 'নওশাদ আলী', 'তপন চৌধুরী', 'ফিরোজ শাই', 'রাশেদুল হাসান',
-      'শুমন সুধর', 'তৌফিক-ই-ইলাহী', 'ইমতিয়াজ আহমেদ', 'নোলক', 'ইমন চৌধুরী',
-      'জাহিদ নিপু', 'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম',
-      'শাহীন আলম', 'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত',
-      'সমরেশ মজুমদার', 'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার',
-      'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 'উৎপল কুমার বসু', 'অরিজিৎ দাস', 'সন্দীপ চট্টোপাধ্যায়',
-      'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন',
-      'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
-      'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
-      'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'কমলাকান্ত ভট্টাচার্য', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
-      'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু', 'গোবিন্দ হালদার'
-    ];
+  const allKnownLyricists = [
+    'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন',
+    'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য্য', 'নিধুবাবু (রামনিধি গুপ্ত)',
+    'কালী মির্জা (কাজী জলিল)', 'রাধারমণ দত্ত', 'দাশরথি রায়', 'ভোলা ময়রা', 'অ্যান্টনি ফিরিঙ্গি',
+    'কবি ভোলানাথ', 'কবি নীলকণ্ঠ', 'কবি ভবানীচরণ', 'কবি হরু ঠাকুর', 'কবি যতীন্দ্রমোহন বাগচী',
+    'গৌরীপ্রসন্ন মজুমদার', 'শ্যামল গুপ্ত', 'প্রণব রায়', 'সুধীন দাশগুপ্ত', 'পুলক বন্দ্যোপাধ্যায়',
+    'শৈলেন্দ্র (শৈলেন রায়)', 'সলিল চৌধুরী', 'প্রেমেন্দ্র মিত্র', 'সুকুমার রায়', 'কাজী মোতাহার হোসেন',
+    'শিবদাস বন্দ্যোপাধ্যায়', 'মুকুল দত্ত', 'অমিতাভ ভট্টাচার্য', 'অঞ্জন চৌধুরী', 'অনুপম দত্ত',
+    'আসাদুজ্জামান নূর (বাংলাদেশি)', 'ভূপেন হাজারিকা', 'চন্দন ঘাটক', 'চিত্তরঞ্জন দাস', 'গৌতম সুস্মিত',
+    'গিরিশচন্দ্র ঘোষ', 'হেমাঙ্গ বিশ্বাস', 'ইন্দ্রনাথ সেন', 'জয় গোস্বামী', 'কবীর সুমন',
+    'কুমার জ্ঞানেন্দ্র', 'লালন ফকির', 'মনোজ মুর্শিদ (বাংলাদেশি)', 'মাইকেল মধুসূদন দত্ত', 'গৌতম চট্টোপাধ্যায় (মোহিনের ঘোড়াগুলি)',
+    'নচিকেতা চক্রবর্তী', 'নীরেন্দ্রনাথ চক্রবর্তী', 'নির্মলেন্দু গুণ (বাংলাদেশি)', 'পবিত্র সরকার', 'প্রীতিভূষণ ভট্টাচার্য',
+    'প্রবীর মজুমদার', 'প্রিয় চট্টোপাধ্যায়', 'ফকির আলমগীর (বাংলাদেশি)', 'বুদ্ধদেব দাশগুপ্ত', 'বেলাল চৌধুরী',
+    'মণীন্দ্র গুপ্ত', 'মন্টু মুখোপাধ্যায়', 'মলয় গাঙ্গুলি', 'রবি চট্টোপাধ্যায়', 'রীতুপর্ণ ঘোষ',
+    'শিবরাম চক্রবর্তী', 'শ্যামল মিত্র', 'শ্রীজাত', 'সুদীপ্ত মুখোপাধ্যায়', 'সুধীরলাল চক্রবর্তী',
+    'সুনীল গঙ্গোপাধ্যায়', 'স্বপন চক্রবর্তী', 'তারাপদ রায়', 'তৃপ্তি মিত্র', 'তীর্থঙ্কর দাস',
+    'উত্তম কুমার', 'উজ্জ্বল মুখোপাধ্যায়', 'ঊষা গাঙ্গুলি', 'বাঈজী প্রীতিলতা', 'বিশ্বজিৎ চট্টোপাধ্যায়',
+    'বিভাস চক্রবর্তী', 'বিপ্লব চৌধুরী', 'মৌসুমী ভৌমিক', 'যশ চোপড়া (বাংলা চলচ্চিত্রে অবদান)', 'রূপম ইসলাম',
+    'অনুপম রায়', 'অনিন্দ্য চট্টোপাধ্যায় (চন্দ্রবিন্দু)', 'উপল সেনগুপ্ত (চন্দ্রবিন্দু)', 'প্রসেনজিৎ মুখোপাধ্যায়', 'ঋদ্ধি বন্দ্যোপাধ্যায়',
+    'আনন্দ গুপ্ত', 'অরিন্দম চট্টোপাধ্যায়', 'সপ্তর্ষি মুখোপাধ্যায়', 'শান্তনু মৈত্র', 'সৌম্য চট্টোপাধ্যায়',
+    'শান্তা দেবী', 'সৌরভ চৌধুরী', 'তানভীর ফয়সাল (বাংলাদেশি)', 'জাহিদ আকবর (বাংলাদেশি)', 'শাহাবুদ্দিন নাগরী (বাংলাদেশি)',
+    'গাজী মাজহারুল আনোয়ার', 'কবির বকুল', 'মোহাম্মদ রফিকুজ্জামান', 'মাসুদ করিম', 'মনিরুজ্জামান মনির',
+    'সৈয়দ শামসুল হক', 'আহমেদ ইমতিয়াজ বুলবুল', 'খন্দকার নুরুল আলম', 'আপেল মাহমুদ', 'খন্দকার ফারুক আহমেদ',
+    'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু',
+    'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ',
+    'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থ বড়ুয়া',
+    'আনিসুল ইসলাম', 'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ',
+    'প্রীতম হাসান', 'নওশাদ আলী', 'তপন চৌধুরী', 'ফিরোজ শাই', 'রাশেদুল হাসান',
+    'শুমন সুধর', 'তৌফিক-ই-ইলাহী', 'ইমতিয়াজ আহমেদ', 'নোলক', 'ইমন চৌধুরী',
+    'জাহিদ নিপু', 'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম',
+    'শাহীন আলম', 'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত',
+    'সমরেশ মজুমদার', 'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার',
+    'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 'উৎপল কুমার বসু', 'অরিজিৎ দাস', 'সন্দীপ চট্টোপাধ্যায়',
+    'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন',
+    'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
+    'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
+    'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'কমলাকান্ত ভট্টাচার্য', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
+    'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু', 'গোবিন্দ হালদার'
+  ];
 
 
-    const existingLyricistSlugs = new Set(
-        mockSongs.map(song => song.originalLyricist ? cleanStringForSlugProcessing(song.originalLyricist, 'unknown').toLowerCase() : 'unknown').filter(Boolean) as string[]
-    );
-    let placeholderIdCounter = mockSongs.length + 10000; // Start placeholder IDs from a high number
+  const existingLyricistSlugs = new Set(
+    mockSongs.map(song => song.originalLyricist ? cleanStringForSlugProcessing(song.originalLyricist, 'unknown').toLowerCase() : 'unknown').filter(Boolean) as string[]
+  );
+  let placeholderIdCounter = mockSongs.length + 10000; // Start placeholder IDs from a high number
 
-    allKnownLyricists.forEach(lyricistName => {
-        const displayLyricist = cleanDisplayString(lyricistName);
-        if (!displayLyricist) return;
+  allKnownLyricists.forEach(lyricistName => {
+    const displayLyricist = cleanDisplayString(lyricistName);
+    if (!displayLyricist) return;
 
-        const lyricistSlugForCheck = cleanStringForSlugProcessing(lyricistName, 'unknown').toLowerCase();
-        if (!lyricistSlugForCheck || lyricistSlugForCheck === 'unknown') return;
+    const lyricistSlugForCheck = cleanStringForSlugProcessing(lyricistName, 'unknown').toLowerCase();
+    if (!lyricistSlugForCheck || lyricistSlugForCheck === 'unknown') return;
 
-        if (!existingLyricistSlugs.has(lyricistSlugForCheck)) {
-            const placeholderId = `ph-${lyricistSlugForCheck}-${placeholderIdCounter++}`;
-            const placeholderTitle = `${displayLyricist} এর একটি গান (স্থানধারক)`;
-            const placeholderArtist = 'বিভিন্ন শিল্পী';
-            const placeholderComposer = 'অজানা সুরকার';
+    if (!existingLyricistSlugs.has(lyricistSlugForCheck)) {
+      const placeholderId = `ph-${lyricistSlugForCheck}-${placeholderIdCounter++}`;
+      const placeholderTitle = `${displayLyricist} এর একটি গান (স্থানধারক)`;
+      const placeholderArtist = 'বিভিন্ন শিল্পী';
+      const placeholderComposer = 'অজানা সুরকার';
 
-            const placeholderSlug = createSlug(undefined, undefined, placeholderId); // Slug is now just the ID
+      const placeholderSlug = createSlug(undefined, undefined, placeholderId); // Slug is now just the ID
 
-            const placeholderSong: Song = {
-                id: placeholderId,
-                originalTitle: placeholderTitle,
-                title: placeholderTitle,
-                originalArtist: placeholderArtist,
-                artist: placeholderArtist,
-                originalLyricist: lyricistName,
-                lyricist: displayLyricist,
-                originalComposer: placeholderComposer,
-                composer: placeholderComposer,
-                originalGenre: 'Placeholder',
-                genre: 'Placeholder',
-                lyrics: `এই গানটি গীতিকার ${displayLyricist} এর জন্য একটি স্থানধারক।`,
-                slug: placeholderSlug,
-                releaseYear: 0,
-            };
-            mockSongs.push(placeholderSong);
-            existingLyricistSlugs.add(lyricistSlugForCheck);
-        }
-    });
+      const placeholderSong: Song = {
+        id: placeholderId,
+        originalTitle: placeholderTitle,
+        title: placeholderTitle,
+        originalArtist: placeholderArtist,
+        artist: placeholderArtist,
+        originalLyricist: lyricistName,
+        lyricist: displayLyricist,
+        originalComposer: placeholderComposer,
+        composer: placeholderComposer,
+        originalGenre: 'Placeholder',
+        genre: 'Placeholder',
+        lyrics: `এই গানটি গীতিকার ${displayLyricist} এর জন্য একটি স্থানধারক।`,
+        slug: placeholderSlug,
+        releaseYear: 0,
+      };
+      mockSongs.push(placeholderSong);
+      existingLyricistSlugs.add(lyricistSlugForCheck);
+    }
+  });
 }
 
 addPlaceholderSongsForMissingLyricists();
@@ -886,29 +900,29 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     const songGenreSlug = cleanStringForSlugProcessing(song.originalGenre, "").toLowerCase();
 
     const songContentForTokenMatching = [
-        songTitleSlug,
-        songArtistSlug,
-        songLyricistSlug,
-        songComposerSlug,
-        songGenreSlug,
+      songTitleSlug,
+      songArtistSlug,
+      songLyricistSlug,
+      songComposerSlug,
+      songGenreSlug,
     ].join(' '); // Use space for joining to match individual words better
 
     // Check if all query tokens are present in the combined song content
     if (queryTokens.every(token => songContentForTokenMatching.includes(token))) {
-        return true;
+      return true;
     }
-    
+
     // Fallback to display name matching if token matching fails
     // This uses the display-cleaned versions which might be more user-friendly
     const cleanedQueryDisplayLower = (cleanDisplayString(searchQuery) || "").toLowerCase();
     if (
-        (song.title?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
-        (song.artist?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
-        (song.lyricist?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
-        (song.composer?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
-        (song.genre?.toLowerCase() || "").includes(cleanedQueryDisplayLower)
+      (song.title?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
+      (song.artist?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
+      (song.lyricist?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
+      (song.composer?.toLowerCase() || "").includes(cleanedQueryDisplayLower) ||
+      (song.genre?.toLowerCase() || "").includes(cleanedQueryDisplayLower)
     ) {
-        return true;
+      return true;
     }
 
     return false;
@@ -927,9 +941,9 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
     if (cleanStringForSlugProcessing(song.originalLyricist, "").toLowerCase().includes(querySlugLower)) matchCount += 3;
     if (cleanStringForSlugProcessing(song.originalComposer, "").toLowerCase().includes(querySlugLower)) matchCount += 2;
     if (cleanStringForSlugProcessing(song.originalGenre, "").toLowerCase().includes(querySlugLower)) matchCount += 1;
-    
+
     // Additionally, consider matches in display fields if not already heavily weighted
-    if ((song.title?.toLowerCase() || "").includes(queryLower) && matchCount < 10) matchCount += 8; 
+    if ((song.title?.toLowerCase() || "").includes(queryLower) && matchCount < 10) matchCount += 8;
     if ((song.artist?.toLowerCase() || "").includes(queryLower) && matchCount < 5) matchCount += 4;
     if ((song.lyricist?.toLowerCase() || "").includes(queryLower) && matchCount < 3) matchCount += 2;
 
@@ -941,65 +955,65 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
 
 
 export async function getPopularSongs(): Promise<Song[]> {
-   const popularSongDefinitions = [
-        { title: 'আমার সোনার বাংলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর' },
-        { title: 'যদি তোর ডাক শুনে কেউ না আসে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর'},
-        { title: 'একতারা তুই দেশের কথা', artist: 'শাহনাজ রহমতউল্লাহ', lyricist: 'গাজী মাজহারুল আনোয়ার', composer: 'আনোয়ার পারভেজ' },
-        { title: 'কফি হাউসের সেই আড্ডাটা', artist: 'মান্না দে', lyricist: 'গৌরীপ্রসন্ন মজুমদার', composer: 'সুপর্ণকান্তি ঘোষ' },
-        { title: 'মানুষ মানুষের জন্যে', artist: 'ভূপেন হাজারিকা', lyricist: 'ভূপেন হাজারিকা', composer: 'ভূপেন হাজারিকা' },
-   ];
+  const popularSongDefinitions = [
+    { title: 'আমার সোনার বাংলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর' },
+    { title: 'যদি তোর ডাক শুনে কেউ না আসে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর' },
+    { title: 'একতারা তুই দেশের কথা', artist: 'শাহনাজ রহমতউল্লাহ', lyricist: 'গাজী মাজহারুল আনোয়ার', composer: 'আনোয়ার পারভেজ' },
+    { title: 'কফি হাউসের সেই আড্ডাটা', artist: 'মান্না দে', lyricist: 'গৌরীপ্রসন্ন মজুমদার', composer: 'সুপর্ণকান্তি ঘোষ' },
+    { title: 'মানুষ মানুষের জন্যে', artist: 'ভূপেন হাজারিকা', lyricist: 'ভূপেন হাজারিকা', composer: 'ভূপেন হাজারিকা' },
+  ];
 
   let popular: Song[] = [];
 
   try {
     popular = popularSongDefinitions.map(def => {
-        const searchTitleRaw = def.title;
-        const searchArtistRaw = def.artist;
-        const searchLyricistRaw = def.lyricist;
-        const searchComposerRaw = def.composer;
+      const searchTitleRaw = def.title;
+      const searchArtistRaw = def.artist;
+      const searchLyricistRaw = def.lyricist;
+      const searchComposerRaw = def.composer;
 
-        return mockSongs.find(s =>
-            s.originalTitle === searchTitleRaw &&
-            s.originalArtist === searchArtistRaw &&
-            s.originalLyricist === searchLyricistRaw &&
-            s.originalComposer === searchComposerRaw &&
-            s.genre !== 'Placeholder'
-        );
+      return mockSongs.find(s =>
+        s.originalTitle === searchTitleRaw &&
+        s.originalArtist === searchArtistRaw &&
+        s.originalLyricist === searchLyricistRaw &&
+        s.originalComposer === searchComposerRaw &&
+        s.genre !== 'Placeholder'
+      );
     }).filter((song): song is Song => song !== undefined);
 
 
     if (popular.length < popularSongDefinitions.length) {
-        const existingSlugs = new Set(popular.map(p => p.slug));
-        const needed = popularSongDefinitions.length - popular.length;
-        let addedCount = 0;
+      const existingSlugs = new Set(popular.map(p => p.slug));
+      const needed = popularSongDefinitions.length - popular.length;
+      let addedCount = 0;
 
-        const fallbackSongs = [...mockSongs]
-          .filter(s => s.releaseYear && s.genre !== 'Placeholder' && s.slug && !existingSlugs.has(s.slug))
-          .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)); 
+      const fallbackSongs = [...mockSongs]
+        .filter(s => s.releaseYear && s.genre !== 'Placeholder' && s.slug && !existingSlugs.has(s.slug))
+        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0));
 
-        for (const song of fallbackSongs) {
-            if (addedCount >= needed) break;
-            popular.push(song);
-            existingSlugs.add(song.slug);
-            addedCount++;
-        }
+      for (const song of fallbackSongs) {
+        if (addedCount >= needed) break;
+        popular.push(song);
+        existingSlugs.add(song.slug);
+        addedCount++;
+      }
     }
-  } catch (error:any) {
+  } catch (error: any) {
     return [];
   }
   return popular.slice(0, 8);
 }
 
 export async function getNewSongs(): Promise<Song[]> {
-    try {
-      const sortedSongs = [...mockSongs]
-        .filter(s => s.releaseYear && s.genre !== 'Placeholder') 
-        .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0)) 
-        .slice(0, 8); 
-      return sortedSongs;
-    } catch (error: any) {
-      return [];
-    }
+  try {
+    const sortedSongs = [...mockSongs]
+      .filter(s => s.releaseYear && s.genre !== 'Placeholder')
+      .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0))
+      .slice(0, 8);
+    return sortedSongs;
+  } catch (error: any) {
+    return [];
+  }
 }
 
 
@@ -1010,64 +1024,64 @@ async function getUniqueFieldValues(
   try {
     const valuesSet = new Set<string>();
     mockSongs.forEach(song => {
-      if (song.genre === 'Placeholder' && conceptualFieldName !== 'lyricist') { 
-          return;
+      if (song.genre === 'Placeholder' && conceptualFieldName !== 'lyricist') {
+        return;
       }
-      
+
       let originalSourceValue: string | undefined;
 
       switch (conceptualFieldName) {
         case 'artist': originalSourceValue = song.originalArtist; break;
-        case 'genre': originalSourceValue = song.originalGenre; break; 
+        case 'genre': originalSourceValue = song.originalGenre; break;
         case 'lyricist': originalSourceValue = song.originalLyricist; break;
         case 'composer': originalSourceValue = song.originalComposer; break;
       }
-      
+
       if (!originalSourceValue || originalSourceValue.toLowerCase() === 'placeholder') {
-          return;
+        return;
       }
 
       let valuesToProcess: string[] = [];
       if (splitCombined && (conceptualFieldName === 'artist' || conceptualFieldName === 'lyricist' || conceptualFieldName === 'composer')) {
-          // Split by common delimiters like comma, semicolon, slash, ' ও ', ' এবং '
-          valuesToProcess = originalSourceValue.split(/[,;\/\\]+|\s+ও\s+|\s+এবং\s+/)
-              .map(part => cleanDisplayString(part.trim())) 
-              .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0 && cleanedPart.toLowerCase() !== 'placeholder' && cleanedPart.toLowerCase() !== 'undefined');
+        // Split by common delimiters like comma, semicolon, slash, ' ও ', ' এবং '
+        valuesToProcess = originalSourceValue.split(/[,;\/\\]+|\s+ও\s+|\s+এবং\s+/)
+          .map(part => cleanDisplayString(part.trim()))
+          .filter((cleanedPart): cleanedPart is string => !!cleanedPart && cleanedPart.length > 0 && cleanedPart.toLowerCase() !== 'placeholder' && cleanedPart.toLowerCase() !== 'undefined');
       } else {
-          const cleanedItem = cleanDisplayString(originalSourceValue.trim());
-          if (cleanedItem && cleanedItem.toLowerCase() !== 'placeholder' && cleanedItem.toLowerCase() !== 'undefined') {
-              valuesToProcess.push(cleanedItem);
-          }
+        const cleanedItem = cleanDisplayString(originalSourceValue.trim());
+        if (cleanedItem && cleanedItem.toLowerCase() !== 'placeholder' && cleanedItem.toLowerCase() !== 'undefined') {
+          valuesToProcess.push(cleanedItem);
+        }
       }
 
       valuesToProcess.forEach(item => {
-          const itemLower = item.toLowerCase();
-          if (itemLower === 'বিভিন্ন শিল্পী' || itemLower === 'various artists' || itemLower === 'various') valuesSet.add('বিভিন্ন শিল্পী');
-          else if (itemLower === 'অজানা শিল্পী' || itemLower === 'unknown artist') valuesSet.add('অজানা শিল্পী');
-          else if (itemLower === 'অজানা গীতিকার' || itemLower === 'unknown lyricist') valuesSet.add('অজানা গীতিকার');
-          else if (itemLower === 'অজানা সুরকার' || itemLower === 'unknown composer') valuesSet.add('অজানা সুরকার');
-          else if (itemLower === 'অজানা ধরণ' || itemLower === 'unknown genre') valuesSet.add('অজানা ধরণ');
-          else if (itemLower === 'সংগৃহীত' || itemLower === 'collected') valuesSet.add('সংগৃহীত');
-          else if (itemLower === 'প্রচলিত' || itemLower === 'traditional') valuesSet.add('প্রচলিত');
-          else {
-              valuesSet.add(item); 
-          }
+        const itemLower = item.toLowerCase();
+        if (itemLower === 'বিভিন্ন শিল্পী' || itemLower === 'various artists' || itemLower === 'various') valuesSet.add('বিভিন্ন শিল্পী');
+        else if (itemLower === 'অজানা শিল্পী' || itemLower === 'unknown artist') valuesSet.add('অজানা শিল্পী');
+        else if (itemLower === 'অজানা গীতিকার' || itemLower === 'unknown lyricist') valuesSet.add('অজানা গীতিকার');
+        else if (itemLower === 'অজানা সুরকার' || itemLower === 'unknown composer') valuesSet.add('অজানা সুরকার');
+        else if (itemLower === 'অজানা ধরণ' || itemLower === 'unknown genre') valuesSet.add('অজানা ধরণ');
+        else if (itemLower === 'সংগৃহীত' || itemLower === 'collected') valuesSet.add('সংগৃহীত');
+        else if (itemLower === 'প্রচলিত' || itemLower === 'traditional') valuesSet.add('প্রচলিত');
+        else {
+          valuesSet.add(item);
+        }
       });
     });
-    
+
     if (valuesSet.has('নিরেন্দ্রনাথ চক্রবর্তী') && valuesSet.has('নীরেন্দ্রনাথ চক্রবর্তী')) {
-        valuesSet.delete('নিরেন্দ্রনাথ চক্রবর্তী');
+      valuesSet.delete('নিরেন্দ্রনাথ চক্রবর্তী');
     }
 
 
     return Array.from(valuesSet)
-      .filter(val => val && val.trim() !== '' && val.toLowerCase() !== 'placeholder' && val.toLowerCase() !== 'undefined') 
+      .filter(val => val && val.trim() !== '' && val.toLowerCase() !== 'placeholder' && val.toLowerCase() !== 'undefined')
       .sort((a, b) => {
-          const isABengali = /[\u0980-\u09FF]/.test(a);
-          const isBBengali = /[\u0980-\u09FF]/.test(b);
-          if (isABengali && !isBBengali) return -1;
-          if (!isABengali && isBBengali) return 1;
-          return a.localeCompare(b, 'bn'); 
+        const isABengali = /[\u0980-\u09FF]/.test(a);
+        const isBBengali = /[\u0980-\u09FF]/.test(b);
+        if (isABengali && !isBBengali) return -1;
+        if (!isABengali && isBBengali) return 1;
+        return a.localeCompare(b, 'bn');
       });
 
   } catch (error: any) {
@@ -1077,26 +1091,26 @@ async function getUniqueFieldValues(
 
 
 export async function getAllArtists(): Promise<string[]> {
-    const artists = await getUniqueFieldValues('artist', true); 
-    const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'ভূপেন হাজারিকা', 'বিভিন্ন শিল্পী', 'অজানা শিল্পী'];
-    return artists.sort((a, b) => {
-        const aPriority = priorityOrder.indexOf(a);
-        const bPriority = priorityOrder.indexOf(b);
+  const artists = await getUniqueFieldValues('artist', true);
+  const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'ভূপেন হাজারিকা', 'বিভিন্ন শিল্পী', 'অজানা শিল্পী'];
+  return artists.sort((a, b) => {
+    const aPriority = priorityOrder.indexOf(a);
+    const bPriority = priorityOrder.indexOf(b);
 
-        if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority;
-        if (aPriority !== -1) return -1;
-        if (bPriority !== -1) return 1;
-        return a.localeCompare(b, 'bn');
-    });
+    if (aPriority !== -1 && bPriority !== -1) return aPriority - bPriority;
+    if (aPriority !== -1) return -1;
+    if (bPriority !== -1) return 1;
+    return a.localeCompare(b, 'bn');
+  });
 }
 
 
 export async function getAllGenres(): Promise<string[]> {
-  return getUniqueFieldValues('genre'); 
+  return getUniqueFieldValues('genre');
 }
 
 export async function getAllLyricists(): Promise<string[]> {
-  const lyricists = await getUniqueFieldValues('lyricist', true); 
+  const lyricists = await getUniqueFieldValues('lyricist', true);
   const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন', 'সংগৃহীত', 'অজানা গীতিকার'];
   return lyricists.sort((a, b) => {
     const aPriority = priorityOrder.indexOf(a);
@@ -1110,9 +1124,9 @@ export async function getAllLyricists(): Promise<string[]> {
 }
 
 export async function getAllComposers(): Promise<string[]> {
-  const composers = await getUniqueFieldValues('composer', true); 
-   const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'সলিল চৌধুরী', 'হেমন্ত মুখোপাধ্যায়', 'সংগৃহীত', 'প্রচলিত', 'অজানা সুরকার'];
-   return composers.sort((a, b) => {
+  const composers = await getUniqueFieldValues('composer', true);
+  const priorityOrder = ['রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'সলিল চৌধুরী', 'হেমন্ত মুখোপাধ্যায়', 'সংগৃহীত', 'প্রচলিত', 'অজানা সুরকার'];
+  return composers.sort((a, b) => {
     const aPriority = priorityOrder.indexOf(a);
     const bPriority = priorityOrder.indexOf(b);
 
@@ -1124,15 +1138,15 @@ export async function getAllComposers(): Promise<string[]> {
 }
 
 
-export async function getPaginatedSongs(page: number, limitPerPage: number): Promise<{songs: Song[], nextPageCursor: null }> {
-    const start = (page - 1) * limitPerPage;
-    const end = start + limitPerPage;
-    const nonPlaceholderSongs = mockSongs.filter(song => song.genre !== 'Placeholder');
-    if (start >= nonPlaceholderSongs.length) {
-        return { songs: [], nextPageCursor: null };
-    }
-    const songs = nonPlaceholderSongs.slice(start, Math.min(end, nonPlaceholderSongs.length));
-    return { songs, nextPageCursor: null };
+export async function getPaginatedSongs(page: number, limitPerPage: number): Promise<{ songs: Song[], nextPageCursor: null }> {
+  const start = (page - 1) * limitPerPage;
+  const end = start + limitPerPage;
+  const nonPlaceholderSongs = mockSongs.filter(song => song.genre !== 'Placeholder');
+  if (start >= nonPlaceholderSongs.length) {
+    return { songs: [], nextPageCursor: null };
+  }
+  const songs = nonPlaceholderSongs.slice(start, Math.min(end, nonPlaceholderSongs.length));
+  return { songs, nextPageCursor: null };
 }
 
 

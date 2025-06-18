@@ -1,9 +1,8 @@
-
 'use client';
 
-import React, { useEffect, useState, Suspense } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getSongBySlug, type Song } from '@/services/bangla-song-database';
-import { mockSongs } from '@/data/all-songs'; // Corrected import path for mockSongs
+import { mockSongs } from '@/data/all-songs';
 import { notFound, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon } from 'lucide-react';
@@ -13,91 +12,93 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-
 export default function SongPage() {
-  const paramsFromHook = useParams<{ slug: string }>();
+  const params = useParams<{ slug: string }>();
+  // slug can be undefined if params is not ready or slug is not present in the URL
+  const slugFromUrl = params?.slug;
 
-  const [slug, setSlug] = useState<string | undefined>(undefined);
-  const [song, setSong] = useState<Song | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [prevSongSlug, setPrevSongSlug] = useState<string | null>(null);
-  const [nextSongSlug, setNextSongSlug] = useState<string | null>(null);
-  const [fetchError, setFetchError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const currentRawSlug = paramsFromHook?.slug;
-
-    if (currentRawSlug && typeof currentRawSlug === 'string' && currentRawSlug.trim() !== "") {
-      const decodedSlug = decodeURIComponent(currentRawSlug).trim();
-      setSlug(decodedSlug);
-      setLoading(true); // Set loading to true when slug is identified and data fetching will start
-      setFetchError(null); // Clear previous errors
-    } else if (paramsFromHook) {
-      setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
-      setSong(null);
-      setSlug(undefined);
-      setLoading(false);
-    }
-    // If paramsFromHook is not available yet, do nothing, initial loading state will cover it.
-  }, [paramsFromHook]);
+  const [songData, setSongData] = useState<{
+    song: Song | null;
+    loading: boolean;
+    error: string | null;
+    prevSongSlug: string | null;
+    nextSongSlug: string | null;
+  }>({
+    song: null,
+    loading: true, // Initial state: loading
+    error: null,
+    prevSongSlug: null,
+    nextSongSlug: null,
+  });
 
   useEffect(() => {
-    if (!slug) {
-      // If slug is still not set after the first effect (e.g. invalid params or hook not ready),
-      // and not already in an error state from the first effect,
-      // ensure loading is false.
-      if (!fetchError) {
-        setLoading(false);
+    // This effect runs when `slugFromUrl` (from `useParams`) changes.
+    // If `slugFromUrl` is undefined initially (router not ready), we don't fetch yet.
+    // `songData.loading` remains true from initial state.
+    if (slugFromUrl === undefined) {
+      // If params hook has resolved (i.e., params object exists) but slug is still undefined,
+      // it indicates an invalid route or that the slug is missing.
+      if (params && slugFromUrl === undefined) { 
+        setSongData(prev => ({ ...prev, loading: false, error: "গানের লিঙ্ক সঠিক নয় বা অসম্পূর্ণ।" }));
       }
+      // Otherwise, if params itself is undefined, router might still be initializing.
+      // songData.loading remains true, showing the loader.
+      return;
+    }
+
+    // Reset state for the new slug and start loading.
+    // This ensures that if we navigate from one song page to another, states are reset.
+    setSongData(prev => ({
+      ...prev, // Keep existing prev/next slugs if not recalculating yet or if it's part of a more complex state object
+      loading: true,
+      error: null,
+      song: null,
+      // Reset prevSongSlug and nextSongSlug here if they should always be recalculated with the song
+      prevSongSlug: null,
+      nextSongSlug: null,
+    }));
+
+    const decodedSlug = decodeURIComponent(slugFromUrl).trim();
+    if (decodedSlug === "") {
+      setSongData(prev => ({ ...prev, loading: false, error: "গানের লিঙ্ক সনাক্ত করা যায়নি।" }));
       return;
     }
 
     let isMounted = true;
-    const loadSongData = async (s: string) => {
-      // setLoading(true); // Loading is already set true by the first effect when slug is valid
-      // setFetchError(null); // Error is also cleared by the first effect
-      setSong(null);
+    const loadData = async () => {
       try {
-        const fetchedSong = await getSongBySlug(s);
+        const fetchedSong = await getSongBySlug(decodedSlug);
         if (isMounted) {
           if (!fetchedSong) {
-            setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
-            setSong(null);
+            notFound(); // Song not found, trigger Next.js 404 page
+            // Note: notFound() might prevent further state updates in this component
+            // by unmounting it or redirecting.
           } else {
-            setSong(fetchedSong);
+            // Song found, update state
             const nonPlaceholderSongs = mockSongs.filter(ms => ms.genre !== 'Placeholder');
-            const currentIndex = nonPlaceholderSongs.findIndex(songIter => songIter.slug === s);
-
-            if (currentIndex > -1) {
-              const prevSong = currentIndex > 0 ? nonPlaceholderSongs[currentIndex - 1] : null;
-              const nextSong = currentIndex < nonPlaceholderSongs.length - 1 ? nonPlaceholderSongs[currentIndex + 1] : null;
-              setPrevSongSlug(prevSong ? prevSong.slug : null);
-              setNextSongSlug(nextSong ? nextSong.slug : null);
-            } else {
-              setPrevSongSlug(null);
-              setNextSongSlug(null);
-            }
+            const currentIndex = nonPlaceholderSongs.findIndex(s => s.slug === decodedSlug);
+            const prev = currentIndex > 0 ? nonPlaceholderSongs[currentIndex - 1].slug : null;
+            const next = currentIndex < nonPlaceholderSongs.length - 1 ? nonPlaceholderSongs[currentIndex + 1].slug : null;
+            setSongData({ song: fetchedSong, loading: false, error: null, prevSongSlug: prev, nextSongSlug: next });
           }
         }
-      } catch (error: any) {
+      } catch (e: any) {
+        // Catch any unexpected errors during data fetching or processing
         if (isMounted) {
-          console.error(`Error fetching song data for slug ${s}:`, error);
-          setFetchError('গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।');
-          setSong(null);
-        }
-      } finally {
-        if (isMounted) {
-          setLoading(false);
+          console.error("Failed to load song data:", e);
+          setSongData(prev => ({ ...prev, loading: false, error: "গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।" }));
         }
       }
     };
 
-    loadSongData(slug);
-    return () => {
-      isMounted = false;
-    };
-  }, [slug]);
+    loadData();
 
+    return () => {
+      isMounted = false; // Cleanup to prevent state updates on unmounted component
+    };
+  }, [slugFromUrl, params]); // React to changes in slugFromUrl or the params object's availability
+
+  const { song, loading, error, prevSongSlug, nextSongSlug } = songData;
 
   if (loading) {
     return (
@@ -108,20 +109,23 @@ export default function SongPage() {
     );
   }
 
-  if (fetchError) {
+  if (error) {
     return (
       <Alert variant="destructive" className="max-w-2xl mx-auto">
         <WifiOff className="h-4 w-4" />
         <AlertTitle>ত্রুটি</AlertTitle>
-        <AlertDescription>{fetchError}</AlertDescription>
+        <AlertDescription>{error}</AlertDescription>
       </Alert>
     );
   }
-
+  
+  // If notFound() was called, Next.js should handle rendering its 404 page.
+  // This component might unmount or its render output ignored.
+  // If we reach here, and !loading and !error, then 'song' should be populated.
+  // A final guard in case 'song' is null despite no loading/error state (e.g., if notFound() doesn't stop render immediately).
   if (!song) {
-    // This will be caught if fetchError is not set but song is null, and not loading
-    // This indicates an actual "not found" scenario after trying to load.
-    notFound();
+     // This state should ideally not be reached if `notFound()` is effective or an error is always set.
+     // Returning null here prevents rendering the rest of the page if song is unexpectedly null.
     return null; 
   }
 
@@ -190,7 +194,7 @@ export default function SongPage() {
 				)}
 			</Card>
 
-			<div className="flex justify-between items-center mt-6 mb-6">
+			<div className="flex justify-between items-center mt-6 mb-6 px-1">
 					{prevSongSlug ? (
 						<Link href={`/song/${prevSongSlug}`}>
 							<Button variant="outline" aria-label="পূর্ববর্তী গান">
@@ -214,37 +218,37 @@ export default function SongPage() {
                 <CardContent className="flex flex-wrap gap-2 justify-center py-4">
                     <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/">
-                            <Home className="mr-2 h-4 w-4" />
+                            <Home className="mr-2 h-3 w-3" /> 
                             <span>মূল পাতা</span>
                         </Link>
                     </Button>
                     <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/songs">
-                            <ListMusic className="mr-2 h-4 w-4" />
+                            <ListMusic className="mr-2 h-3 w-3" />
                             <span>সকল গান</span>
                         </Link>
                     </Button>
                     <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/artists">
-                            <UsersIcon className="mr-2 h-4 w-4" />
+                            <UsersIcon className="mr-2 h-3 w-3" />
                             <span>সকল শিল্পী</span>
                         </Link>
                     </Button>
                     <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/lyricists">
-                            <Feather className="mr-2 h-4 w-4" />
+                            <Feather className="mr-2 h-3 w-3" />
                             <span>সকল গীতিকার</span>
                         </Link>
                     </Button>
                     <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/composers">
-                            <Disc3 className="mr-2 h-4 w-4" />
+                            <Disc3 className="mr-2 h-3 w-3" />
                             <span>সকল সুরকার</span>
                         </Link>
                     </Button>
                     <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/genres">
-                            <Library className="mr-2 h-4 w-4" />
+                            <Library className="mr-2 h-3 w-3" />
                             <span>সকল ধরণ</span>
                         </Link>
                     </Button>

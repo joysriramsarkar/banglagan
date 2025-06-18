@@ -30,25 +30,23 @@ export default function SongPage() {
     if (currentRawSlug && typeof currentRawSlug === 'string' && currentRawSlug.trim() !== "") {
       const decodedSlug = decodeURIComponent(currentRawSlug).trim();
       setSlug(decodedSlug);
-    } else if (paramsFromHook) { // Check if paramsFromHook itself is available
+      setLoading(true); // Set loading to true when slug is identified and data fetching will start
+      setFetchError(null); // Clear previous errors
+    } else if (paramsFromHook) {
       setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
       setSong(null);
       setSlug(undefined);
       setLoading(false);
-    } else {
-      // If paramsFromHook is not even available yet, keep loading or handle as initial undefined state
-      // This branch might be hit if useParams returns undefined initially.
-      // No error set here immediately, let the main loading state handle it, or the next useEffect.
     }
+    // If paramsFromHook is not available yet, do nothing, initial loading state will cover it.
   }, [paramsFromHook]);
 
   useEffect(() => {
     if (!slug) {
-      // If slug is not set and no error is set from previous effect,
-      // and we are not already loading, it implies an issue or params are still pending.
-      // This check prevents trying to load with an undefined slug.
-      if (!loading && !fetchError && !paramsFromHook?.slug) {
-        setFetchError('গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।');
+      // If slug is still not set after the first effect (e.g. invalid params or hook not ready),
+      // and not already in an error state from the first effect,
+      // ensure loading is false.
+      if (!fetchError) {
         setLoading(false);
       }
       return;
@@ -56,19 +54,17 @@ export default function SongPage() {
 
     let isMounted = true;
     const loadSongData = async (s: string) => {
-      setLoading(true);
-      setFetchError(null);
-      setSong(null); // Clear previous song data
+      // setLoading(true); // Loading is already set true by the first effect when slug is valid
+      // setFetchError(null); // Error is also cleared by the first effect
+      setSong(null);
       try {
         const fetchedSong = await getSongBySlug(s);
         if (isMounted) {
           if (!fetchedSong) {
             setFetchError('গানটি খুঁজে পাওয়া যায়নি। লিঙ্কটি সঠিক কিনা দেখে নিন।');
             setSong(null);
-            // Consider calling notFound() here if appropriate, but an error message is also fine.
           } else {
             setSong(fetchedSong);
-            // Find previous and next songs from the mockSongs (non-placeholder)
             const nonPlaceholderSongs = mockSongs.filter(ms => ms.genre !== 'Placeholder');
             const currentIndex = nonPlaceholderSongs.findIndex(songIter => songIter.slug === s);
 
@@ -78,7 +74,6 @@ export default function SongPage() {
               setPrevSongSlug(prevSong ? prevSong.slug : null);
               setNextSongSlug(nextSong ? nextSong.slug : null);
             } else {
-              // This might happen if the slug exists but is a placeholder, or some other mismatch
               setPrevSongSlug(null);
               setNextSongSlug(null);
             }
@@ -101,10 +96,10 @@ export default function SongPage() {
     return () => {
       isMounted = false;
     };
-  }, [slug]); // Dependency on slug
+  }, [slug]);
 
 
-  if (loading && !song && !fetchError) { // Show loading only if truly loading data and no song/error yet
+  if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -124,15 +119,10 @@ export default function SongPage() {
   }
 
   if (!song) {
-    // This case will be hit if slug was invalid, or song not found, and error was set.
-    // If no error was set but song is null (e.g. initial state before slug is resolved),
-    // the loading condition above should catch it. If slug is resolved but song not found by getSongBySlug,
-    // an error should have been set. If somehow we reach here without loading and without error,
-    // it might imply notFound() should be called.
-    if (!loading && slug) { // If not loading and slug is present, but no song and no error, then it's a true not found
-        notFound();
-    }
-    return null; // Or a more specific "not found" or "invalid link" UI if not relying on error state
+    // This will be caught if fetchError is not set but song is null, and not loading
+    // This indicates an actual "not found" scenario after trying to load.
+    notFound();
+    return null; 
   }
 
   const displayTitle = song.title;
@@ -200,8 +190,7 @@ export default function SongPage() {
 				)}
 			</Card>
 
-			<Card className="shadow-lg">
-				<CardContent className="flex justify-between p-4">
+			<div className="flex justify-between items-center mt-6 mb-6">
 					{prevSongSlug ? (
 						<Link href={`/song/${prevSongSlug}`}>
 							<Button variant="outline" aria-label="পূর্ববর্তী গান">
@@ -216,45 +205,44 @@ export default function SongPage() {
                             </Button>
 						</Link>
 					) : <Button variant="outline" disabled aria-label="পরবর্তী গান (নিষ্ক্রিয়)"><ChevronRight className="h-5 w-5" /></Button>}
-				</CardContent>
-			</Card>
+			</div>
 
             <Card className="shadow-lg">
                 <CardHeader>
                     <CardTitle className="text-xl text-primary">আরও দেখুন</CardTitle>
                 </CardHeader>
-                <CardContent className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2.5 hover:bg-accent/50 transition-colors">
+                <CardContent className="flex flex-wrap gap-2 justify-center py-4">
+                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/">
                             <Home className="mr-2 h-4 w-4" />
                             <span>মূল পাতা</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2.5 hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/songs">
                             <ListMusic className="mr-2 h-4 w-4" />
                             <span>সকল গান</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2.5 hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/artists">
                             <UsersIcon className="mr-2 h-4 w-4" />
                             <span>সকল শিল্পী</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2.5 hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/lyricists">
                             <Feather className="mr-2 h-4 w-4" />
                             <span>সকল গীতিকার</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2.5 hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/composers">
                             <Disc3 className="mr-2 h-4 w-4" />
                             <span>সকল সুরকার</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2.5 hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/genres">
                             <Library className="mr-2 h-4 w-4" />
                             <span>সকল ধরণ</span>
@@ -265,27 +253,3 @@ export default function SongPage() {
 		</div>
 	);
 }
-
-// Fallback for Suspense if you were using it around the main component
-// export function SongPageSkeleton() {
-//   return (
-//     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)]">
-//       <Loader2 className="h-12 w-12 animate-spin text-primary" />
-//       <p className="mt-4 text-lg">তথ্য লোড হচ্ছে...</p>
-//     </div>
-//   );
-// }
-
-// To use with Suspense, you might wrap the default export like this:
-// export default function SongPageWrapper() {
-//   return (
-//     <Suspense fallback={<SongPageSkeleton />}>
-//       <SongPage />
-//     </Suspense>
-//   );
-// }
-
-// However, since SongPage itself handles its loading state internally,
-// direct export is fine and Suspense at this level might be redundant
-// unless specific parts of SongPage were separate Suspense boundaries.
-

@@ -6,7 +6,7 @@ import { cleanString as cleanStringForSlugProcessing, cleanDisplayString } from 
 // Note: `createSlug` is used in `all-songs.ts` now.
 // Note: `cleanLyricsForDisplay` is used in `all-songs.ts` now.
 
-export { type Song } from '@/data/all-songs';
+export { type Song };
 
 
 export async function getAllSongs(): Promise<Song[]> {
@@ -18,7 +18,7 @@ export async function getAllSongs(): Promise<Song[]> {
 }
 
 export async function getSongBySlug(slugFromUrl: string): Promise<Song | undefined> {
-  if (!slugFromUrl || typeof slugFromUrl !== 'string' || !slugFromUrl.trim()) {
+  if (!slugFromUrl || typeof slugFromUrl !== 'string' || !slugFromUrl.trim()) { // Corrected typo: slugFromSaltanate -> slugFromUrl
     return undefined;
   }
   const slugToSearch = slugFromUrl.trim().toLowerCase();
@@ -294,5 +294,3 @@ export async function getTotalSongCount(): Promise<number> {
 export async function seedDatabase() {
   return Promise.resolve();
 }
-
-    

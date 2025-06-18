@@ -14,91 +14,65 @@ import { Button } from '@/components/ui/button';
 
 export default function SongPage() {
   const params = useParams<{ slug: string }>();
-  // slug can be undefined if params is not ready or slug is not present in the URL
-  const slugFromUrl = params?.slug;
+  const slugFromParams = params?.slug;
 
-  const [songData, setSongData] = useState<{
-    song: Song | null;
-    loading: boolean;
-    error: string | null;
-    prevSongSlug: string | null;
-    nextSongSlug: string | null;
-  }>({
-    song: null,
-    loading: true, // Initial state: loading
-    error: null,
-    prevSongSlug: null,
-    nextSongSlug: null,
-  });
+  const [song, setSong] = useState<Song | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [prevSongSlug, setPrevSongSlug] = useState<string | null>(null);
+  const [nextSongSlug, setNextSongSlug] = useState<string | null>(null);
 
   useEffect(() => {
-    // This effect runs when `slugFromUrl` (from `useParams`) changes.
-    // If `slugFromUrl` is undefined initially (router not ready), we don't fetch yet.
-    // `songData.loading` remains true from initial state.
-    if (slugFromUrl === undefined) {
-      // If params hook has resolved (i.e., params object exists) but slug is still undefined,
-      // it indicates an invalid route or that the slug is missing.
-      if (params && slugFromUrl === undefined) { 
-        setSongData(prev => ({ ...prev, loading: false, error: "গানের লিঙ্ক সঠিক নয় বা অসম্পূর্ণ।" }));
-      }
-      // Otherwise, if params itself is undefined, router might still be initializing.
-      // songData.loading remains true, showing the loader.
+    // Reset states for new slug or initial load
+    setLoading(true);
+    setError(null);
+    setSong(null);
+    setPrevSongSlug(null);
+    setNextSongSlug(null);
+
+    if (typeof slugFromParams !== 'string' || slugFromParams.trim() === '') {
+      setError("গানের লিঙ্ক সঠিক নয় বা অসম্পূর্ণ।");
+      setLoading(false);
       return;
     }
 
-    // Reset state for the new slug and start loading.
-    // This ensures that if we navigate from one song page to another, states are reset.
-    setSongData(prev => ({
-      ...prev, // Keep existing prev/next slugs if not recalculating yet or if it's part of a more complex state object
-      loading: true,
-      error: null,
-      song: null,
-      // Reset prevSongSlug and nextSongSlug here if they should always be recalculated with the song
-      prevSongSlug: null,
-      nextSongSlug: null,
-    }));
-
-    const decodedSlug = decodeURIComponent(slugFromUrl).trim();
-    if (decodedSlug === "") {
-      setSongData(prev => ({ ...prev, loading: false, error: "গানের লিঙ্ক সনাক্ত করা যায়নি।" }));
-      return;
-    }
-
+    const slugToFetch = slugFromParams.trim();
     let isMounted = true;
+
     const loadData = async () => {
       try {
-        const fetchedSong = await getSongBySlug(decodedSlug);
-        if (isMounted) {
-          if (!fetchedSong) {
-            notFound(); // Song not found, trigger Next.js 404 page
-            // Note: notFound() might prevent further state updates in this component
-            // by unmounting it or redirecting.
-          } else {
-            // Song found, update state
-            const nonPlaceholderSongs = mockSongs.filter(ms => ms.genre !== 'Placeholder');
-            const currentIndex = nonPlaceholderSongs.findIndex(s => s.slug === decodedSlug);
-            const prev = currentIndex > 0 ? nonPlaceholderSongs[currentIndex - 1].slug : null;
-            const next = currentIndex < nonPlaceholderSongs.length - 1 ? nonPlaceholderSongs[currentIndex + 1].slug : null;
-            setSongData({ song: fetchedSong, loading: false, error: null, prevSongSlug: prev, nextSongSlug: next });
+        const fetchedSong = await getSongBySlug(slugToFetch);
+        if (!isMounted) return;
+
+        if (!fetchedSong) {
+          notFound(); // This will render the not-found.tsx page
+          // No need to set loading to false here as the component will unmount
+        } else {
+          setSong(fetchedSong);
+          // Find previous and next songs from the main mockSongs array
+          const nonPlaceholderSongs = mockSongs.filter(ms => ms.genre !== 'Placeholder');
+          const currentIndex = nonPlaceholderSongs.findIndex(s => s.slug === slugToFetch);
+
+          if (currentIndex !== -1) {
+            setPrevSongSlug(currentIndex > 0 ? nonPlaceholderSongs[currentIndex - 1].slug : null);
+            setNextSongSlug(currentIndex < nonPlaceholderSongs.length - 1 ? nonPlaceholderSongs[currentIndex + 1].slug : null);
           }
+          setLoading(false); // Set loading to false only after successful data retrieval
         }
       } catch (e: any) {
-        // Catch any unexpected errors during data fetching or processing
-        if (isMounted) {
-          console.error("Failed to load song data:", e);
-          setSongData(prev => ({ ...prev, loading: false, error: "গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।" }));
-        }
+        if (!isMounted) return;
+        console.error(`Failed to load song data for slug: ${slugToFetch}`, e);
+        setError("গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+        setLoading(false); // Set loading to false on error
       }
     };
 
     loadData();
 
     return () => {
-      isMounted = false; // Cleanup to prevent state updates on unmounted component
+      isMounted = false;
     };
-  }, [slugFromUrl, params]); // React to changes in slugFromUrl or the params object's availability
-
-  const { song, loading, error, prevSongSlug, nextSongSlug } = songData;
+  }, [slugFromParams]);
 
   if (loading) {
     return (
@@ -118,15 +92,15 @@ export default function SongPage() {
       </Alert>
     );
   }
-  
-  // If notFound() was called, Next.js should handle rendering its 404 page.
-  // This component might unmount or its render output ignored.
-  // If we reach here, and !loading and !error, then 'song' should be populated.
-  // A final guard in case 'song' is null despite no loading/error state (e.g., if notFound() doesn't stop render immediately).
+
+  // If song is null and not loading and no error, it means notFound() should have been called.
+  // This explicit check is a fallback. notFound() should handle redirecting to the 404 page.
   if (!song) {
-     // This state should ideally not be reached if `notFound()` is effective or an error is always set.
-     // Returning null here prevents rendering the rest of the page if song is unexpectedly null.
-    return null; 
+     // This state should ideally not be reached if notFound() is effective or an error is set.
+     // If it is reached, it implies an issue not caught by loading/error states or notFound().
+     // Returning null or a generic error message to prevent rendering with null song.
+     // The not-found.tsx page (triggered by notFound()) is the primary way to handle "song not found".
+    return null;
   }
 
   const displayTitle = song.title;

@@ -2,7 +2,8 @@
 'use client';
 
 import React, { useEffect, useState, Suspense } from 'react';
-import { getSongBySlug, type Song, mockSongs } from '@/services/bangla-song-database';
+import { getSongBySlug, type Song } from '@/services/bangla-song-database';
+import { mockSongs } from '@/data/all-songs'; // Corrected import path for mockSongs
 import { notFound, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon } from 'lucide-react';
@@ -29,20 +30,26 @@ export default function SongPage() {
     if (currentRawSlug && typeof currentRawSlug === 'string' && currentRawSlug.trim() !== "") {
       const decodedSlug = decodeURIComponent(currentRawSlug).trim();
       setSlug(decodedSlug);
-    } else if (paramsFromHook) {
+    } else if (paramsFromHook) { // Check if paramsFromHook itself is available
       setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
       setSong(null);
       setSlug(undefined);
       setLoading(false);
+    } else {
+      // If paramsFromHook is not even available yet, keep loading or handle as initial undefined state
+      // This branch might be hit if useParams returns undefined initially.
+      // No error set here immediately, let the main loading state handle it, or the next useEffect.
     }
   }, [paramsFromHook]);
 
   useEffect(() => {
     if (!slug) {
-      if (!paramsFromHook?.slug && !fetchError) {
-        // This covers the case where slug is not yet available from params, but no error has been set yet.
-        // We keep loading true, or if paramsFromHook is definitely null/empty and no slug will ever come,
-        // the first useEffect should have set an error.
+      // If slug is not set and no error is set from previous effect,
+      // and we are not already loading, it implies an issue or params are still pending.
+      // This check prevents trying to load with an undefined slug.
+      if (!loading && !fetchError && !paramsFromHook?.slug) {
+        setFetchError('গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।');
+        setLoading(false);
       }
       return;
     }
@@ -51,7 +58,7 @@ export default function SongPage() {
     const loadSongData = async (s: string) => {
       setLoading(true);
       setFetchError(null);
-      setSong(null);
+      setSong(null); // Clear previous song data
       try {
         const fetchedSong = await getSongBySlug(s);
         if (isMounted) {
@@ -94,10 +101,10 @@ export default function SongPage() {
     return () => {
       isMounted = false;
     };
-  }, [slug, paramsFromHook?.slug]);
+  }, [slug]); // Dependency on slug
 
 
-  if (loading) {
+  if (loading && !song && !fetchError) { // Show loading only if truly loading data and no song/error yet
     return (
       <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -117,10 +124,15 @@ export default function SongPage() {
   }
 
   if (!song) {
-    if (slug && !loading && !fetchError) {
-         notFound();
+    // This case will be hit if slug was invalid, or song not found, and error was set.
+    // If no error was set but song is null (e.g. initial state before slug is resolved),
+    // the loading condition above should catch it. If slug is resolved but song not found by getSongBySlug,
+    // an error should have been set. If somehow we reach here without loading and without error,
+    // it might imply notFound() should be called.
+    if (!loading && slug) { // If not loading and slug is present, but no song and no error, then it's a true not found
+        notFound();
     }
-    return null;
+    return null; // Or a more specific "not found" or "invalid link" UI if not relying on error state
   }
 
   const displayTitle = song.title;
@@ -276,3 +288,4 @@ export default function SongPage() {
 // However, since SongPage itself handles its loading state internally,
 // direct export is fine and Suspense at this level might be redundant
 // unless specific parts of SongPage were separate Suspense boundaries.
+

@@ -3,8 +3,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { getSongBySlug, type Song } from '@/services/bangla-song-database';
-// Import mockSongs from the new data file
-import { mockSongs } from '@/data/all-songs'; 
+import { mockSongs } from '@/data/all-songs';
 import { notFound, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2 } from 'lucide-react';
@@ -14,13 +13,8 @@ import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 
-interface PageParams {
-  slug: string;
-}
-
 export default function SongPage() {
-  const paramsFromHook = useParams<PageParams>();
-  const rawSlugFromParams = paramsFromHook?.slug;
+  const paramsFromHook = useParams<{ slug: string }>();
 
   const [slug, setSlug] = useState<string | undefined>(undefined);
   const [song, setSong] = useState<Song | null>(null);
@@ -30,27 +24,40 @@ export default function SongPage() {
   const [fetchError, setFetchError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (rawSlugFromParams) {
-      const currentSlug = decodeURIComponent(rawSlugFromParams).trim();
-      setSlug(currentSlug);
-    } else {
+    // This effect is responsible for setting the slug from URL parameters.
+    // It also handles the case where slug might not be available.
+    const currentRawSlug = paramsFromHook?.slug;
+
+    if (currentRawSlug && typeof currentRawSlug === 'string' && currentRawSlug.trim() !== "") {
+      const decodedSlug = decodeURIComponent(currentRawSlug).trim();
+      setSlug(decodedSlug);
+      // setLoading(true) will be handled by the data fetching effect if slug is valid
+      // If slug becomes valid, the second useEffect will trigger.
+    } else if (paramsFromHook) { // Check if paramsFromHook itself is available but slug is not
       setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
-      setLoading(false);
+      setSong(null);
+      setSlug(undefined);
+      setLoading(false); // No valid slug, stop loading and show error.
     }
-  }, [rawSlugFromParams]);
+    // If paramsFromHook is not yet available (e.g. initial render), `loading` remains true from initial state.
+  }, [paramsFromHook]);
 
   useEffect(() => {
+    // This effect is responsible for fetching the song data once a valid slug is set.
     if (!slug) {
-      if (rawSlugFromParams === undefined && !loading) { // Only set error if params were truly undefined and not just during initial render
-         setFetchError("গানের লিঙ্ক সনাক্ত করা যায়নি বা লিঙ্কটি সঠিক নয়।");
-         setLoading(false);
+      // If no slug is set (e.g., initial render, or previous effect determined no valid slug),
+      // do nothing here. Loading state should be managed by the first effect if slug is invalid.
+      // If slug is just not ready, initial `loading` is true.
+      if (!paramsFromHook?.slug && loading && !fetchError) {
+        // This means the first effect decided there's no slug and set loading to false and an error.
+        // Or, paramsFromHook is still not ready.
       }
       return;
     }
 
     let isMounted = true;
     const loadSongData = async (s: string) => {
-      setLoading(true);
+      setLoading(true); // Set loading true before fetching data for this slug
       setFetchError(null);
       setSong(null);
       try {
@@ -66,7 +73,6 @@ export default function SongPage() {
             if (currentIndex > -1) {
               const prevSong = currentIndex > 0 ? mockSongs[currentIndex - 1] : null;
               const nextSong = currentIndex < mockSongs.length - 1 ? mockSongs[currentIndex + 1] : null;
-
               setPrevSongSlug(prevSong ? prevSong.slug : null);
               setNextSongSlug(nextSong ? nextSong.slug : null);
             } else {
@@ -92,7 +98,8 @@ export default function SongPage() {
     return () => {
       isMounted = false;
     };
-  }, [slug, rawSlugFromParams, loading]); // Added loading to dependencies to re-check if slug becomes available
+  }, [slug, paramsFromHook?.slug]); // Re-run if slug changes or the raw slug from params changes (for safety)
+
 
   if (loading) {
     return (
@@ -114,10 +121,13 @@ export default function SongPage() {
   }
 
   if (!song) {
+    // This case should ideally be covered by fetchError, or if slug was invalid.
+    // If slug was valid, but song not found, getSongBySlug would lead to fetchError.
+    // Calling notFound() here if everything seemed fine but song is still null.
     if (slug && !loading && !fetchError) {
-      notFound();
+         notFound();
     }
-    return null;
+    return null; // Or a more specific "Song not available" message if !loading and !fetchError
   }
 
   const displayTitle = song.title;
@@ -188,12 +198,12 @@ export default function SongPage() {
 			<Card className="shadow-lg">
 				<CardContent className="flex justify-between p-4">
 					{prevSongSlug ? (
-						<Link href={`/song/${prevSongSlug}`} passHref>
+						<Link href={`/song/${prevSongSlug}`}>
 							<Button variant="outline">পূর্ববর্তী গান</Button>
 						</Link>
 					) : <Button variant="outline" disabled>পূর্ববর্তী গান</Button>}
 					{nextSongSlug ? (
-						<Link href={`/song/${nextSongSlug}`} passHref>
+						<Link href={`/song/${nextSongSlug}`}>
 							<Button variant="outline">পরবর্তী গান</Button>
 						</Link>
 					) : <Button variant="outline" disabled>পরবর্তী গান</Button>}
@@ -202,5 +212,3 @@ export default function SongPage() {
 		</div>
 	);
 }
-
-    

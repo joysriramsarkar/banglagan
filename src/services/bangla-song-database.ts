@@ -1,28 +1,29 @@
 
 'use server';
 
-import { mockSongs, type Song } from '@/data/all-songs';
+import { getProcessedMockSongs } from '@/data/all-songs';
+import type { Song } from '@/types/song';
 import { cleanString as cleanStringForSlugProcessing, cleanDisplayString } from '@/lib/utils';
-// Note: `createSlug` is used in `all-songs.ts` now.
-// Note: `cleanLyricsForDisplay` is used in `all-songs.ts` now.
 
 export { type Song };
 
 
 export async function getAllSongs(): Promise<Song[]> {
   try {
-    return mockSongs.filter(song => song.genre !== 'Placeholder');
+    const allSongs = getProcessedMockSongs();
+    return allSongs.filter(song => song.genre !== 'Placeholder');
   } catch (error: any) {
     return [];
   }
 }
 
 export async function getSongBySlug(slugFromUrl: string): Promise<Song | undefined> {
-  if (!slugFromUrl || typeof slugFromUrl !== 'string' || !slugFromUrl.trim()) { // Corrected typo: slugFromSaltanate -> slugFromUrl
+  if (!slugFromUrl || typeof slugFromUrl !== 'string' || !slugFromUrl.trim()) {
     return undefined;
   }
+  const allSongs = getProcessedMockSongs();
   const slugToSearch = slugFromUrl.trim().toLowerCase();
-  const song = mockSongs.find(s => s.slug === slugToSearch);
+  const song = allSongs.find(s => s.slug === slugToSearch);
 
   if (!song) {
     return undefined;
@@ -36,11 +37,11 @@ export async function searchSongs(searchQuery: string): Promise<Song[]> {
   if (!searchQuery || !searchQuery.trim()) {
     return [];
   }
-
+  const allSongs = getProcessedMockSongs();
   const cleanedQueryForMatching = cleanStringForSlugProcessing(searchQuery, "").toLowerCase();
   const queryTokens = cleanedQueryForMatching.split('-').filter(token => token.length > 0);
 
-  const filteredSongs = mockSongs.filter(song => {
+  const filteredSongs = allSongs.filter(song => {
     if (song.genre === 'Placeholder') return false;
 
     const songTitleSlug = cleanStringForSlugProcessing(song.originalTitle, "").toLowerCase();
@@ -106,6 +107,7 @@ export async function getPopularSongs(): Promise<Song[]> {
   ];
 
   let popular: Song[] = [];
+  const allSongs = getProcessedMockSongs();
 
   try {
     popular = popularSongDefinitions.map(def => {
@@ -114,7 +116,7 @@ export async function getPopularSongs(): Promise<Song[]> {
       const searchLyricistRaw = def.lyricist;
       const searchComposerRaw = def.composer;
 
-      return mockSongs.find(s =>
+      return allSongs.find(s =>
         s.originalTitle === searchTitleRaw &&
         s.originalArtist === searchArtistRaw &&
         s.originalLyricist === searchLyricistRaw &&
@@ -129,7 +131,7 @@ export async function getPopularSongs(): Promise<Song[]> {
       const needed = popularSongDefinitions.length - popular.length;
       let addedCount = 0;
 
-      const fallbackSongs = [...mockSongs]
+      const fallbackSongs = [...allSongs]
         .filter(s => s.releaseYear && s.genre !== 'Placeholder' && s.slug && !existingSlugs.has(s.slug))
         .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0));
 
@@ -147,8 +149,9 @@ export async function getPopularSongs(): Promise<Song[]> {
 }
 
 export async function getNewSongs(): Promise<Song[]> {
+  const allSongs = getProcessedMockSongs();
   try {
-    const sortedSongs = [...mockSongs]
+    const sortedSongs = [...allSongs]
       .filter(s => s.releaseYear && s.genre !== 'Placeholder')
       .sort((a, b) => (b.releaseYear || 0) - (a.releaseYear || 0))
       .slice(0, 8);
@@ -163,9 +166,10 @@ async function getUniqueFieldValues(
   conceptualFieldName: 'artist' | 'genre' | 'lyricist' | 'composer',
   splitCombined: boolean = false
 ): Promise<string[]> {
+  const allSongs = getProcessedMockSongs();
   try {
     const valuesSet = new Set<string>();
-    mockSongs.forEach(song => {
+    allSongs.forEach(song => {
       if (song.genre === 'Placeholder' && conceptualFieldName !== 'lyricist') {
         return;
       }
@@ -276,9 +280,10 @@ export async function getAllComposers(): Promise<string[]> {
 }
 
 export async function getPaginatedSongs(page: number, limitPerPage: number): Promise<{ songs: Song[], nextPageCursor: null }> {
+  const allSongs = getProcessedMockSongs();
   const start = (page - 1) * limitPerPage;
   const end = start + limitPerPage;
-  const nonPlaceholderSongs = mockSongs.filter(song => song.genre !== 'Placeholder');
+  const nonPlaceholderSongs = allSongs.filter(song => song.genre !== 'Placeholder');
   if (start >= nonPlaceholderSongs.length) {
     return { songs: [], nextPageCursor: null };
   }
@@ -287,7 +292,8 @@ export async function getPaginatedSongs(page: number, limitPerPage: number): Pro
 }
 
 export async function getTotalSongCount(): Promise<number> {
-  return mockSongs.filter(song => song.genre !== 'Placeholder').length;
+  const allSongs = getProcessedMockSongs();
+  return allSongs.filter(song => song.genre !== 'Placeholder').length;
 }
 
 // This function is for a real database, not used with mock data.

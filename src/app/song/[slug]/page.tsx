@@ -1,8 +1,9 @@
+
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { getSongBySlug, type Song } from '@/services/bangla-song-database';
-import { mockSongs } from '@/data/all-songs';
+import { getProcessedMockSongs } from '@/data/all-songs'; // For prev/next songs
 import { notFound, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon } from 'lucide-react';
@@ -23,51 +24,67 @@ export default function SongPage() {
   const [nextSongSlug, setNextSongSlug] = useState<string | null>(null);
 
   useEffect(() => {
-    // Reset states for new slug or initial load
-    setLoading(true);
-    setError(null);
-    setSong(null);
-    setPrevSongSlug(null);
-    setNextSongSlug(null);
-
-    if (typeof slugFromParams !== 'string' || slugFromParams.trim() === '') {
-      setError("গানের লিঙ্ক সঠিক নয় বা অসম্পূর্ণ।");
-      setLoading(false);
-      return;
-    }
-
-    const slugToFetch = slugFromParams.trim();
     let isMounted = true;
+    setLoading(true); 
 
-    const loadData = async () => {
+    const loadSongData = async () => {
+      setError(null); 
+      setSong(null); 
+      setPrevSongSlug(null);
+      setNextSongSlug(null);
+
+      if (typeof slugFromParams !== 'string' || slugFromParams.trim() === '') {
+        if (isMounted) {
+          setError("গানের লিঙ্ক সঠিক নয় বা অসম্পূর্ণ।");
+          setLoading(false);
+        }
+        return;
+      }
+
+      const slugToFetch = slugFromParams.trim();
+
       try {
         const fetchedSong = await getSongBySlug(slugToFetch);
+
         if (!isMounted) return;
 
         if (!fetchedSong) {
-          notFound(); // This will render the not-found.tsx page
-          // No need to set loading to false here as the component will unmount
+          notFound();
+          return; 
         } else {
           setSong(fetchedSong);
-          // Find previous and next songs from the main mockSongs array
-          const nonPlaceholderSongs = mockSongs.filter(ms => ms.genre !== 'Placeholder');
-          const currentIndex = nonPlaceholderSongs.findIndex(s => s.slug === slugToFetch);
+          
+          const allMockSongs = getProcessedMockSongs();
+          const nonPlaceholderSongs = allMockSongs.filter(ms => ms.genre !== 'Placeholder');
+          const currentIndex = nonPlaceholderSongs.findIndex(s => s.slug === fetchedSong.slug);
 
           if (currentIndex !== -1) {
             setPrevSongSlug(currentIndex > 0 ? nonPlaceholderSongs[currentIndex - 1].slug : null);
             setNextSongSlug(currentIndex < nonPlaceholderSongs.length - 1 ? nonPlaceholderSongs[currentIndex + 1].slug : null);
           }
-          setLoading(false); // Set loading to false only after successful data retrieval
         }
       } catch (e: any) {
         if (!isMounted) return;
         console.error(`Failed to load song data for slug: ${slugToFetch}`, e);
         setError("গানটি আনতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
-        setLoading(false); // Set loading to false on error
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
+    
+    // Ensure slugFromParams is not undefined before attempting to load.
+    // This handles the initial render where useParams might not have resolved the slug yet.
+    if (slugFromParams !== undefined) {
+        loadSongData();
+    } else {
+        // If slugFromParams is still undefined after initial checks, it implies an issue
+        // or the router is not ready. Keep loading or show a specific message.
+        // For now, setLoading(true) at the start of useEffect handles the loading UI.
+        // If it stays undefined for too long, it might indicate a routing problem.
+    }
 
-    loadData();
 
     return () => {
       isMounted = false;
@@ -93,14 +110,19 @@ export default function SongPage() {
     );
   }
 
-  // If song is null and not loading and no error, it means notFound() should have been called.
-  // This explicit check is a fallback. notFound() should handle redirecting to the 404 page.
   if (!song) {
-     // This state should ideally not be reached if notFound() is effective or an error is set.
-     // If it is reached, it implies an issue not caught by loading/error states or notFound().
-     // Returning null or a generic error message to prevent rendering with null song.
-     // The not-found.tsx page (triggered by notFound()) is the primary way to handle "song not found".
-    return null;
+    // This case should ideally be handled by notFound() or the error state.
+    // If reached, it's an unexpected state.
+    // notFound() should have been called if song is null and no error after loading.
+    return (
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)]">
+             <Alert variant="destructive" className="max-w-2xl mx-auto">
+                <WifiOff className="h-4 w-4" />
+                <AlertTitle>ত্রুটি</AlertTitle>
+                <AlertDescription>গানটি লোড করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।</AlertDescription>
+            </Alert>
+        </div>
+    );
   }
 
   const displayTitle = song.title;
@@ -168,16 +190,17 @@ export default function SongPage() {
 				)}
 			</Card>
 
-			<div className="flex justify-between items-center mt-6 mb-6 px-1">
+      <div className="flex justify-between items-center mt-6 mb-6 px-1">
 					{prevSongSlug ? (
-						<Link href={`/song/${prevSongSlug}`}>
+						<Link href={`/song/${prevSongSlug}`} passHref>
 							<Button variant="outline" aria-label="পূর্ববর্তী গান">
                                 <ChevronLeft className="h-5 w-5" />
                             </Button>
 						</Link>
 					) : <Button variant="outline" disabled aria-label="পূর্ববর্তী গান (নিষ্ক্রিয়)"><ChevronLeft className="h-5 w-5" /></Button>}
-					{nextSongSlug ? (
-						<Link href={`/song/${nextSongSlug}`}>
+					
+          {nextSongSlug ? (
+						<Link href={`/song/${nextSongSlug}`} passHref>
 							<Button variant="outline" aria-label="পরবর্তী গান">
                                 <ChevronRight className="h-5 w-5" />
                             </Button>
@@ -185,44 +208,44 @@ export default function SongPage() {
 					) : <Button variant="outline" disabled aria-label="পরবর্তী গান (নিষ্ক্রিয়)"><ChevronRight className="h-5 w-5" /></Button>}
 			</div>
 
-            <Card className="shadow-lg">
+            <Card className="shadow-md">
                 <CardHeader>
-                    <CardTitle className="text-xl text-primary">আরও দেখুন</CardTitle>
+                    <CardTitle className="text-lg text-primary">আরও দেখুন</CardTitle>
                 </CardHeader>
-                <CardContent className="flex flex-wrap gap-2 justify-center py-4">
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
+                <CardContent className="flex flex-wrap gap-2 justify-center py-3">
+                    <Button variant="outline" size="sm" asChild className="text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/">
-                            <Home className="mr-2 h-3 w-3" /> 
+                            <Home className="mr-1.5 h-3.5 w-3.5" /> 
                             <span>মূল পাতা</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" size="sm" asChild className="text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/songs">
-                            <ListMusic className="mr-2 h-3 w-3" />
+                            <ListMusic className="mr-1.5 h-3.5 w-3.5" />
                             <span>সকল গান</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" size="sm" asChild className="text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/artists">
-                            <UsersIcon className="mr-2 h-3 w-3" />
+                            <UsersIcon className="mr-1.5 h-3.5 w-3.5" />
                             <span>সকল শিল্পী</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" size="sm" asChild className="text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/lyricists">
-                            <Feather className="mr-2 h-3 w-3" />
+                            <Feather className="mr-1.5 h-3.5 w-3.5" />
                             <span>সকল গীতিকার</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" size="sm" asChild className="text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/composers">
-                            <Disc3 className="mr-2 h-3 w-3" />
+                            <Disc3 className="mr-1.5 h-3.5 w-3.5" />
                             <span>সকল সুরকার</span>
                         </Link>
                     </Button>
-                    <Button variant="outline" asChild className="justify-start text-left h-auto py-2 text-xs hover:bg-accent/50 transition-colors">
+                    <Button variant="outline" size="sm" asChild className="text-xs hover:bg-accent/50 transition-colors">
                         <Link href="/genres">
-                            <Library className="mr-2 h-3 w-3" />
+                            <Library className="mr-1.5 h-3.5 w-3.5" />
                             <span>সকল ধরণ</span>
                         </Link>
                     </Button>

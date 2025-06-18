@@ -17,7 +17,6 @@ export interface Song extends SongInterfaceFromTypes {
 }
 
 // Base mock data without pre-computed id/slug/keywords
-// Add 'id' field to raw data if you have persistent IDs, otherwise it will be index-based.
 const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre'>[] = [
   // Rabindranath Tagore Songs
   {
@@ -911,7 +910,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 
 জানি না কার কী যায় বা আসে তাতে
 তাই গান গাই রাস্তাতে
-আর ভুলে যাই পস্তাতে
+আর ভুলে যাই پস্তাতে
 
 জীবন চলছে না আর সোজাপথে
 দেখো আজও হাসি কোনমতে
@@ -1237,73 +1236,67 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '479', title: 'শয়তান', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2009, lyrics: 'আমার ভিতরে এক শয়তান, জেগে ওঠে মাঝে মাঝে।' }
 ];
 
+let internalProcessedSongs: Song[] | null = null;
 
-// Deduplication logic based on title and lyricist for absolute uniqueness.
-// Ensure 'id' is unique. If 'id' from raw data is not unique, this logic won't fix that.
-// The primary purpose here is to avoid duplicate *content* (song by same lyricist).
-const uniqueSongsMap = new Map<string, Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre'>>();
+function processAllSongsData(): Song[] {
+  // Deduplication logic based on title and lyricist for absolute uniqueness.
+  const uniqueSongsMap = new Map<string, Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'createdAt' | 'originalTitle' | 'originalArtist' | 'originalLyricist' | 'originalComposer' | 'originalGenre'>>();
 
-rawMockSongsData.forEach(songItem => {
-  // Use original (raw) title and lyricist for deduplication key
-  const rawTitle = songItem.title || 'untitled';
-  let rawLyricist = songItem.lyricist;
+  rawMockSongsData.forEach(songItem => {
+    const rawTitle = songItem.title || 'untitled';
+    let rawLyricist = songItem.lyricist;
 
-  // Handle cases where lyricist might be undefined, null, or "সংগৃহীত" before cleaning for key
-  if (rawLyricist === undefined || rawLyricist === null || rawLyricist.trim() === "" || rawLyricist.toLowerCase() === 'সংগৃহীত') {
-    rawLyricist = 'সংগৃহীত'; // Normalize to a consistent placeholder for deduplication
-  } else if (rawLyricist.toLowerCase() === 'অজানা গীতিকার') {
-    rawLyricist = 'অজানা গীতিকার';
-  }
+    if (rawLyricist === undefined || rawLyricist === null || rawLyricist.trim() === "" || rawLyricist.toLowerCase() === 'সংগৃহীত') {
+      rawLyricist = 'সংগৃহীত';
+    } else if (rawLyricist.toLowerCase() === 'অজানা গীতিকার') {
+      rawLyricist = 'অজানা গীতিকার';
+    }
 
-  const cleanedTitleForKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
-  const cleanedLyricistForKey = cleanStringForSlugProcessing(rawLyricist, 'সংগৃহীত').toLowerCase();
+    const cleanedTitleForKey = cleanStringForSlugProcessing(rawTitle, 'untitled').toLowerCase();
+    const cleanedLyricistForKey = cleanStringForSlugProcessing(rawLyricist, 'সংগৃহীত').toLowerCase();
+    const uniqueKey = `${cleanedTitleForKey}-lyricist:${cleanedLyricistForKey}`;
 
-  const uniqueKey = `${cleanedTitleForKey}-lyricist:${cleanedLyricistForKey}`;
+    if (!uniqueSongsMap.has(uniqueKey)) {
+      uniqueSongsMap.set(uniqueKey, songItem);
+    }
+  });
 
-  if (!uniqueSongsMap.has(uniqueKey)) {
-    uniqueSongsMap.set(uniqueKey, songItem);
-  }
-});
+  const initialSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, index) => {
+    const id = rawSongData.id || `gen-${index + 1}-${Date.now()}`;
+    const slug = createSlug(undefined, undefined, id);
+    const displayTitle = cleanDisplayString(rawSongData.title) || 'শিরোনামহীন';
+    let displayArtist = cleanDisplayString(rawSongData.artist) || 'বিভিন্ন শিল্পী';
+    if (displayArtist?.toLowerCase() === 'বিভিন্ন বাউল') {
+      displayArtist = 'বিভিন্ন শিল্পী';
+    }
+    const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকার' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
+    const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' || rawSongData.composer === null || rawSongData.composer === undefined ? 'অজানা সুরকার' : 'অজানা সুরকার');
+    const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' || rawSongData.genre === null || rawSongData.genre === undefined ? 'অজানা ধরণ' : 'অজানা ধরণ');
 
+    return {
+      originalTitle: rawSongData.title,
+      originalArtist: rawSongData.artist,
+      originalLyricist: rawSongData.lyricist,
+      originalComposer: rawSongData.composer,
+      originalGenre: rawSongData.genre,
+      id: id,
+      slug: slug,
+      title: displayTitle,
+      artist: displayArtist,
+      lyricist: displayLyricist,
+      composer: displayComposer,
+      genre: displayGenre,
+      lyrics: cleanLyricsForDisplay(rawSongData.lyrics),
+      releaseYear: rawSongData.releaseYear,
+    };
+  });
 
-// Process and generate final mockSongs array
-export const mockSongs: Song[] = Array.from(uniqueSongsMap.values()).map((rawSongData, index) => {
-  const id = rawSongData.id || `gen-${index + 1}-${Date.now()}`; // Ensure unique ID if not provided
-
-  // Slug is now generated using ONLY the ID for simplicity and to avoid character issues.
-  const slug = createSlug(undefined, undefined, id);
-
-  const displayTitle = cleanDisplayString(rawSongData.title) || 'শিরোনামহীন';
-  let displayArtist = cleanDisplayString(rawSongData.artist) || 'বিভিন্ন শিল্পী';
-  if (displayArtist?.toLowerCase() === 'বিভিন্ন বাউল') {
-    displayArtist = 'বিভিন্ন শিল্পী';
-  }
-  const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকার' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
-  const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' || rawSongData.composer === null || rawSongData.composer === undefined ? 'অজানা সুরকার' : 'অজানা সুরকার');
-  const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' || rawSongData.genre === null || rawSongData.genre === undefined ? 'অজানা ধরণ' : 'অজানা ধরণ');
-
-  return {
-    originalTitle: rawSongData.title,
-    originalArtist: rawSongData.artist,
-    originalLyricist: rawSongData.lyricist,
-    originalComposer: rawSongData.composer,
-    originalGenre: rawSongData.genre,
-
-    id: id,
-    slug: slug, // Slug is now just the lowercased ID
-    title: displayTitle,
-    artist: displayArtist,
-    lyricist: displayLyricist,
-    composer: displayComposer,
-    genre: displayGenre,
-    lyrics: cleanLyricsForDisplay(rawSongData.lyrics),
-    releaseYear: rawSongData.releaseYear,
-  };
-});
+  addPlaceholderSongsForMissingLyricists(initialSongs);
+  return initialSongs;
+}
 
 
-// Helper function to ensure every listed lyricist has at least one song entry
-function addPlaceholderSongsForMissingLyricists() {
+function addPlaceholderSongsForMissingLyricists(songsArray: Song[]) {
   const allKnownLyricists = [
     'রবীন্দ্রনাথ ঠাকুর', 'কাজী নজরুল ইসলাম', 'দ্বিজেন্দ্রলাল রায়', 'রজনীকান্ত সেন', 'অতুলপ্রসাদ সেন',
     'হিমাংশু দত্ত', 'মুকুন্দ দাস', 'গগন হরকরা', 'কমলাকান্ত ভট্টাচার্য্য', 'নিধুবাবু (রামনিধি গুপ্ত)',
@@ -1345,9 +1338,9 @@ function addPlaceholderSongsForMissingLyricists() {
   ];
 
   const existingLyricistSlugs = new Set(
-    mockSongs.map(song => song.originalLyricist ? cleanStringForSlugProcessing(song.originalLyricist, 'unknown').toLowerCase() : 'unknown').filter(Boolean) as string[]
+    songsArray.map(song => song.originalLyricist ? cleanStringForSlugProcessing(song.originalLyricist, 'unknown').toLowerCase() : 'unknown').filter(Boolean) as string[]
   );
-  let placeholderIdCounter = mockSongs.length + 10000; // Start placeholder IDs from a high number
+  let placeholderIdCounter = songsArray.length + 10000;
 
   allKnownLyricists.forEach(lyricistName => {
     const displayLyricist = cleanDisplayString(lyricistName);
@@ -1361,8 +1354,7 @@ function addPlaceholderSongsForMissingLyricists() {
       const placeholderTitle = `${displayLyricist} এর একটি গান (স্থানধারক)`;
       const placeholderArtist = 'বিভিন্ন শিল্পী';
       const placeholderComposer = 'অজানা সুরকার';
-
-      const placeholderSlug = createSlug(undefined, undefined, placeholderId); // Slug is now just the ID
+      const placeholderSlug = createSlug(undefined, undefined, placeholderId);
 
       const placeholderSong: Song = {
         id: placeholderId,
@@ -1380,12 +1372,15 @@ function addPlaceholderSongsForMissingLyricists() {
         slug: placeholderSlug,
         releaseYear: 0,
       };
-      mockSongs.push(placeholderSong);
+      songsArray.push(placeholderSong);
       existingLyricistSlugs.add(lyricistSlugForCheck);
     }
   });
 }
 
-addPlaceholderSongsForMissingLyricists();
-
-    
+export function getProcessedMockSongs(): Song[] {
+  if (internalProcessedSongs === null) {
+    internalProcessedSongs = processAllSongsData();
+  }
+  return internalProcessedSongs;
+}

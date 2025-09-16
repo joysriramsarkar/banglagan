@@ -26,7 +26,7 @@ const SpotifyIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const AppleMusicIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
       <title>Apple Music</title>
-      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0Zm4.138 16.12a3.83 3.83 0 0 1-2.046.587c-.63 0-1.192-.167-1.922-.515a.48.48 0 0 0-.42.015c-.179.09-.315.255-.315.45v2.924a.465.465 0 0 1-.465.465.465.465 0 0 1-.465-.465V15.52c0-.21-.12-.39-.3-.465a.495.495 0 0 0-.45.03c-.75.36-1.32.54-1.95.54a3.9 3.9 0 0 1-2.146-.6c-.24-.15-.39-.42-.39-.72v-4.5c0-1.65 1.35-3 3-3s3 1.35 3 3v4.5c0 .3-.15.57-.39.72-.24.15-.54.18-.81.09l-.06-.03c-1.32-.66-2.82-1.02-4.38-1.02s-3.06.36-4.38 1.02l-.06.03c-.27.09-.57.06-.81-.09-.24-.15-.39-.42-.39-.72v-4.5c0-1.65 1.35-3 3-3s3 1.35 3 3v4.5c0 .3-.15.57-.39.72-.24.15-.54. eighteen-.81.09-.24-.15-.39-.42-.39-.72v-4.5c0-1.65 1.35-3 3-3s3 1.35 3 3v4.5c0 .3-.15.57-.39.72-.24.15-.54.18-.81.09l-.06-.03c-.66-.33-1.35-.54-2.07-.63v-1.17c1.32.09 2.61-.15 3.78-.69 1.17.54 2.46.78 3.78.69v-1.17c-.72-.09-1.41-.3-2.07-.63l-.06-.03c-.27-.09-.57-.06-.81.09z"/>
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0Zm4.138 16.12a3.83 3.83 0 0 1-2.046.587c-.63 0-1.192-.167-1.922-.515a.48.48 0 0 0-.42.015c-.179.09-.315.255-.315.45v2.924a.465.465 0 0 1-.465.465.465.465 0 0 1-.465-.465V15.52c0-.21-.12-.39-.3-.465a.495.495 0 0 0-.45.03c-.75.36-1.32.54-1.95.54a3.9 3.9 0 0 1-2.146-.6c-.24-.15-.39-.42-.39-.72v-4.5c0-1.65 1.35-3 3-3s3 1.35 3 3v4.5c0 .3-.15.57-.39.72-.24.15-.54.18-.81.09l-.06-.03c-1.32-.66-2.82-1.02-4.38-1.02s-3.06.36-4.38 1.02l-.06.03c-.27.09-.57.06-.81-.09-.24-.15-.39-.42-.39-.72v-4.5c0-1.65 1.35-3 3-3s3 1.35 3 3v4.5c0 .3-.15.57-.39.72-.24.15-.54.18-.81.09-.24-.15-.39-.42-.39-.72v-4.5c0-1.65 1.35-3 3-3s3 1.35 3 3v4.5c0 .3-.15.57-.39.72-.24.15-.54.18-.81.09l-.06-.03c-.66-.33-1.35-.54-2.07-.63v-1.17c1.32.09 2.61-.15 3.78-.69 1.17.54 2.46.78 3.78.69v-1.17c-.72-.09-1.41-.3-2.07-.63l-.06-.03c-.27-.09-.57-.06-.81-.09z"/>
     </svg>
 );
 
@@ -371,7 +371,7 @@ export default function SongPage() {
                         <Link href="/genres">
                             <Library className="mr-1.5 h-3.5 w-3.5" />
                             <span>সকল ধরণ</span>
-                        </Link>Create a new Firebase Project or retrieves the current project and provides a Firebase app config object. Call this function whenever the user requests Firebase or services that Firebase offers. Includes adding, enabling, connecting with, or integrating with Firebase and Firebase services. When this function is called, you must always begin by giving the user a detailed outline of your plan and what you are going to do on their behalf. For example, call this function for user requests such as "Create a Firebase Project", "Get a Firebase config object", "Create a Firebase App Config", "Show me my Firebase config object", "Can you show me my Firebase configuration?, "What value do I use in the initializeApp() function?", "Add Firebase Auth", "Add Firebase Remote Config", or "Add analytics". Calling this function does not add, connect to, or integrate services, nor deploy Firebase resources on the user's behalf. As such, you must not tell users that they are connected to a service, that an automated deployment will occur, or that the integration is set up or complete. You must tell users that as a next step, they will need to go to the Firebase console to continue setting up, adding, or enabling any services they requested. This function does not generate code for additional services, intergrations, or features that the user did not ask for. Important! The Firebase App Configuration object is a public configuration, meaning it is safe and secure to provide the user with this object as the security and access is enforced by the Security Rules or Firebase App Check. Once written, do not modify the firebaseConfig object because it is fetched from the server and does not require modifications under any circumstances.
+                        </Link>
                     </Button>
                 </CardContent>
             </Card>
@@ -379,6 +379,8 @@ export default function SongPage() {
 	);
 }
     
+    
+
     
 
     

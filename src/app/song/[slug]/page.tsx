@@ -2,16 +2,45 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { getSongBySlug, type Song } from '@/services/bangla-song-database';
+import { getSongBySlug } from '@/services/bangla-song-database';
 import { getProcessedMockSongs } from '@/data/all-songs'; // For prev/next songs
 import { notFound, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon } from 'lucide-react';
+import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon, Youtube, Headphone } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import type { Song } from '@/types/song'; // Import the main Song type
+
+const SpotifyIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <title>Spotify</title>
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.922 17.513a.47.47 0 0 1-.652.126c-2.31-1.42-5.242-1.748-8.738-.953a.47.47 0 0 1-.523-.448.47.47 0 0 1 .448-.523c3.743-.852 7.002-.488 9.58 1.05.27.16.35.53.185.8zM18.8 14.15a.593.593 0 0 1-.82.162c-2.6-1.58-6.5-2.076-9.663-1.134a.593.593 0 0 1-.667-.552.593.593 0 0 1 .552-.667c3.51-.99 7.82-.443 10.74 1.34.31.18.42.61.255.918zm.13-3.23a.74.74 0 0 1-1.02.2c-2.95-1.8-7.7-2.2-11.22-1.2A.74.74 0 0 1 5.92 9.09a.74.74 0 0 1 .83-.677c3.96-1.1 9.1-.55 12.42 1.45.35.21.48.7.27 1.05z"/>
+    </svg>
+);
+
+const AppleMusicIcon = (props: React.SVGProps<SVGSVGElement>) => (
+    <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
+        <title>Apple Music</title>
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 19.714c-1.536 0-2.949-.5-4.142-1.357-.18-.12-.39-.18-.6-.18-.3 0-.57.12-.78.33l-.15.15c-.21.21-.33.48-.33.78 0 .3.12.57.33.78l.15.15c.21.21.48.33.78.33.21 0 .42-.06.6-.18 1.47-.99 3.24-1.59 5.142-1.59 1.903 0 3.673.6 5.143 1.59.18.12.39.18.6.18.3 0 .57-.12.78-.33l.15-.15c.21-.21.33-.48.33-.78 0-.3-.12-.57-.33-.78l-.15-.15c-.21-.21-.48-.33-.78-.33-.21 0-.42.06-.6-.18-1.193-.857-2.606-1.357-4.143-1.357zm-1.88-5.314c.24-.15.39-.42.39-.72v-4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3v4.5c0 .3.15.57.39.72.24.15.54.18.81.09l.06-.03c1.32-.66 2.82-1.02 4.38-1.02s3.06.36 4.38 1.02l.06.03c.27.09.57.06.81-.09.24-.15.39-.42.39-.72v-4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3v4.5c0 .3.15.57.39.72.24.15.54.18.81.09l.06-.03c.66-.33 1.35-.54 2.07-.63v-1.17c-1.32-.09-2.61.15-3.78.69-1.17-.54-2.46-.78-3.78-.69v1.17c.72.09 1.41.3 2.07.63l.06.03c.27.09.57.06.81-.09z"/>
+    </svg>
+);
+
+const PlatformIcon = ({ platform, className }: { platform: string, className?: string }) => {
+    const iconClass = cn("w-5 h-5", className);
+    switch (platform.toLowerCase()) {
+        case 'youtube':
+            return <Youtube className={iconClass} />;
+        case 'spotify':
+            return <SpotifyIcon className={cn(iconClass, "fill-current")} />;
+        case 'apple music':
+            return <AppleMusicIcon className={cn(iconClass, "fill-current")} />;
+        default:
+            return <Headphone className={iconClass} />;
+    }
+};
 
 export default function SongPage() {
   const params = useParams<{ slug: string }>();
@@ -25,14 +54,14 @@ export default function SongPage() {
 
   useEffect(() => {
     let isMounted = true;
-    setLoading(true); 
 
     const loadSongData = async () => {
-      setError(null); 
-      setSong(null); 
+      setLoading(true);
+      setError(null);
+      setSong(null);
       setPrevSongSlug(null);
       setNextSongSlug(null);
-
+      
       if (typeof slugFromParams !== 'string' || slugFromParams.trim() === '') {
         if (isMounted) {
           setError("গানের লিঙ্ক সঠিক নয় বা অসম্পূর্ণ।");
@@ -40,7 +69,7 @@ export default function SongPage() {
         }
         return;
       }
-
+      
       const slugToFetch = slugFromParams.trim();
 
       try {
@@ -50,12 +79,12 @@ export default function SongPage() {
 
         if (!fetchedSong) {
           notFound();
-          return; 
+          return;
         } else {
           setSong(fetchedSong);
           
-          const allMockSongs = getProcessedMockSongs();
-          const nonPlaceholderSongs = allMockSongs.filter(ms => ms.genre !== 'Placeholder');
+          const allSongs = getProcessedMockSongs();
+          const nonPlaceholderSongs = allSongs.filter(ms => ms.genre !== 'Placeholder');
           const currentIndex = nonPlaceholderSongs.findIndex(s => s.slug === fetchedSong.slug);
 
           if (currentIndex !== -1) {
@@ -73,18 +102,10 @@ export default function SongPage() {
         }
       }
     };
-    
-    // Ensure slugFromParams is not undefined before attempting to load.
-    // This handles the initial render where useParams might not have resolved the slug yet.
-    if (slugFromParams !== undefined) {
-        loadSongData();
-    } else {
-        // If slugFromParams is still undefined after initial checks, it implies an issue
-        // or the router is not ready. Keep loading or show a specific message.
-        // For now, setLoading(true) at the start of useEffect handles the loading UI.
-        // If it stays undefined for too long, it might indicate a routing problem.
-    }
 
+    if (slugFromParams !== undefined) {
+      loadSongData();
+    }
 
     return () => {
       isMounted = false;
@@ -111,18 +132,7 @@ export default function SongPage() {
   }
 
   if (!song) {
-    // This case should ideally be handled by notFound() or the error state.
-    // If reached, it's an unexpected state.
-    // notFound() should have been called if song is null and no error after loading.
-    return (
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-20rem)]">
-             <Alert variant="destructive" className="max-w-2xl mx-auto">
-                <WifiOff className="h-4 w-4" />
-                <AlertTitle>ত্রুটি</AlertTitle>
-                <AlertDescription>গানটি লোড করা সম্ভব হয়নি। অনুগ্রহ করে আবার চেষ্টা করুন।</AlertDescription>
-            </Alert>
-        </div>
-    );
+    return notFound();
   }
 
   const displayTitle = song.title;
@@ -190,23 +200,52 @@ export default function SongPage() {
 				)}
 			</Card>
 
-      <div className="flex justify-between items-center mt-6 mb-6 px-1">
-					{prevSongSlug ? (
-						<Link href={`/song/${prevSongSlug}`} passHref>
-							<Button variant="outline" aria-label="পূর্ববর্তী গান">
-                                <ChevronLeft className="h-5 w-5" />
-                            </Button>
-						</Link>
-					) : <Button variant="outline" disabled aria-label="পূর্ববর্তী গান (নিষ্ক্রিয়)"><ChevronLeft className="h-5 w-5" /></Button>}
-					
-          {nextSongSlug ? (
-						<Link href={`/song/${nextSongSlug}`} passHref>
-							<Button variant="outline" aria-label="পরবর্তী গান">
-                                <ChevronRight className="h-5 w-5" />
-                            </Button>
-						</Link>
-					) : <Button variant="outline" disabled aria-label="পরবর্তী গান (নিষ্ক্রিয়)"><ChevronRight className="h-5 w-5" /></Button>}
-			</div>
+            {song.streamingLinks && song.streamingLinks.length > 0 && (
+                <Card className="shadow-md">
+                    <CardHeader>
+                        <CardTitle className="text-xl text-primary flex items-center gap-2">
+                           <Headphone className="w-6 h-6" />
+                           <span>শুনুন</span>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                        {song.streamingLinks.map((link, index) => (
+                           <a
+                             key={index}
+                             href={link.url}
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             className="flex items-center p-3 rounded-md bg-secondary/50 hover:bg-accent/50 transition-colors border"
+                           >
+                                <PlatformIcon platform={link.platform} className="mr-3 text-primary" />
+                                <div className="flex-grow">
+                                   <p className="font-semibold text-secondary-foreground">{link.platform}</p>
+                                   {link.version && <p className="text-xs text-muted-foreground">{link.version}</p>}
+                                </div>
+                                <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                           </a>
+                        ))}
+                    </CardContent>
+                </Card>
+            )}
+
+            <div className="flex justify-between items-center mt-6">
+                {prevSongSlug ? (
+                    <Link href={`/song/${prevSongSlug}`} passHref>
+                        <Button variant="outline" aria-label="পূর্ববর্তী গান">
+                            <ChevronLeft className="h-5 w-5" />
+                        </Button>
+                    </Link>
+                ) : <Button variant="outline" disabled aria-label="পূর্ববর্তী গান (নিষ্ক্রিয়)"><ChevronLeft className="h-5 w-5" /></Button>}
+                
+                {nextSongSlug ? (
+                    <Link href={`/song/${nextSongSlug}`} passHref>
+                        <Button variant="outline" aria-label="পরবর্তী গান">
+                            <ChevronRight className="h-5 w-5" />
+                        </Button>
+                    </Link>
+                ) : <Button variant="outline" disabled aria-label="পরবর্তী গান (নিষ্ক্রিয়)"><ChevronRight className="h-5 w-5" /></Button>}
+            </div>
 
             <Card className="shadow-md">
                 <CardHeader>

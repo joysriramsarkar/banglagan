@@ -1,6 +1,6 @@
 
 import { createSlug, cleanLyricsForDisplay, cleanDisplayString, cleanString as cleanStringForSlugProcessing } from '@/lib/utils';
-import type { Song as SongInterfaceFromTypes } from '@/types/song'; // Renamed to avoid conflict
+import type { Song as SongInterfaceFromTypes, StreamingLink } from '@/types/song'; // Renamed to avoid conflict
 
 // Add id and slug to the Song interface for clarity
 // This interface is specific to the data structure within this mock data module
@@ -14,6 +14,7 @@ export interface Song extends SongInterfaceFromTypes {
   originalLyricist?: string;
   originalComposer?: string;
   originalGenre?: string;
+  streamingLinks?: StreamingLink[];
 }
 
 // Base mock data without pre-computed id/slug/keywords
@@ -51,7 +52,11 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 দে গো তোর পায়ের ধূলা, সে যে আমার মাথার মানিক হবে
 ও মা, গরিবের ধন যা আছে তাই দিব চরণতলে
 মরি হায়, হায় রে
-আমি পরের ঘরে কিনব না আর, মা, তোর ভূষণ ব'লে গলার ফাঁসি`
+আমি পরের ঘরে কিনব না আর, মা, তোর ভূষণ ব'লে গলার ফাঁসি`,
+    streamingLinks: [
+      { platform: 'YouTube', url: 'https://www.youtube.com/watch?v=f_v9o23-S5A', version: 'জাতীয় সঙ্গীত' },
+      { platform: 'Spotify', url: 'https://open.spotify.com/track/4SgVNLg9bYllw5p3f2tWf8', version: 'বিভিন্ন শিল্পী' }
+    ]
   },
   {
     id: '2',
@@ -87,11 +92,14 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 যদি সবাই ফিরে যায়, ওরে ওরে ও অভাগা
 যদি গহন পথে যাবার কালে কেউ ফিরে না চায়
 তবে পথের কাঁটা
-ও তুই রক্তমাখা চরণতলে একলা দলো রে
+ও তুই রক্তমাখা চরণতলে একলা dolo রে
 যদি আলো না ধরে, ওরে ওরে ও অভাগা
 যদি ঝড়-বাদলে আঁধার রাতে দুয়ার দেয় ঘরে
 তবে বজ্রানলে
-আপন বুকের পাঁজর জ্বালিয়ে নিয়ে একলা জ্বলো রে`
+আপন বুকের পাঁজর জ্বালিয়ে নিয়ে একলা জ্বলো রে`,
+    streamingLinks: [
+        { platform: 'YouTube', url: 'https://www.youtube.com/watch?v=GoaT-x_d-3s', version: 'শ্রেয়া ঘোষাল' },
+    ]
   },
   { id: '4', title: 'আমার মিলন লাগি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1913, lyrics: 'আমার মিলন লাগি তুমি আসছ কবে থেকে।', genre: 'রবীন্দ্রসঙ্গীত' },
   { id: '5', title: 'আমি কান পেতে রই', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1910, lyrics: 'আমি কান পেতে রই ও আমার বন্ধু।', genre: 'রবীন্দ্রসঙ্গীত' },
@@ -101,7 +109,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '9', title: 'এ কী লাবণ্যে পূর্ণ প্রাণ', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1914, lyrics: 'এ কী লাবণ্যে পূর্ণ প্রাণ, প্রাণেশ হে।', genre: 'রবীন্দ্রসঙ্গীত' },
   { id: '10', title: 'এ কী শোভা, কী ছায়া গো', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1905, lyrics: 'এ কী শোভা, কী ছায়া গো। (আমার সোনার বাংলা অংশ)', genre: 'রবীন্দ্রসঙ্গীত' },
   { id: '11', title: 'এসো শ্যামল সুন্দর', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1909, lyrics: 'এসো শ্যামল সুন্দর।', genre: 'রবীন্দ্রসঙ্গীত' },
-  { id: '12', title: 'ওগো দখিন হাওয়া', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1914, lyrics: 'ওগো দখিন হাওয়া, ও পথিকে।', genre: 'রবীন্দ্রসঙ্গীত' },
+  { id: '12', title: 'ওগো দখিন হাওয়া', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1914, lyrics: 'ওগো দখিন হাওয়া, ও pathike।', genre: 'রবীন্দ্রসঙ্গীত' },
   { id: '13', title: 'ও আমার দেশের মাটি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1905, lyrics: 'ও আমার দেশের মাটি, তোমার ’পরে ঠেকাই মাথা।', genre: 'রবীন্দ্রসঙ্গীত' },
   { id: '14', title: 'কৃষ্ণকলি আমি তারেই বলি', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1895, lyrics: 'কৃষ্ণকলি আমি তারেই বলি।', genre: 'রবীন্দ্রসঙ্গীত' },
   { id: '15', title: 'মেঘের পরে মেঘ জমেছে', artist: 'বিভিন্ন শিল্পী', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', releaseYear: 1910, lyrics: 'মেঘের পরে মেঘ জমেছে, আঁধার করে আসে।', genre: 'রবীন্দ্রসঙ্গীত' },
@@ -484,7 +492,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 ত্রাসে কাঁপে তরণীর পাপী যত নিঃস্বে
 
 তমসাবৃতা ঘোরা 'কিয়ামত' রাত্রি
-খেয়া-পারে আশা নাই ডুবিল রে যাত্রী
+খেয়া-পারে আশা নাই ডুবিল रे যাত্রী
 দমকি দমকি দেয়া হাঁকে কাঁপে দামিনী
 শিঙ্গার হুঙ্কারে থরথর যামিনী
 
@@ -559,7 +567,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 আমি ছিনু তব অমরাবতীতে পারিজাত ফুল–গন্ধ
 কত বসন্তে কত বরষায়
 খুঁজেছি তোমায় তারায় তারায়
-আজিও এসেছি তেমনি আশায় ল’য়ে স্মৃতি–সম্ভার` },
+আজিও এসেছি তেমনি আশায় ল’ye স্মৃতি–সম্ভার` },
   { id: '74', title: 'কেমনে রাখি আঁখি বারি চাপিয়া', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'বিরহ', releaseYear: 1929, lyrics: `কেমনে রাখি আঁখি–বারি চাপিয়া
 প্রাতে কোকিল কাঁদে নিশীথে পাপিয়া
 এ ভরা ভাদরে আমার মরা নদী
@@ -710,14 +718,14 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 মোর বিরহে কাঁদ যখন আরও ভালো লাগে
 পেয়ে তোমায় যদি হারাই
 দূরে দূরে থাকি গো তাই
-ফুল ফোটায়ে যায় গো চলে চঞ্চল বুলবুল` },
+ফুল ফোটায়ে যায় গো चले চঞ্চল বুলবুল` },
   { id: '88', title: 'বক্ষে আমার কাবার ছবি', artist: 'কাজী নজরুল ইসলাম', lyricist: 'কাজী নজরুল ইসলাম', composer: 'কাজী নজরুল ইসলাম', genre: 'আধ্যাত্মিক', releaseYear: 1930, lyrics: `বক্ষে আমার কাবার ছবি চক্ষে মোহাম্মদ রসুল
 শিরোপরি মোর খোদার আরশ গাই তাঁরি গান পথ বেভুল
 লায়লী প্রেমে মজনু পাগল আমি পাগল লা-ইলা’র
 প্রেমিক দরবেশ আমায় চেনে অরসিকে কয় বাতুল
 হৃদয়ে মোর খুশির বাগান বুলবুলি তায় গায় সদাই
 ওরা খোদার রহম মাগে আমি খোদার ইশ্‌ক্‌ চাই
-আমার মনের মস্‌জিদে দেয় আজান হাজার মোয়াজ্জিন
+আমার মনের মস্‌জিদে দেয় আজান হাজার মোয়াজ্জิน
 প্রাণের ‘লওহে’ কোরান লেখা রুহ্‌ পড়ে তা রাত্রি দিন
 খাতুনে জিন্নত মা আমার হাসান হোসেন চোখের জেল
 ভয় করি না রোজ-কেয়ামত পুল সিরাতের কঠিন পুল` },
@@ -1087,7 +1095,10 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
     composer: 'নচিকেতা চক্রবর্তী',
     genre: 'জীবনমুখী',
     releaseYear: 1993,
-    lyrics: 'নীলাঞ্জনা ১',
+    lyrics: `হাজার কবিতা, বেকার সবই তা, তার কথা কেউ বলে না।
+সে প্রথম প্রেম আমার নীলাঞ্জনা।
+मंदাক্রান্তা, তারার সাথে, তারার দেশে যায়;
+আমার চোখে শুধু ভিসার ছবি ভাসে।`
   },
   {
     id: '116',
@@ -1097,7 +1108,14 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
     composer: 'লালন ফকির',
     genre: 'বাউল',
     releaseYear: 1850, // Approximate
-    lyrics: 'খাঁচার ভিতর অচিন পাখি কেমনে আসে যায়। তাঁরে ধরতে পারলে মন বেড়ি, দিতাম পাখির পায়।',
+    lyrics: `খাঁচার ভিতর অচিন পাখি কেমনে আসে যায়
+তারে ধরতে পারলে মন-বেড়ি দিতাম পাখির পায়
+আট কুঠুরি নয় দরজা আঁটা, মধ্যে মধ্যে ঝলকা কাটা
+তার উপরে সদর কোঠা, আয়না মহল তায়
+কপালের ফের নইলে কি আর, পাখিটার এমন ব্যবহার
+খাঁচা ছেড়ে পাখি আমার কোন বনে পালায়
+মন তুই রইলি খাঁচার আসে, খাঁচা যে তোর কাঁচা বাঁশের
+কোনদিন খাঁচা পড়বে খসে, ফকির লালন কেঁদে কয়।`
   },
   {
     id: '117',
@@ -1113,7 +1131,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 সবকিছু মেনে নিয়ে, চল এগিয়ে যাই মোরা।`
   },
   // মাহমুদুজ্জামান বাবু'র গান
-  { id: '118', title: 'প্রিয় মৃত্তিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2005, lyrics: 'প্রিয় মৃত্তিকা' },
+  { id: '118', title: 'প্রিয় মৃত্তিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2005, lyrics: 'প্রিয় মৃত্তিকা, তোমার বুকে ফেরা হবে কিনা জানি না। শুধু জানি, এই নির্বাসনে আমার প্রাণ কাঁদে।' },
   { id: '119', title: 'বাংলাদেশ', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2008, lyrics: 'বাংলাদেশ' },
   { id: '120', title: 'ঘুম ঘুম রাত', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2010, lyrics: 'ঘুম ঘুম রাত যায় ঘুম ঘুম দিন' },
   { id: '121', title: 'আমার নয়ন ভরা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2012, lyrics: 'আমার নয়ন ভরা জল' },
@@ -1124,7 +1142,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '126', title: 'মেঘবালিকা', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2016, lyrics: 'মেঘবালিকা ও মেঘবালিকা, কত স্বপ্নকথা ছিল তোমার সাথে' },
   { id: '127', title: 'আমার পরাণ যাহা চায় (বাবু)', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'রবীন্দ্রনাথ ঠাকুর', composer: 'রবীন্দ্রনাথ ঠাকুর', genre: 'রবীন্দ্রসঙ্গীত', releaseYear: 2010, lyrics: 'আমার পরাণ যাহা চায়, তুমি তাই, তুমি তাই গো। তোমা ছাড়া আর এ জগতে মোর কেহ নাই, কিছু নাই গো।' },
   { id: '128', title: 'ভোর হয়নি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'ভোর হয়নি, আজ হলো না, কাল হবে কিনা তা জানা নেই' },
-  { id: '129', title: 'রাজা যায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'রাজা যায় রাজা আসে' },
+  { id: '129', title: 'রাজা যায়', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'রাজা যায় राजा আসে' },
   { id: '130', title: 'আস্থা হারোনোর দিন', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2019, lyrics: 'আস্থা হারোনোর দিন' },
   { id: '131', title: 'রাত্রি', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2017, lyrics: 'রাত্রি ঘনঘোর, জানি বহুদূর প্রিয় সেই ভোর' },
   { id: '132', title: 'নাচতে নেমে', artist: 'মাহমুদুজ্জামান বাবু', lyricist: 'মাহমুদুজ্জামান বাবু', composer: 'মাহমুদুজ্জামান বাবু', genre: 'আধুনিক', releaseYear: 2011, lyrics: 'নাচতে নেমে ঘোমটা দেওয়া উচিত কাজ সে কখনও নয়' },
@@ -1206,8 +1224,8 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '202', title: 'আমার আমি না থাকিলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার আমি না থাকিলে' },
   { id: '203', title: 'মানুষ ভজলে সোনার মানুষ হবি', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'মানুষ ভজলে সোনার মানুষ হবি' },
   { id: '204', title: 'আমার বাড়ীর কাছে আরশিনগর', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার বাড়ীর কাছে আরশিনগর' },
-  { id: '205', title: 'এমন মানব জনম আর কি হবে', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'এমন মানব জনম আর কি হবে' },
-  { id: '206', title: 'খাঁচার ভেতর অচিন পাখি (লালন)', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'খাঁচার ভেতর অচিন পাখি কেমনে আসে যায়। তাঁরে ধরতে পারলে মন বেড়ি, দিতাম পাখির পায়।' },
+  { id: '205', title: 'এমন মানব জনম আর কি হবে', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'এমন मानव জনম আর কি হবে' },
+  { id: '206', title: 'খাঁচার ভেতর অচিন পাখি (লালন)', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'খাঁচার ভেতর অচิน পাখি কেমনে আসে যায়। তাঁরে ধরতে পারলে মন বেড়ি, দিতাম পাখির পায়।' },
   { id: '207', title: 'কে কথা কয়রে দেখা দেয় না', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'কে কথা কয়রে দেখা দেয় না' },
   { id: '208', title: 'আমার এ ঘরখানায় কে বিরাজ করে', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'আমার এ ঘরখানায় কে বিরাজ করে' },
   { id: '209', title: 'সত্য বল সুপথে চল', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', genre: 'বাউল', releaseYear: 1850, lyrics: 'সত্য বল সুপথে চল' },
@@ -1284,7 +1302,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '276', title: 'যখন ভাঙল মিলন মেলা', artist: 'বিভিন্ন শিল্পী', lyricist: 'নীরেন্দ্রনাথ চক্রবর্তী', composer: 'অজানা সুরকার', releaseYear: 1960, lyrics: 'যখন ভাঙল মিলন মেলা।', genre: 'আধুনিক' },
   { id: '277', title: 'সবারে বাসনা দিও', artist: 'বিভিন্ন শিল্পী', lyricist: 'নির্মলেন্দু গুণ (বাংলাদেশি)', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'সবারে বাসনা দিও।', genre: 'আধুনিক' },
   { id: '278', title: 'সবারে করি আহবান', artist: 'বিভিন্ন শিল্পী', lyricist: 'পবিত্র সরকার', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'সবারে করি আহবান।', genre: 'আধুনিক' },
-  { id: '279', title: 'আজি মম জীবন', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রীতিভূষণ ভট্টাচার্য', composer: 'অজানা সুরকার', releaseYear: 1950, lyrics: 'আজি মম জীবন।', genre: 'আধুনিক' },
+  { id: '279', title: 'আজি মম জীবন', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রীতিভূষণ ভট্টাচার্য', composer: 'অজানা সুরकार', releaseYear: 1950, lyrics: 'আজি মম জীবন।', genre: 'আধুনিক' },
   { id: '280', title: 'আজি তোমারে দেখিতে', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রবীর মজুমদার', composer: 'অজানা সুরকার', releaseYear: 1960, lyrics: 'আজি তোমারে দেখিতে।', genre: 'আধুনিক' },
   { id: '281', title: 'আনন্দ জাগে প্রেম', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রিয় চট্টোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'আনন্দ জাগে প্রেম।', genre: 'আধুনিক' },
   { id: '282', title: 'আমার এ পথ', artist: 'বিভিন্ন শিল্পী', lyricist: 'ফকির আলমগীর (বাংলাদেশি)', composer: 'ফকির আলমগীর (বাংলাদেশি)', releaseYear: 1975, lyrics: 'আমার এ পথ।', genre: 'গণসঙ্গীত' },
@@ -1307,7 +1325,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '299', title: 'তুমি ভালোবাস', artist: 'বিভিন্ন শিল্পী', lyricist: 'তৃপ্তি মিত্র', composer: 'অজানা সুরকার', releaseYear: 1950, lyrics: 'তুমি ভালোবাস।', genre: 'আধুনিক' },
   { id: '300', title: 'আজি বসন্ত (তীর্থঙ্কর)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তীর্থঙ্কর দাস', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'আজি বসন্ত।', genre: 'আধুনিক' },
   { id: '301', title: 'আমার মুক্তি (উত্তম)', artist: 'বিভিন্ন শিল্পী', lyricist: 'উত্তম কুমার', composer: 'অজানা সুরকার', releaseYear: 1960, lyrics: 'আমার মুক্তি।', genre: 'আধুনিক' },
-  { id: '302', title: 'আলো দিয়ে', artist: 'বিভিন্ন শিল্পী', lyricist: 'উজ্জ্বল মুখোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'আলো দিয়ে।', genre: 'আধুনিক' },
+  { id: '302', title: 'আলো দিয়ে', artist: 'বিভিন্ন শিল্পী', lyricist: 'উজ্জ্বল মুখোপাধ্যায়', composer: 'অজানা সুরकार', releaseYear: 1970, lyrics: 'আলো দিয়ে।', genre: 'আধুনিক' },
   { id: '303', title: 'এ ধরা', artist: 'বিভিন্ন শিল্পী', lyricist: 'ঊষা গাঙ্গুলি', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'এ ধরা।', genre: 'আধুনিক' },
   { id: '304', title: 'এসো নিঃসংশয়', artist: 'বিভিন্ন শিল্পী', lyricist: 'বাঈজী প্রীতিলতা', composer: 'অজানা সুরকার', releaseYear: 1930, lyrics: 'এসো নিঃসংশয়।', genre: 'বাঈজী গান' },
   { id: '305', title: 'ও আমার মন (বিশ্বজিৎ)', artist: 'বিভিন্ন শিল্পী', lyricist: 'বিশ্বজিৎ চট্টোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1965, lyrics: 'ও আমার মন।', genre: 'আধুনিক' },
@@ -1327,10 +1345,10 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '319', title: 'ওগো নিষ্ঠুর', artist: 'বিভিন্ন শিল্পী', lyricist: 'সৌম্য চট্টোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'ওগো নিষ্ঠুর।', genre: 'আধুনিক' },
   { id: '320', title: 'কান পেতে (শান্তা)', artist: 'বিভিন্ন শিল্পী', lyricist: 'শান্তা দেবী', composer: 'অজানা সুরকার', releaseYear: 1930, lyrics: 'কান পেতে।', genre: 'আধুনিক' },
   { id: '321', title: 'কেহ দেয়', artist: 'বিভিন্ন শিল্পী', lyricist: 'সৌরভ চৌধুরী', composer: 'অজানা সুরকার', releaseYear: 2018, lyrics: 'কেহ দেয়।', genre: 'আধুনিক' },
-  { id: '322', title: 'ছেড়ে দিনু', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানভীর ফয়সাল (বাংলাদেশি)', composer: 'অজানা সুরকার', releaseYear: 2015, lyrics: 'ছেড়ে দিনু।', genre: 'আধুনিক' },
+  { id: '322', title: 'ছেড়ে দিনু', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানভীর ফয়সাল (বাংলাদেশি)', composer: 'অজানা সুরकार', releaseYear: 2015, lyrics: 'ছেড়ে দিনু।', genre: 'আধুনিক' },
   { id: '323', title: 'ঝড়ের মেঘে', artist: 'বিভিন্ন শিল্পী', lyricist: 'জাহিদ আকবর (বাংলাদেশি)', composer: 'অজানা সুরকার', releaseYear: 2012, lyrics: 'ঝড়ের মেঘে।', genre: 'আধুনিক' },
   { id: '324', title: 'দূরে কোন্‌', artist: 'বিভিন্ন শিল্পী', lyricist: 'শাহাবুদ্দিন নাগরী (বাংলাদেশি)', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'দূরে কোন্‌।', genre: 'আধুনিক' },
-  { id: '325', title: 'পথহারা তুমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'গাজী মাজহারুল আনোয়ার', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'পথহারা তুমি।', genre: 'আধুনিক' },
+  { id: '325', title: 'পথহারা তুমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'গাজী মাজহারুল আনোয়ার', composer: 'অজানা সুরकार', releaseYear: 1970, lyrics: 'পথহারা তুমি।', genre: 'আধুনিক' },
   { id: '326', title: 'বুঝি দিলে (কবির বকুল)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবির বকুল', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'বুঝি দিলে।', genre: 'আধুনিক' },
   { id: '327', title: 'মালতী (রফিকুজ্জামান)', artist: 'বিভিন্ন শিল্পী', lyricist: 'মোহাম্মদ রফিকুজ্জামান', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'মালতী।', genre: 'আধুনিক' },
   { id: '328', title: 'মেঘেরা', artist: 'বিভিন্ন শিল্পী', lyricist: 'মাসুদ করিম', composer: 'অজানা সুরকার', releaseYear: 1975, lyrics: 'মেঘেরা।', genre: 'আধুনিক' },
@@ -1367,7 +1385,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '359', title: 'ও আমার চির', artist: 'বিভিন্ন শিল্পী', lyricist: 'রাশেদুল হাসান', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'ও আমার চির।', genre: 'আধুনিক' },
   { id: '360', title: 'ওগো, তোরা চাস কি', artist: 'বিভিন্ন শিল্পী', lyricist: 'শুমন সুধর', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'ওগো, তোরা চাস কি।', genre: 'আধুনিক' },
   { id: '361', title: 'কমলার ফুল', artist: 'বিভিন্ন শিল্পী', lyricist: 'তৌফিক-ই-ইলাহী', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'কমলার ফুল।', genre: 'আধুনিক' },
-  { id: '362', title: 'কেমনে চিনিব', artist: 'বিভিন্ন শিল্পী', lyricist: 'ইমতিয়াজ আহমেদ', composer: 'অজানা সুরকার', releaseYear: 1990, lyrics: 'কেমনে চিনিব।', genre: 'আধুনিক' },
+  { id: '362', title: 'কেমনে চিনিব', artist: 'বিভিন্ন শিল্পী', lyricist: 'ইমতিয়াজ আহমেদ', composer: 'অজানা সুরकार', releaseYear: 1990, lyrics: 'কেমনে চিনিব।', genre: 'আধুনিক' },
   { id: '363', title: 'যখন এসেছিলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'নোলক', composer: 'অজানা সুরকার', releaseYear: 2005, lyrics: 'যখন এসেছিলে।', genre: 'আধুনিক' },
   { id: '364', title: 'ঝড়ের রাতে (ইমন)', artist: 'বিভিন্ন শিল্পী', lyricist: 'ইমন চৌধুরী', composer: 'ইমন চৌধুরী', releaseYear: 2010, lyrics: 'ঝড়ের রাতে।', genre: 'আধুনিক' },
   { id: '365', title: 'দূরে কে', artist: 'বিভিন্ন শিল্পী', lyricist: 'জাহিদ নিপু', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'দূরে কে।', genre: 'আধুনিক' },
@@ -1385,7 +1403,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '377', title: 'এক মুঠো ভালোবাসা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবির বকুল', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'এক মুঠো ভালোবাসা।', genre: 'আধুনিক' },
   { id: '378', title: 'যদি সুন্দর একখান মুখ পাইতাম', artist: 'বিভিন্ন শিল্পী', lyricist: 'মোহাম্মদ রফিকুজ্জামান', composer: 'আলম খান', releaseYear: 1980, lyrics: 'যদি সুন্দর একখান মুখ পাইতাম।', genre: 'আধুনিক' },
   { id: '379', title: 'যেতে পারি কিন্তু কেন যাবো', artist: 'বিভিন্ন শিল্পী', lyricist: 'শক্তি চট্টোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1983, lyrics: 'যেতে পারি কিন্তু কেন যাবো।', genre: 'আধুনিক' },
-  { id: '380', title: 'আমার স্বপ্ন তুমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রদীপ ঘোষ', composer: 'অজানা সুরকার', releaseYear: 1994, lyrics: 'আমার স্বপ্ন তুমি।', genre: 'আধুনিক' },
+  { id: '380', title: 'আমার স্বপ্ন তুমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রদীপ ঘোষ', composer: 'অজানা সুরकार', releaseYear: 1994, lyrics: 'আমার স্বপ্ন তুমি।', genre: 'আধুনিক' },
   { id: '381', title: 'গায়ত্রী', artist: 'বিভিন্ন শিল্পী', lyricist: 'বিনয় মজুমদার', composer: 'অজানা সুরকার', releaseYear: 1973, lyrics: 'গায়ত্রী।', genre: 'আধুনিক' },
   { id: '382', title: 'এই শহর (সুবোধ সরকার)', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুবোধ সরকার', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'এই শহর।', genre: 'আধুনিক' },
   { id: '383', title: 'আমার এ পথ (শঙ্খ ঘোষ)', artist: 'বিভিন্ন শিল্পী', lyricist: 'শঙ্খ ঘোষ', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'আমার এ পথ।', genre: 'আধুনিক' },
@@ -1399,7 +1417,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '391', title: 'চলচ্চিত্রের গান (কৃষ্ণেন্দু মুখোপাধ্যায়)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কৃষ্ণেন্দু মুখোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1990, lyrics: 'চলচ্চিত্রের গান।', genre: 'আধুনিক' },
   { id: '392', title: 'আধুনিক গান (অভিজিৎ বসু)', artist: 'অভিজিৎ বসু', lyricist: 'অভিজিৎ বসু', composer: 'অভিজিৎ বসু', releaseYear: 1985, lyrics: 'আধুনিক গান।', genre: 'আধুনিক' },
   { id: '393', title: 'আধুনিক গান (শাহীন সামাদ)', artist: 'শাহীন সামাদ', lyricist: 'শাহীন সামাদ', composer: 'শাহীন সামাদ', releaseYear: 1980, lyrics: 'আধুনিক গান।', genre: 'আধুনিক' },
-  { id: '394', title: 'পপ গান (ইমরান মাহমুদ)', artist: 'ইমরান মাহমুদউল্লাহ', lyricist: 'ইমরান মাহমুদউল্লাহ', composer: 'ইমরান মাহমুদউল্লাহ', releaseYear: 2015, lyrics: 'পপ গান।', genre: 'পপ' },
+  { id: '394', title: 'পপ গান (ইমরান মাহমুদ)', artist: 'ইমরان محمودউল্লাহ', lyricist: 'ইমরান محمودউল্লাহ', composer: 'ইমরান محمودউল্লাহ', releaseYear: 2015, lyrics: 'পপ গান।', genre: 'পপ' },
   { id: '395', title: 'চলচ্চিত্রের গান (তানজিদ তুহিন)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানজিদ তুহিন', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'চলচ্চিত্রের গান।', genre: 'আধুনিক' },
   { id: '396', title: 'লোকসংগীত (নাজমুল হাসান)', artist: 'বিভিন্ন শিল্পী', lyricist: 'নাজমুল হাসান', composer: 'নাজমুল হাসান', releaseYear: 1990, lyrics: 'লোকসংগীত।', genre: 'লোকগীতি' },
   { id: '397', title: 'আর্টসেলের গান (ফাহিম হোসেন)', artist: 'আর্টসেল', lyricist: 'ফাহিম হোসেন চৌধুরী', composer: 'আর্টসেল', releaseYear: 2002, lyrics: 'আর্টসেলের গান।', genre: 'ব্যান্ড সঙ্গীত' },
@@ -1416,12 +1434,12 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '408', title: 'ঐতিহ্যবাহী গান (দীনেন্দ্রকৃষ্ণ রায়)', artist: 'বিভিন্ন শিল্পী', lyricist: 'দীনেন্দ্রকৃষ্ণ রায়', composer: 'প্রচলিত', releaseYear: 1920, lyrics: 'ঐতিহ্যবাহী গান।', genre: 'ঐতিহাসিক' },
   { id: '409', title: 'আন্ডারগ্রাউন্ড সংগীত (ঋত্বিজ মল্লিক)', artist: 'বিভিন্ন শিল্পী', lyricist: 'ঋত্বিজ মল্লিক', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'আন্ডারগ্রাউন্ড সংগীত।', genre: 'ব্যান্ড সঙ্গীত' },
   { id: '410', title: 'ফিউশন গান (অর্ণব আদিত্য)', artist: 'বিভিন্ন শিল্পী', lyricist: 'অর্ণব আদিত্য', composer: 'অজানা সুরকার', releaseYear: 2015, lyrics: 'ফিউশন গান।', genre: 'ফিউশন' },
-  { id: '411', title: 'মহিলাদের গান (তানিশা মুখার্জী)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানিশা মুখার্জী', composer: 'অজানা সুরকার', releaseYear: 2018, lyrics: 'মহিলাদের গান।', genre: 'আধুনিক' },
+  { id: '411', title: 'মহিলাদের গান (তানিশা মুখার্জী)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তানিশা মুখার্জী', composer: 'অজানা সুরकार', releaseYear: 2018, lyrics: 'মহিলাদের গান।', genre: 'আধুনিক' },
   { id: '412', title: 'আধুনিক কবিতা ও গান (ঐশানী সাহা)', artist: 'বিভিন্ন শিল্পী', lyricist: 'ঐশানী সাহা', composer: 'অজানা সুরকার', releaseYear: 2020, lyrics: 'আধুনিক কবিতা ও গান।', genre: 'আধুনিক' },
-  { id: '413', title: 'ডিজিটাল প্ল্যাটফর্মের গান (রুদ্র ঘোষ)', artist: 'বিভিন্ন শিল্পী', lyricist: 'রুদ্র ঘোষ', composer: 'অজানা সুরকার', releaseYear: 2019, lyrics: 'ডিজিটাল প্ল্যাটফর্মের গান।', genre: 'আধুনিক' },
+  { id: '413', title: 'ডিজিটাল প্ল্যাটফর্মের গান (রুদ্র ঘোষ)', artist: 'বিভিন্ন শিল্পী', lyricist: 'রুদ্র ঘোষ', composer: 'অজানা সুরकार', releaseYear: 2019, lyrics: 'ডিজিটাল প্ল্যাটফর্মের গান।', genre: 'আধুনিক' },
   { id: '414', title: 'সংগৃহীত গান', artist: 'বিভিন্ন শিল্পী', lyricist: 'সংগৃহীত', composer: 'সংগৃহীত', releaseYear: 1900, lyrics: 'সংগৃহীত গান।', genre: 'লোকগীতি' },
   { id: '415', title: 'ভাষার গান (আব্দুল গাফফার চৌধুরী)', artist: 'বিভিন্ন শিল্পী', lyricist: 'আব্দুল গাফফার চৌধুরী', composer: 'আলতাফ মাহমুদ', releaseYear: 1952, lyrics: 'আমার ভাইয়ের রক্তে রাঙানো।', genre: 'দেশাত্মবোধক' },
-  { id: '416', title: 'সকরুণ নয়নে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শৈলেন্দ্র (শৈলেন রায়)', composer: 'শৈলেন্দ্র (শৈলেন রায়)', releaseYear: 1955, lyrics: 'সকরুণ নয়নে।', genre: 'আধুনিক' },
+  { id: '416', title: 'সকরুণ নয়নে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শৈলেন্দ্র (שৈলেন রায়)', composer: 'שৈলেন্দ্র (שৈলেন রায়)', releaseYear: 1955, lyrics: 'সকরুণ নয়নে।', genre: 'আধুনিক' },
   { id: '417', title: 'সকাতর আমন্ত্রণ (ভোলানাথ)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি ভোলানাথ', composer: 'কবি ভোলানাথ', releaseYear: 1860, lyrics: 'সকাতর আমন্ত্রণ।', genre: 'কবিগান' },
   { id: '418', title: 'সখী, তোরা দেখিবি', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি নীলকণ্ঠ', composer: 'কবি নীলকণ্ঠ', releaseYear: 1870, lyrics: 'সখী, তোরা দেখিবি।', genre: 'কবিগান' },
   { id: '419', title: 'সকলি শুকায়ে', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবি ভবানীচরণ', composer: 'কবি ভবানীচরণ', releaseYear: 1880, lyrics: 'সকলি শুকায়ে।', genre: 'কবিগান' },
@@ -1436,7 +1454,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '428', title: 'কেন আমায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুকুমার রায়', composer: 'সুকুমার রায়', releaseYear: 1920, lyrics: 'কেন আমায়।', genre: 'সুকুমার রায়ের গান' },
   { id: '429', title: 'ক্ষণে ক্ষণে', artist: 'বিভিন্ন শিল্পী', lyricist: 'কাজী মোতাহার হোসেন', composer: 'কাজী মোতাহার হোসেন', releaseYear: 1930, lyrics: 'ক্ষণে ক্ষণে।', genre: 'আধুনিক' },
   { id: '430', title: 'চিরদিন আমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'শিবদাস বন্দ্যোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'চিরদিন আমি।', genre: 'আধুনিক' },
-  { id: '431', title: 'যে শুধু', artist: 'বিভিন্ন শিল্পী', lyricist: 'মুকুল দত্ত', composer: 'অজানা সুরকার', releaseYear: 1975, lyrics: 'যে শুধু।', genre: 'আধুনিক' },
+  { id: '431', title: 'যে শুধু', artist: 'বিভিন্ন শিল্পী', lyricist: 'মুকুল দত্ত', composer: 'অজানা সুরकार', releaseYear: 1975, lyrics: 'যে শুধু।', genre: 'আধুনিক' },
   { id: '432', title: 'সবারে দাও', artist: 'বিভিন্ন শিল্পী', lyricist: 'অমিতাভ ভট্টাচার্য', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'সবারে দাও।', genre: 'আধুনিক' },
   { id: '433', title: 'সবারে রাজার', artist: 'বিভিন্ন শিল্পী', lyricist: 'অঞ্জন চৌধুরী', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'সবারে রাজার।', genre: 'আধুনিক' },
   { id: '434', title: 'সখি, আমারি', artist: 'বিভিন্ন শিল্পী', lyricist: 'অনুপম দত্ত', composer: 'অজানা সুরকার', releaseYear: 1995, lyrics: 'সখি, আমারি।', genre: 'আধুনিক' },
@@ -1447,7 +1465,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '439', title: 'এ কী রূপ', artist: 'বিভিন্ন শিল্পী', lyricist: 'হেমাঙ্গ বিশ্বাস', composer: 'হেমাঙ্গ বিশ্বাস', releaseYear: 1950, lyrics: 'এ কী রূপ।', genre: 'গণসঙ্গীত' },
   { id: '440', title: 'এসো হে প্রেম', artist: 'বিভিন্ন শিল্পী', lyricist: 'ইন্দ্রনাথ সেন', composer: 'অজানা সুরকার', releaseYear: 1945, lyrics: 'এসো হে প্রেম।', genre: 'আধুনিক' },
   { id: '441', title: 'এসো হে সখা', artist: 'বিভিন্ন শিল্পী', lyricist: 'জয় গোস্বামী', composer: 'অজানা সুরকার', releaseYear: 2005, lyrics: 'এসো হে সখা।', genre: 'আধুনিক' },
-  { id: '442', title: 'ও আমার (কবীর সুমন)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবীর সুমন', composer: 'কবীর সুমন', releaseYear: 1992, lyrics: 'ও আমার।', genre: 'সুমনীয়' },
+  { id: '442', title: 'ও আমার (কবীর सुमन)', artist: 'বিভিন্ন শিল্পী', lyricist: 'কবীর सुमन', composer: 'কবীর सुमन', releaseYear: 1992, lyrics: 'ও আমার।', genre: 'সুমনীয়' },
   { id: '443', title: 'ওগো, তোমরা', artist: 'বিভিন্ন শিল্পী', lyricist: 'কুমার জ্ঞানেন্দ্র', composer: 'অজানা সুরকার', releaseYear: 1930, lyrics: 'ওগো, তোমরা।', genre: 'ভক্তিগীতি' },
   { id: '444', title: 'কাঁদি আমি', artist: 'বিভিন্ন শিল্পী', lyricist: 'লালন ফকির', composer: 'লালন ফকির', releaseYear: 1850, lyrics: 'কাঁদি আমি।', genre: 'বাউল' },
   { id: '445', title: 'ক্ষণিকের অতিথি', artist: 'বিভিন্ন শিল্পী', lyricist: 'মনোজ মুর্শিদ (বাংলাদেশি)', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'ক্ষণিকের অতিথি।', genre: 'আধুনিক' },
@@ -1457,23 +1475,23 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
   { id: '449', title: 'সবারে পর', artist: 'বিভিন্ন শিল্পী', lyricist: 'নীরেন্দ্রনাথ চক্রবর্তী', composer: 'অজানা সুরকার', releaseYear: 1960, lyrics: 'সবারে পর।', genre: 'আধুনিক' },
   { id: '450', title: 'সবারে আপন (পবিত্র)', artist: 'বিভিন্ন শিল্পী', lyricist: 'পবিত্র সরকার', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'সবারে আপন।', genre: 'আধুনিক' },
   { id: '451', title: 'সকলি নবীন', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রীতিভূষণ ভট্টাচার্য', composer: 'অজানা সুরকার', releaseYear: 1950, lyrics: 'সকলি নবীন।', genre: 'আধুনিক' },
-  { id: '452', title: 'সখি, বারে বারে', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রবীর মজুমদার', composer: 'অজানা সুরকার', releaseYear: 1960, lyrics: 'সখি, বারে বারে।', genre: 'আধুনিক' },
+  { id: '452', title: 'সখি, বারে বারে', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রবীর মজুমদার', composer: 'অজানা সুরकार', releaseYear: 1960, lyrics: 'সখি, বারে বারে।', genre: 'আধুনিক' },
   { id: '453', title: 'তুমি কি তাই', artist: 'বিভিন্ন শিল্পী', lyricist: 'প্রিয় চট্টোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'তুমি কি তাই।', genre: 'আধুনিক' },
   { id: '454', title: 'তুমি সুন্দর', artist: 'বিভিন্ন শিল্পী', lyricist: 'ফকির আলমগীর (বাংলাদেশি)', composer: 'ফকির আলমগীর (বাংলাদেশি)', releaseYear: 1975, lyrics: 'তুমি সুন্দর।', genre: 'গণসঙ্গীত' },
   { id: '455', title: 'আজি শুভ (ফকির)', artist: 'বিভিন্ন শিল্পী', lyricist: 'বুদ্ধদেব দাশগুপ্ত', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'আজি শুভ।', genre: 'আধুনিক' },
   { id: '456', title: 'আমার মুক্তি দাও (বুদ্ধদেব)', artist: 'বিভিন্ন শিল্পী', lyricist: 'মণীন্দ্র গুপ্ত', composer: 'অজানা সুরকার', releaseYear: 1960, lyrics: 'আমার মুক্তি দাও।', genre: 'আধুনিক' },
-  { id: '457', title: 'আলোকের ঝর্ণা (মণীন্দ্র)', artist: 'বিভিন্ন শিল্পী', lyricist: 'মন্টু মুখোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1955, lyrics: 'আলোকের ঝর্ণা।', genre: 'আধুনিক' },
+  { id: '457', title: 'আলোকের ঝর্ণা (মণীন্দ্র)', artist: 'বিভিন্ন শিল্পী', lyricist: 'মন্টু মুখোপাধ্যায়', composer: 'অজানা সুরकार', releaseYear: 1955, lyrics: 'আলোকের ঝর্ণা।', genre: 'আধুনিক' },
   { id: '458', title: 'এ কী গভীর বাণী', artist: 'বিভিন্ন শিল্পী', lyricist: 'মলয় গাঙ্গুলি', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'এ কী গভীর বাণী।', genre: 'আধুনিক' },
   { id: '459', title: 'এসো হে রাজা', artist: 'বিভিন্ন শিল্পী', lyricist: 'রীতুপর্ণ ঘোষ', composer: 'অজানা সুরকার', releaseYear: 1995, lyrics: 'এসো হে রাজা।', genre: 'আধুনিক' },
   { id: '460', title: 'এসো নির্মল করে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শিবরাম চক্রবর্তী', composer: 'অজানা সুরকার', releaseYear: 1940, lyrics: 'এসো নির্মল করে।', genre: 'আধুনিক' },
   { id: '461', title: 'ও আমার চির (শিবরাম)', artist: 'বিভিন্ন শিল্পী', lyricist: 'শ্যামল মিত্র', composer: 'শ্যামল মিত্র', releaseYear: 1960, lyrics: 'ও আমার চির।', genre: 'আধুনিক' },
   { id: '462', title: 'ওগো, তোরা যাস নে', artist: 'বিভিন্ন শিল্পী', lyricist: 'শ্রীজাত', composer: 'অজানা সুরকার', releaseYear: 2010, lyrics: 'ওগো, তোরা যাস নে।', genre: 'আধুনিক' },
-  { id: '463', title: 'কেউ যাহা', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুদীপ্ত মুখোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 2000, lyrics: 'কেউ যাহা।', genre: 'আধুনিক' },
+  { id: '463', title: 'কেউ যাহা', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুদীপ্ত মুখোপাধ্যায়', composer: 'অজানা সুরकार', releaseYear: 2000, lyrics: 'কেউ যাহা।', genre: 'আধুনিক' },
   { id: '464', title: 'কেন দূরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুধীরলাল চক্রবর্তী', composer: 'সুধীরলাল চক্রবর্তী', releaseYear: 1940, lyrics: 'কেন দূরে।', genre: 'আধুনিক' },
   { id: '465', title: 'ক্ষমা করো', artist: 'বিভিন্ন শিল্পী', lyricist: 'সুনীল গঙ্গোপাধ্যায়', composer: 'অজানা সুরকার', releaseYear: 1970, lyrics: 'ক্ষমা করো।', genre: 'আধুনিক' },
   { id: '466', title: 'চলে যায়', artist: 'বিভিন্ন শিল্পী', lyricist: 'স্বপন চক্রবর্তী', composer: 'অজানা সুরকার', releaseYear: 1975, lyrics: 'চলে যায়।', genre: 'আধুনিক' },
   { id: '467', title: 'ডাকিলে ধীরে', artist: 'বিভিন্ন শিল্পী', lyricist: 'তারাপদ রায়', composer: 'অজানা সুরকার', releaseYear: 1965, lyrics: 'ডাকিলে ধীরে।', genre: 'আধুনিক' },
-  { id: '468', title: 'পথে চলে', artist: 'বিভিন্ন শিল্পী', lyricist: 'তৃপ্তি মিত্র', composer: 'অজানা সুরকার', releaseYear: 1950, lyrics: 'পথে চলে।', genre: 'আধুনিক' },
+  { id: '468', title: 'পথে चले', artist: 'বিভিন্ন শিল্পী', lyricist: 'তৃপ্তি মিত্র', composer: 'অজানা সুরকার', releaseYear: 1950, lyrics: 'পথে चले।', genre: 'আধুনিক' },
   { id: '469', title: 'বুঝি দিলে প্রেম (তীর্থঙ্কর)', artist: 'বিভিন্ন শিল্পী', lyricist: 'তীর্থঙ্কর দাস', composer: 'অজানা সুরকার', releaseYear: 1980, lyrics: 'বুঝি দিলে প্রেম।', genre: 'আধুনিক' },
 
   // রূপম ইসলাম / ফসিলস এর গান
@@ -1558,7 +1576,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 পরিবর্তন এলো না তবু মনে
 ইয়ে
 স্বপ্নেরা তবু খুঁজে যায়
-জীবনের শেষ সীমানায়
+জীবনের শেষ সীmanay
 আছে কি রাখা বাঁচার ঠিকানা, ঠিকানা
 
 আরো একবার চলো ফিরে যাই
@@ -1634,7 +1652,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 তোমার বাড়ির পথে চলেছি আবার
 দেয় বৃষ্টিটা সঙ্গ আমায়
 জানালার কাঁচে তুমি দেখতে পাবে কি
-নাকি ঝাপসা তা ঘোর বর্ষায়
+নাকি ঝাপसा তা ঘোর বর্ষায়
 
 
 না না যাচ্ছি না
@@ -1747,7 +1765,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 
 সে চক্রব্যূহে আজও
 বন্দী হয়ে আছি
-সে চোরাবালি আজও
+সে চোরাবali আজও
 গ্রাস করছে আমাকে
 ভালবাসি তাকে
 তার নিষিদ্ধ অসুখের
@@ -1814,7 +1832,7 @@ const rawMockSongsData: Omit<Song, 'slug' | 'keywords' | 'matchCount' | 'created
 আমি আছি তোমার অপেক্ষায়
 জীবনে যখন শেষ ট্রেন দাঁড়ায়` },
   { id: '478', title: 'অ্যাসিড', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2002, lyrics: 'অ্যাসিড বৃষ্টিতে ভিজবে এসো।' },
-  { id: '479', title: 'শয়তান', artist: 'ফসিলস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2009, lyrics: 'আমার ভিতরে এক শয়তান, জেগে ওঠে মাঝে মাঝে।' }
+  { id: '479', title: 'শয়তান', artist: 'ফসילস', lyricist: 'রূপম ইসলাম', composer: 'রূপম ইসলাম', genre: 'রক', releaseYear: 2009, lyrics: 'আমার ভিতরে এক শয়তান, জেগে ওঠে মাঝে মাঝে।' }
 ];
 
 let internalProcessedSongs: Song[] | null = null;
@@ -1850,7 +1868,7 @@ function processAllSongsData(): Song[] {
     if (displayArtist?.toLowerCase() === 'বিভিন্ন বাউল') {
       displayArtist = 'বিভিন্ন শিল্পী';
     }
-    const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকার' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
+    const displayLyricist = cleanDisplayString(rawSongData.lyricist) || (rawSongData.lyricist === '' || rawSongData.lyricist === null || rawSongData.lyricist === undefined ? 'অজানা গীতিকar' : (rawSongData.lyricist.toLowerCase() === 'সংগৃহীত' ? 'সংগৃহীত' : 'অজানা গীতিকার'));
     const displayComposer = cleanDisplayString(rawSongData.composer) || (rawSongData.composer === '' || rawSongData.composer === null || rawSongData.composer === undefined ? 'অজানা সুরকার' : 'অজানা সুরকার');
     const displayGenre = cleanDisplayString(rawSongData.genre) || (rawSongData.genre === '' || rawSongData.genre === null || rawSongData.genre === undefined ? 'অজানা ধরণ' : 'অজানা ধরণ');
 
@@ -1869,6 +1887,7 @@ function processAllSongsData(): Song[] {
       genre: displayGenre,
       lyrics: cleanLyricsForDisplay(rawSongData.lyrics),
       releaseYear: rawSongData.releaseYear,
+      streamingLinks: rawSongData.streamingLinks,
     };
   });
 
@@ -1904,18 +1923,18 @@ function addPlaceholderSongsForMissingLyricists(songsArray: Song[]) {
     'নাসির আহমেদ নাসির', 'মাকসুদুল হক', 'ইমন সাহা', 'সাইদুস সালেহীন (সাজু)', 'ফুয়াদ নাসের বাবু',
     'বারী সিদ্দিকী', 'রথীন্দ্রনাথ রায়', 'শফিক তুহিন', 'রবিউল ইসলাম জিবন', 'শিবলী মোহাম্মদ',
     'শহরাব হোসেন', 'মিল্টন খন্দকার', 'তারিকুল ইসলাম', 'শুজিত রায়', 'পার্থ বড়ুয়া',
-    'আনিসুল ইসলাম', 'শফিকুল খালেক', 'শফিকুল আলম', 'রানা', 'শুভ',
+    'আনিসুল ইসলাম', 'שফিকুল খালেক', 'שফিকুল আলম', 'রানা', 'শুভ',
     'প্রীতম হাসান', 'নওশাদ আলী', 'তপন চৌধুরী', 'ফিরোজ শাই', 'রাশেদুল হাসান',
     'শুমন সুধর', 'তৌফিক-ই-ইলাহী', 'ইমতিয়াজ আহমেদ', 'নোলক', 'ইমন চৌধুরী',
     'জাহিদ নিপু', 'মিলন মাহমুদ', 'শাহেদ সরওয়ার', 'মাহমুদুল হাসান', 'রবিউল আলম',
     'শাহীন আলম', 'তানজিদ নূর', 'মাহবুবুল হক', 'রিয়াজ উদ্দিন আহমেদ', 'আবুল হায়াত',
     'সমরেশ মজুমদার', 'শক্তি চট্টোপাধ্যায়', 'প্রদীপ ঘোষ', 'বিনয় মজুমদার', 'সুবোধ সরকার',
     'শঙ্খ ঘোষ', 'নবারুন ভট্টাচার্য্য', 'উৎপল কুমার বসু', 'অরিজিৎ দাস', 'সন্দীপ চট্টোপাধ্যায়',
-    'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান মাহমুদউল্লাহ', 'তানজিদ তুহিন',
+    'কৃষ্ণেন্দু মুখোপাধ্যায়', 'অভিজিৎ বসু', 'শাহীন সামাদ', 'ইমরান محمودউল্লাহ', 'তানজিদ তুহিন',
     'নাজমুল হাসান', 'ফাহিম হোসেন চৌধুরী', 'রবিন চন্দ', 'নাসিম আলী খান', 'রাজিব আহমেদ',
     'ফারহানা মিথিলা', 'হেমন্ত কুমার ত্রিপুরা', 'অর্পিতা দাস', 'বিকাশ রায়',
-    'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'কমলাকান্ত ভট্টাচার্য', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋত্বিজ মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
-    'ঐশানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু', 'গোবিন্দ হালদার'
+    'হরিচরণ আচার্য্য', 'রামপ্রসাদ সেন', 'কমলাকান্ত ভট্টাচার্য', 'দীনেন্দ্রকৃষ্ণ রায়', 'ঋत्विज মল্লিক', 'অর্ণব আদিত্য', 'তানিশা মুখার্জী',
+    'ঐשানী সাহা', 'রুদ্র ঘোষ', 'সংগৃহীত', 'আব্দুল গাফফার চৌধুরী', 'মোহিনী চৌধুরী', 'আল্লামা ইকবাল', 'মাহমুদুজ্জামান বাবু', 'গোবিন্দ হালদার'
   ];
 
   const existingLyricistSlugs = new Set(

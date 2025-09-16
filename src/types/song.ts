@@ -2,6 +2,25 @@
 import type { Timestamp } from 'firebase/firestore';
 
 /**
+ * Represents a link to a streaming platform.
+ */
+export interface StreamingLink {
+  /**
+   * The name of the platform (e.g., "YouTube", "Spotify").
+   */
+  platform: string;
+  /**
+   * The URL to the song on the platform.
+   */
+  url: string;
+  /**
+   * Optional version description (e.g., "Live", "Remastered", "Cover by Artist").
+   */
+  version?: string;
+}
+
+
+/**
  * Represents a song with title, artist, genre, release year, lyricist, and lyrics.
  */
 export interface Song {
@@ -60,4 +79,8 @@ export interface Song {
    * For client-side ranking during search (optional).
    */
   matchCount?: number;
+  /**
+   * Links to the song on various streaming platforms (optional).
+   */
+  streamingLinks?: StreamingLink[];
 }

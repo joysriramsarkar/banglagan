@@ -3,16 +3,18 @@
 
 import React, { useEffect, useState } from 'react';
 import { getSongBySlug } from '@/services/bangla-song-database';
-import { getProcessedMockSongs } from '@/data/all-songs'; // For prev/next songs
+import { getProcessedMockSongs } from '@/data/all-songs';
 import { notFound, useParams } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon, Youtube, Headphone } from 'lucide-react';
+import { Music, User, Disc3, Tag, Calendar, Feather, WifiOff, Loader2, Home, ListMusic, Library, ChevronLeft, ChevronRight, Users as UsersIcon, Youtube, Headphones } from 'lucide-react';
 import { toBengaliNumerals, cleanLyricsForDisplay } from '@/lib/utils';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import type { Song } from '@/types/song'; // Import the main Song type
+import type { Song } from '@/types/song';
+import { cn } from "@/lib/utils"
+
 
 const SpotifyIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -24,7 +26,7 @@ const SpotifyIcon = (props: React.SVGProps<SVGSVGElement>) => (
 const AppleMusicIcon = (props: React.SVGProps<SVGSVGElement>) => (
     <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" {...props}>
         <title>Apple Music</title>
-        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 19.714c-1.536 0-2.949-.5-4.142-1.357-.18-.12-.39-.18-.6-.18-.3 0-.57.12-.78.33l-.15.15c-.21.21-.33.48-.33.78 0 .3.12.57.33.78l.15.15c.21.21.48.33.78.33.21 0 .42-.06.6-.18 1.47-.99 3.24-1.59 5.142-1.59 1.903 0 3.673.6 5.143 1.59.18.12.39.18.6.18.3 0 .57-.12.78-.33l.15-.15c.21-.21.33-.48.33-.78 0-.3-.12-.57-.33-.78l-.15-.15c-.21-.21-.48-.33-.78-.33-.21 0-.42.06-.6-.18-1.193-.857-2.606-1.357-4.143-1.357zm-1.88-5.314c.24-.15.39-.42.39-.72v-4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3v4.5c0 .3.15.57.39.72.24.15.54.18.81.09l.06-.03c1.32-.66 2.82-1.02 4.38-1.02s3.06.36 4.38 1.02l.06.03c.27.09.57.06.81-.09.24-.15.39-.42.39-.72v-4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3v4.5c0 .3.15.57.39.72.24.15.54.18.81.09l.06-.03c.66-.33 1.35-.54 2.07-.63v-1.17c-1.32-.09-2.61.15-3.78.69-1.17-.54-2.46-.78-3.78-.69v1.17c.72.09 1.41.3 2.07.63l.06.03c.27.09.57.06.81-.09z"/>
+        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm0 19.714c-1.536 0-2.949-.5-4.142-1.357-.18-.12-.39-.18-.6-.18-.3 0-.57.12-.78.33l-.15.15c-.21.21-.33.48-.33.78 0 .3.12.57.33.78l.15.15c.21.21.48.33.78.33.21 0 .42-.06.6-.18 1.47-.99 3.24-1.59 5.142-1.59 1.903 0 3.673.6 5.143 1.59.18.12.39.18.6.18.3 0 .57-.12.78-.33l-.15-.15c.21-.21.33-.48.33-.78 0-.3-.12-.57-.33-.78l-.15-.15c-.21-.21-.48-.33-.78-.33-.21 0-.42-.06-.6-.18-1.193-.857-2.606-1.357-4.143-1.357zm-1.88-5.314c.24-.15.39-.42.39-.72v-4.5c0-1.65-1.35-3-3-3s-3 1.35-3 3v4.5c0 .3.15.57.39.72.24.15.54.18.81.09l.06-.03c1.32-.66 2.82-1.02 4.38-1.02s3.06.36 4.38 1.02l.06.03c.27.09.57.06.81-.09.24-.15.39-.42.৩৯-.৭২v-৪.৫c০-১.৬৫-১.৩৫-৩-৩-৩s-৩ ১.৩৫-৩ ৩v৪.৫c০ .৩.১৫.৫৭.৩৯.৭২.২৪.১৫.৫৪.১৮.৮১-.০৯.২৪-.১৫.৩৯-.৪২.৩৯-.৭২v-৪.৫c০-১.৬৫-১.৩৫-৩-৩-৩s-৩ ১.৩৫-৩ ৩v৪.৫c০ .৩.১৫.৫৭.৩৯.৭২.২৪.১৫.৫৪.১৮.৮১.০৯l.০৬-.০৩c.৬৬-.৩৩ ১.৩৫-.৫৪ ২.০৭-.৬৩v-১.১৭c-১.৩২-.০৯-২.৬১.১৫-৩.৭৮.৬৯-১.১৭-.৫৪-২.৪৬-.৭৮-৩.৭৮-.৬৯v১.১৭c.৭২.০৯ ১.৪১.৩ ২.০৭.৬৩l.০৬.০৩c.২৭.০৯.৫৭.০৬.৮১-.০৯z"/>
     </svg>
 );
 
@@ -38,7 +40,7 @@ const PlatformIcon = ({ platform, className }: { platform: string, className?: s
         case 'apple music':
             return <AppleMusicIcon className={cn(iconClass, "fill-current")} />;
         default:
-            return <Headphone className={iconClass} />;
+            return <Headphones className={iconClass} />;
     }
 };
 
@@ -204,7 +206,7 @@ export default function SongPage() {
                 <Card className="shadow-md">
                     <CardHeader>
                         <CardTitle className="text-xl text-primary flex items-center gap-2">
-                           <Headphone className="w-6 h-6" />
+                           <Headphones className="w-6 h-6" />
                            <span>শুনুন</span>
                         </CardTitle>
                     </CardHeader>
@@ -293,3 +295,5 @@ export default function SongPage() {
 		</div>
 	);
 }
+    
+    
